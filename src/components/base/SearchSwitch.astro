@@ -96,32 +96,52 @@
     }
     if (import.meta.env.PROD) {
       const target = e.target as HTMLInputElement
-      const search = await pagefind.search(target.value)
+      const search = await pagefind.debouncedSearch(target.value)
 
-      for (const result of search.results) {
+      // 添加结果长度判断
+      if (!search?.results && search?.results.length === 0 ) {
+        const noResults = document.createElement('div')
+        noResults.className = 'search-results-item text-center py-4 text-muted-foreground'
+        noResults.textContent = 'No results found'
+        searchResults?.appendChild(noResults)
+        return
+      }
+
+      if(search?.results){
+        for (const result of search?.results) {
         const data = await result.data()
-        // 获取所有匹配位置
-        const locations = await result.locations()
-
+        // 显示主结果
         const resultItem = document.createElement('a')
         resultItem.href = data.url
         resultItem.className = 'search-results-item'
-
-        // 构建包含所有匹配片段的HTML
-        let excerptsHtml = ''
-
-
-        locations.forEach((location:any) => {
-          excerptsHtml += `<div class="search-results-excerpt">${location.excerpt}</div>`
-        })
-
         resultItem.innerHTML = `
           <div class="search-results-title">${data.meta.title}</div>
-          ${excerptsHtml}
+          <div class="search-results-excerpt">${data.excerpt}</div>
         `
-
         resultItem.addEventListener('click', closeSearchIn)
         searchResults?.appendChild(resultItem)
+
+        // 显示子结果（如果有）
+        if (data.sub_results) {
+          for (const subResult of data.sub_results) {
+            if (subResult.excerpt === data.excerpt) continue;
+
+            const cleanTitle = subResult.title.replace(/\s*[Hh][1-6]$/g, '');
+
+            if (!cleanTitle) continue; // 跳过空标题
+
+            const subItem = document.createElement('a')
+            subItem.href = subResult.url
+            subItem.className = 'search-results-item sub-result pl-4 border-l-2 border-accent'
+            subItem.innerHTML = `
+              <div class="search-results-title text-sm opacity-80">${cleanTitle}</div>
+              <div class="search-results-excerpt text-xs">${subResult.excerpt}</div>
+            `
+            subItem.addEventListener('click', closeSearchIn)
+            searchResults?.appendChild(subItem)
+          }
+        }
+      }
       }
     } else {
       const resultItem = document.createElement('a')
@@ -145,7 +165,8 @@
       const pagefind = await import(scriptUrl)
 
       await pagefind.options({
-        'excerptLength': 20
+        'excerptLength': 20,
+        'showSubResults': true,
       })
 
       pagefind.init()

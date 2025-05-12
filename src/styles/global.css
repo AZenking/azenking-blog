@@ -299,6 +299,31 @@ input[type='search']::-moz-search-cancel-button {
 
 /* Search Styles */
 .search-results-item {
+  /* 主结果样式 */
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid hsl(var(--border));
+}
+
+.search-results-item.sub-result {
+  /* 子结果样式 */
+  padding-left: 1.5rem;
+  border-left: 2px solid hsl(var(--accent));
+  margin-left: 1rem;
+  font-size: 0.875rem;
+  opacity: 0.9;
+}
+
+.search-results-item .search-results-title {
+  font-weight: 500;
+  margin-bottom: 0.25rem;
+}
+
+.search-results-item.sub-result .search-results-title {
+  font-weight: 400;
+  font-size: 0.875rem;
+}
+
+.search-results-item {
   display: block;
   padding: 1rem;
   border-bottom: 1px solid hsl(var(--border));
@@ -337,17 +362,6 @@ input[type='search']::-moz-search-cancel-button {
     transform: translate(0%, 0);
   }
 }
-.search-results-item .search-results-excerpt {
-  margin-bottom: 0.5rem;
-  padding: 0.5rem;
-  background: rgba(var(--color-primary), 0.05);
-  border-radius: 0.25rem;
-}
-
-.search-results-item .search-results-excerpt:last-child {
-  margin-bottom: 0;
-}
-
 .search-results-excerpt {
   font-size: 0.875rem;
   color: hsl(var(--muted-foreground));
