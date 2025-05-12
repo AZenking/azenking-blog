@@ -308,6 +308,10 @@ input[type='search']::-moz-search-cancel-button {
 
 .search-results-excerpt {
   @apply text-sm text-muted-foreground line-clamp-2;
+  mark {
+    @apply bg-accent/50 text-foreground rounded px-0.5 font-medium;
+    text-decoration: none;
+  }
 }
 
 /* Search Animations */
