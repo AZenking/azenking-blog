@@ -321,3 +321,24 @@ input[type='search']::-moz-search-cancel-button {
   color: hsl(var(--muted-foreground));
   line-height: 1.5;
 }
+
+/* 搜索面板动画 */
+.search-panel-show {
+  animation: searchPanelShow 0.3s cubic-bezier(0.21, 1.02, 0.73, 1) forwards;
+}
+
+@keyframes searchPanelShow {
+  0% {
+    opacity: 0;
+    transform: translate(0%, -2rem);
+  }
+  100% {
+    opacity: 1;
+    transform: translate(0%, 0);
+  }
+}
+.search-results-excerpt {
+  font-size: 0.875rem;
+  color: hsl(var(--muted-foreground));
+  line-height: 1.5;
+}
