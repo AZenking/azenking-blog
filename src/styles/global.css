@@ -271,3 +271,98 @@
 .no-scrollbar::-webkit-scrollbar {
   display: none;
 }
+
+/* Search */
+
+/* 隐藏 WebKit 浏览器（如 Chrome, Safari, Edge）中的搜索框清除按钮 */
+/* Hide the search box clear button in WebKit browsers (such as Chrome, Safari, Edge) */
+#search-input::-webkit-search-decoration,
+#search-input::-webkit-search-cancel-button,
+#search-input::-webkit-search-results-button,
+#search-input::-webkit-search-results-decoration {
+  -webkit-appearance: none;
+}
+
+/* 隐藏 IE/Edge (旧版 EdgeHTML) 中的搜索框清除按钮 */
+/* Hide the search box clear button in IE/Edge (old version EdgeHTML) */
+#search-input::-ms-clear {
+  display: none;
+  width: 0;
+  height: 0;
+}
+
+/* 隐藏 Firefox 中的搜索框清除按钮 (较新版本可能不再需要) */
+/* Hide the search box clear button in Firefox (may no longer be necessary in newer versions) */
+input[type='search']::-moz-search-cancel-button {
+  display: none;
+}
+
+/* Search Styles */
+.search-results-item {
+  @apply block px-4 py-3 text-foreground hover:bg-accent transition-colors;
+}
+
+.search-results-title {
+  @apply text-base font-medium mb-1;
+}
+
+.search-results-excerpt {
+  @apply text-sm text-muted-foreground line-clamp-2;
+}
+
+/* Search Animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: translate(-50%, 0) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, 0) scale(1);
+  }
+}
+
+@keyframes fadeOut {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes scaleOut {
+  from {
+    opacity: 1;
+    transform: translate(-50%, 0) scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: translate(-50%, 0) scale(0.95);
+  }
+}
+
+.search-mask-enter {
+  animation: fadeIn 0.3s ease forwards;
+}
+
+.search-panel-enter {
+  animation: scaleIn 0.3s ease forwards;
+}
+
+.search-mask-leave {
+  animation: fadeOut 0.3s ease forwards;
+}
+
+.search-panel-leave {
+  animation: scaleOut 0.3s ease forwards;
+}

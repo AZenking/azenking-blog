@@ -63,9 +63,7 @@ const filteredHeadings = headings.reduce(
   <script>
     function setupTocModal() {
       const tocModal = document.getElementById('tocModal')
-      const tocClose = document.getElementById('tocClose')
       const tocLinks = tocModal?.querySelectorAll('[data-heading-link]')
-      const tocList = tocModal?.querySelector('ul')
       let isScrolling = false
       let scrollTimeout: ReturnType<typeof setTimeout> | undefined
 

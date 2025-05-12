@@ -2,7 +2,6 @@
 import sharp from 'sharp'
 import fs from 'fs'
 import path from 'path'
-import os from 'os' // 导入 os 模块
 import yargs from 'yargs'
 import { hideBin } from 'yargs/helpers'
 import chalk from 'chalk'
@@ -46,8 +45,8 @@ class ImageProcessor {
     this.config = config
   }
 
-  // 修改签名，接收 targetFormat
-  private async processImage(inputPath: string, outputPath: string, targetFormat: ImageFormat): Promise<boolean> {
+  // 修改签名
+  private async processImage(inputPath: string, outputPath: string): Promise<boolean> {
     // 规范化路径以进行准确比较
     const normalizedInputPath = path.normalize(inputPath)
     const normalizedOutputPath = path.normalize(outputPath)
@@ -300,7 +299,7 @@ class ImageProcessor {
       // ---
 
       // 将确定的 targetFormat 传递给 processImage
-      const success = await this.processImage(file, outputPath, targetFormat)
+      const success = await this.processImage(file, outputPath)
 
       // 修改删除逻辑：仅在处理成功、不保留原文件且 *不是* 覆盖操作时删除
       if (success && !this.config.keepOriginal && !isOverwriting) {

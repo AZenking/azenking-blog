@@ -1,5 +1,6 @@
 ---
 import { POSTS_CONFIG } from '~/config'
+import { cn } from '~/lib/utils'
 
 interface Props {
   class?: string
@@ -8,7 +9,7 @@ interface Props {
 const { class: className } = Astro.props
 ---
 
-<div class="markdown">
+<div class={cn('markdown', className)}>
   <slot />
 </div>
 
@@ -25,7 +26,7 @@ const { class: className } = Astro.props
   })
 </script>
 
-<script define:vars={{ enabled: POSTS_CONFIG.imageDarkenInDark }}>
+<script define:vars={{ enabled: POSTS_CONFIG.imageDarkenInDark }} is:inline>
   if (enabled) {
     const darkModeHandler = () => {
       const isDark = document.documentElement.classList.contains('dark')

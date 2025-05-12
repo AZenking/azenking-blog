@@ -1,10 +1,6 @@
 import rss from '@astrojs/rss'
 import { getCollection } from 'astro:content'
-import { SITE } from '~/config' // 确保你的站点配置路径正确
-import sanitizeHtml from 'sanitize-html' // 需要安装 sanitize-html
-import MarkdownIt from 'markdown-it' // 需要安装 markdown-it
-
-const parser = new MarkdownIt()
+import { SITE } from '~/config'
 
 export async function GET(context) {
   const posts = await getCollection('posts')

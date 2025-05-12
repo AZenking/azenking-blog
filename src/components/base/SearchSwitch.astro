@@ -1,0 +1,161 @@
+---
+
+---
+
+<button
+  class="inline-flex items-center justify-center rounded-md text-foreground hover:scale-105 duration-200 transition-all cursor-pointer"
+  id="search-switch"
+  aria-label="Search"
+  title="Search"
+>
+  <span class="icon-[material-symbols--manage-search-rounded] size-6"></span>
+</button>
+
+<div id="search-mask" class="fixed z-200 hidden inset-0 bg-background/80 backdrop-blur-md dark:bg-background/90">
+  <div class="absolute left-1/2 top-20">
+    <div id="search-panel" class="grid grid-rows-[auto_1fr] max-h-[80vh] w-[22rem] sm:w-[30rem] bg-background/95 dark:bg-background/95 border border-border rounded-lg shadow-lg dark:shadow-accent/20">
+      <div id="search-bar" class="grid grid-cols-[auto_1fr] items-center gap-2 px-4 h-12 border-b border-border">
+        <span class="icon-[material-symbols--search-rounded] size-5 text-muted-foreground"></span>
+        <label class="sr-only" for="search-input">Search</label>
+        <input
+          type="search"
+          id="search-input"
+          class="w-full h-8 bg-transparent outline-none text-foreground placeholder:text-muted-foreground font-normal leading-8 text-base"
+          placeholder="Search"
+          autocomplete="off"
+        />
+      </div>
+      <div id="search-results" class="overflow-y-auto" data-base="/"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+  let searchSwitch: HTMLElement | null = null
+
+  const toggleSearchAnimation = (searchMask: HTMLElement, searchPanel: HTMLElement, isClosing: boolean) => {
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion)').matches
+    
+    if (prefersReducedMotion) {
+      searchMask.classList.toggle('hidden', isClosing)
+      return
+    }
+
+    if (isClosing) {
+      searchMask.classList.add('search-mask-leave')
+      searchPanel.classList.add('search-panel-leave')
+      setTimeout(() => {
+        searchMask.classList.remove('search-mask-leave')
+        searchPanel.classList.remove('search-panel-leave')
+        searchMask.classList.add('hidden')
+      }, 300)
+    } else {
+      searchMask.classList.remove('hidden')
+      searchMask.classList.add('search-mask-enter')
+      searchPanel.classList.add('search-panel-enter')
+      const searchInput = document.getElementById('search-input') as HTMLInputElement
+      searchInput.focus()
+    }
+  }
+
+  const handleToggleSearch = () => {
+    const searchMask = document.getElementById('search-mask')
+    const searchPanel = document.getElementById('search-panel')
+    if (!searchMask || !searchPanel) return
+
+    const isClosed = searchMask.classList.contains('hidden')
+    toggleSearchAnimation(searchMask, searchPanel, !isClosed)
+  }
+
+  const handleCloseSearch = (event: Event) => {
+    const searchMask = document.getElementById('search-mask')
+    const searchPanel = document.getElementById('search-panel')
+    if (!searchMask || !searchPanel || searchMask.classList.contains('hidden')) return
+
+    const target = event.target as Node
+    const shouldClose = 
+      (!searchPanel.contains(target) && !searchSwitch?.contains(target)) ||
+      (target instanceof HTMLElement && 
+       target.closest('#search-results') && 
+       target.closest('a'))
+
+    if (shouldClose) {
+      toggleSearchAnimation(searchMask, searchPanel, true)
+    }
+  }
+
+  const setupEventListeners = () => {
+    if (searchSwitch) {
+      searchSwitch.removeEventListener('click', handleToggleSearch)
+    }
+
+    searchSwitch = document.getElementById('search-switch')
+    searchSwitch?.addEventListener('click', handleToggleSearch)
+  }
+
+  document.addEventListener('astro:page-load', setupEventListeners)
+  document.addEventListener('click', handleCloseSearch)
+  document.addEventListener('keydown', (e: KeyboardEvent) => {
+    if (e.key === 'Escape') {
+      handleCloseSearch(e)
+    } else if (e.key.toLowerCase() === 'k' && (e.ctrlKey || e.metaKey)) {
+      e.preventDefault()
+      handleToggleSearch()
+    }
+  })
+</script>
+
+<script>
+  const searchInput = document.getElementById('search-input')
+
+  // 声明 pagefind 类型
+  declare const pagefind: any
+  
+  // input event
+  const handleInput = async (e: Event) => {
+    const searchResults = document.getElementById('search-results')
+    if (searchResults) {
+      searchResults.innerHTML = ''
+    }
+    if (import.meta.env.PROD) {
+      const target = e.target as HTMLInputElement
+      const search = await pagefind.search(target.value)
+      for (const result of search.results) {
+        const data = await result.data()
+        // console.log('data', data)
+        document.getElementById('search-results')!.innerHTML += `
+        <a href="${data.url}" class="search-results-item">
+          <div class="search-results-title">${data.meta.title}</div>
+          <div class="search-results-excerpt">${data.excerpt}</div>
+        </a>`
+      }
+    }else{
+      const searchResults = document.getElementById('search-results')!
+      searchResults.innerHTML += `
+      <a href=${searchResults.dataset.base} class="search-results-item">
+        <div class="search-results-title">Search</div>
+        <div class="search-results-excerpt">Search in development mode</div>
+      </a>`
+    }
+  }
+  
+  searchInput?.addEventListener('input', handleInput)
+</script>
+
+
+{import.meta.env.PROD &&
+  <script is:inline define:vars={{scriptUrl: ('/pagefind/pagefind.js')}}>
+    async function loadPagefind() {
+      const pagefind = await import(scriptUrl)
+
+      await pagefind.options({
+        'excerptLength': 20
+      })
+
+      pagefind.init()
+      window.pagefind = pagefind
+      pagefind.search('')
+    }
+
+    if (!window.pagefind) loadPagefind()
+  </script>}
