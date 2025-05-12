@@ -22,7 +22,7 @@ const { frontmatter, minutesRead } = Astro.props
           }
 
           <div class="space-y-4">
-            <h1 class="text-2xl sm:text-3xl font-serif leading-tight tracking-wide text-balance">
+            <h1 class="text-2xl sm:text-3xl font-serif leading-tight tracking-wide text-balance" data-pagefind-body>
               {frontmatter.title}
             </h1>
           </div>
@@ -77,7 +77,7 @@ const { frontmatter, minutesRead } = Astro.props
         </div>
       </header>
 
-      <Prose data-pagefind-body>
+      <Prose>
         <slot />
       </Prose>
     </div>

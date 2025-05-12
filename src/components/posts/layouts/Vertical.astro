@@ -44,6 +44,7 @@ const { frontmatter, minutesRead } = Astro.props
               </div>
               <div class="space-y-3">
                 <h1
+                  data-pagefind-body
                   class="text-2xl sm:text-3xl md:text-4xl font-serif leading-tight tracking-wide bg-gradient-to-r from-foreground/90 to-foreground/70 bg-clip-text text-transparent"
                 >
                   {frontmatter.title}
@@ -79,7 +80,7 @@ const { frontmatter, minutesRead } = Astro.props
         </div>
       </header>
 
-      <Prose data-pagefind-body>
+      <Prose>
         <slot />
       </Prose>
     </div>
