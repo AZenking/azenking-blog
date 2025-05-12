@@ -299,103 +299,25 @@ input[type='search']::-moz-search-cancel-button {
 
 /* Search Styles */
 .search-results-item {
-  @apply block px-4 py-3 text-foreground hover:bg-accent transition-colors;
+  display: block;
+  padding: 1rem;
+  border-bottom: 1px solid hsl(var(--border));
+  transition: background-color 0.2s ease;
 }
 
-.search-results-header {
-  @apply flex items-center justify-between mb-2;
+.search-results-item:hover {
+  background-color: hsl(var(--accent));
 }
 
 .search-results-title {
-  @apply text-base font-medium hover:text-accent-foreground transition-colors;
+  font-size: 1rem;
+  font-weight: 500;
+  color: hsl(var(--foreground));
+  margin-bottom: 0.5rem;
 }
 
-.search-results-count {
-  @apply ml-2 text-sm text-muted-foreground;
-}
-
-.search-results-excerpts {
-  @apply space-y-2;
-}
-
-.search-results-excerpt-item {
-  @apply flex flex-col text-sm text-muted-foreground;
-}
-
-.search-results-excerpt-text {
-  @apply line-clamp-2;
-  mark {
-    @apply bg-accent/50 text-foreground rounded px-0.5 font-medium;
-  }
-}
-
-.search-results-excerpt-location {
-  @apply text-xs text-muted-foreground mt-1;
-}
-
-.search-results-more {
-  @apply text-sm text-accent-foreground hover:underline mt-2 cursor-pointer;
-}
-
-.search-results-more-content {
-  @apply mt-2 space-y-2;
-  animation: fadeIn 0.3s ease forwards;
-}
-
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(-4px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-@keyframes scaleIn {
-  from {
-    opacity: 0;
-    transform: translate(-50%, 0) scale(0.95);
-  }
-  to {
-    opacity: 1;
-    transform: translate(-50%, 0) scale(1);
-  }
-}
-
-@keyframes fadeOut {
-  from {
-    opacity: 1;
-  }
-  to {
-    opacity: 0;
-  }
-}
-
-@keyframes scaleOut {
-  from {
-    opacity: 1;
-    transform: translate(-50%, 0) scale(1);
-  }
-  to {
-    opacity: 0;
-    transform: translate(-50%, 0) scale(0.95);
-  }
-}
-
-.search-mask-enter {
-  animation: fadeIn 0.3s ease forwards;
-}
-
-.search-panel-enter {
-  animation: scaleIn 0.3s ease forwards;
-}
-
-.search-mask-leave {
-  animation: fadeOut 0.3s ease forwards;
-}
-
-.search-panel-leave {
-  animation: scaleOut 0.3s ease forwards;
+.search-results-excerpt {
+  font-size: 0.875rem;
+  color: hsl(var(--muted-foreground));
+  line-height: 1.5;
 }
