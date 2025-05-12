@@ -302,25 +302,54 @@ input[type='search']::-moz-search-cancel-button {
   @apply block px-4 py-3 text-foreground hover:bg-accent transition-colors;
 }
 
-.search-results-title {
-  @apply text-base font-medium mb-1;
+.search-results-header {
+  @apply flex items-center justify-between mb-2;
 }
 
-.search-results-excerpt {
-  @apply text-sm text-muted-foreground line-clamp-2;
+.search-results-title {
+  @apply text-base font-medium hover:text-accent-foreground transition-colors;
+}
+
+.search-results-count {
+  @apply ml-2 text-sm text-muted-foreground;
+}
+
+.search-results-excerpts {
+  @apply space-y-2;
+}
+
+.search-results-excerpt-item {
+  @apply flex flex-col text-sm text-muted-foreground;
+}
+
+.search-results-excerpt-text {
+  @apply line-clamp-2;
   mark {
     @apply bg-accent/50 text-foreground rounded px-0.5 font-medium;
-    text-decoration: none;
   }
 }
 
-/* Search Animations */
+.search-results-excerpt-location {
+  @apply text-xs text-muted-foreground mt-1;
+}
+
+.search-results-more {
+  @apply text-sm text-accent-foreground hover:underline mt-2 cursor-pointer;
+}
+
+.search-results-more-content {
+  @apply mt-2 space-y-2;
+  animation: fadeIn 0.3s ease forwards;
+}
+
 @keyframes fadeIn {
   from {
     opacity: 0;
+    transform: translateY(-4px);
   }
   to {
     opacity: 1;
+    transform: translateY(0);
   }
 }
 
