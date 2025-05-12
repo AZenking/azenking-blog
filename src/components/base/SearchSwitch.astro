@@ -112,18 +112,10 @@
   // input event
   const handleInput = async (e: Event) => {
     const searchResults = document.getElementById('search-results')
-    if (!searchResults) return
-    
-    searchResults.innerHTML = ''
-    
-    if (!import.meta.env.PROD) {
-      searchResults.innerHTML = `
-        <a href=${searchResults.dataset.base} class="search-results-item">
-          <div class="search-results-title">Search</div>
-          <div class="search-results-excerpt">Search in development mode</div>
-        </a>`
-      return
+    if (searchResults) {
+      searchResults.innerHTML = ''
     }
+<<<<<<< HEAD
 
     const target = e.target as HTMLInputElement
     const query = target.value.trim()
@@ -218,37 +210,39 @@
     } catch (error) {
       console.error('Search error:', error)
       searchResults.innerHTML = '<div class="p-4 text-muted-foreground">搜索出错，请稍后重试</div>'
+=======
+    if (import.meta.env.PROD) {
+      const target = e.target as HTMLInputElement
+      const search = await pagefind.search(target.value)
+      for (const result of search.results) {
+        const data = await result.data()
+        document.getElementById('search-results')!.innerHTML += `
+        <a href="${data.url}" class="search-results-item">
+          <div class="search-results-title">${data.meta.title}</div>
+          <div class="search-results-excerpt">${data.excerpt}</div>
+        </a>`
+      }
+    }else{
+      const searchResults = document.getElementById('search-results')!
+      searchResults.innerHTML += `
+      <a href=${searchResults.dataset.base} class="search-results-item">
+        <div class="search-results-title">Search</div>
+        <div class="search-results-excerpt">Search in development mode</div>
+      </a>`
+>>>>>>> parent of 76cb97e (Refactor (SearchSwitch): Optimize search function logic and event handling)
     }
   }
-
-  // 移除旧的事件监听器
-  document.addEventListener('astro:page-load', () => {
-    const searchInput = document.getElementById('search-input')
-    if (searchInput) {
-      searchInput.removeEventListener('input', handleInput)
-      searchInput.addEventListener('input', handleInput)
-    }
-  })
-
-  // 页面卸载时清理
-  document.addEventListener('astro:page-unload', () => {
-    const searchInput = document.getElementById('search-input')
-    if (searchInput) {
-      searchInput.removeEventListener('input', handleInput)
-    }
-  })
+  
+  searchInput?.addEventListener('input', handleInput)
 </script>
 
 
 {import.meta.env.PROD &&
   <script is:inline define:vars={{scriptUrl: ('/pagefind/pagefind.js')}}>
-    let pagefindLoaded = false
-    let pagefindLoadPromise = null
-
     async function loadPagefind() {
-      if (pagefindLoaded) return
-      if (pagefindLoadPromise) return pagefindLoadPromise
+      const pagefind = await import(scriptUrl)
 
+<<<<<<< HEAD
       pagefindLoadPromise = (async () => {
         try {
           const pagefind = await import(scriptUrl)
@@ -259,21 +253,16 @@
               collectionType: ['post']
             }
           })
+=======
+      await pagefind.options({
+        'excerptLength': 20
+      })
+>>>>>>> parent of 76cb97e (Refactor (SearchSwitch): Optimize search function logic and event handling)
 
-          await pagefind.init()
-          window.pagefind = pagefind
-          pagefindLoaded = true
-        } catch (error) {
-          console.error('Failed to load pagefind:', error)
-          throw error
-        }
-      })()
-
-      return pagefindLoadPromise
+      pagefind.init()
+      window.pagefind = pagefind
+      pagefind.search('')
     }
 
-    // 延迟加载 pagefind
-    document.addEventListener('astro:page-load', () => {
-      if (!window.pagefind) loadPagefind()
-    }, { once: true })
+    if (!window.pagefind) loadPagefind()
   </script>}
