@@ -337,6 +337,17 @@ input[type='search']::-moz-search-cancel-button {
     transform: translate(0%, 0);
   }
 }
+.search-results-item .search-results-excerpt {
+  margin-bottom: 0.5rem;
+  padding: 0.5rem;
+  background: rgba(var(--color-primary), 0.05);
+  border-radius: 0.25rem;
+}
+
+.search-results-item .search-results-excerpt:last-child {
+  margin-bottom: 0;
+}
+
 .search-results-excerpt {
   font-size: 0.875rem;
   color: hsl(var(--muted-foreground));

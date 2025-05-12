@@ -97,15 +97,29 @@
     if (import.meta.env.PROD) {
       const target = e.target as HTMLInputElement
       const search = await pagefind.search(target.value)
+
       for (const result of search.results) {
         const data = await result.data()
+        // 获取所有匹配位置
+        const locations = await result.locations()
+
         const resultItem = document.createElement('a')
         resultItem.href = data.url
         resultItem.className = 'search-results-item'
+
+        // 构建包含所有匹配片段的HTML
+        let excerptsHtml = ''
+
+
+        locations.forEach((location:any) => {
+          excerptsHtml += `<div class="search-results-excerpt">${location.excerpt}</div>`
+        })
+
         resultItem.innerHTML = `
           <div class="search-results-title">${data.meta.title}</div>
-          <div class="search-results-excerpt">${data.excerpt}</div>
+          ${excerptsHtml}
         `
+
         resultItem.addEventListener('click', closeSearchIn)
         searchResults?.appendChild(resultItem)
       }
