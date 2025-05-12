@@ -33,7 +33,7 @@
 <script>
   const toggleSearchAnimation = (searchMask: HTMLElement, searchPanel: HTMLElement, isClosing: boolean) => {
     const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion)').matches
-    
+
     if (prefersReducedMotion) {
       searchMask.classList.toggle('hidden', isClosing)
       return
@@ -72,10 +72,10 @@
     if (!searchMask || !searchPanel || searchMask.classList.contains('hidden')) return
 
     const target = event.target as Node
-    const shouldClose = 
+    const shouldClose =
       (!searchPanel.contains(target) && !searchSwitch?.contains(target)) ||
-      (target instanceof HTMLElement && 
-       target.closest('#search-results') && 
+      (target instanceof HTMLElement &&
+       target.closest('#search-results') &&
        target.closest('a'))
 
     if (shouldClose) {
@@ -108,109 +108,13 @@
 
   // 声明 pagefind 类型
   declare const pagefind: any
-  
+
   // input event
   const handleInput = async (e: Event) => {
     const searchResults = document.getElementById('search-results')
     if (searchResults) {
       searchResults.innerHTML = ''
     }
-<<<<<<< HEAD
-
-    const target = e.target as HTMLInputElement
-    const query = target.value.trim()
-    if (!query) return
-
-    try {
-      const search = await pagefind.search(query)
-      // 按 URL 分组结果
-      const groupedResults = new Map()
-
-      await Promise.all(search.results.map(async (result: any) => {
-        const data = await result.data()
-        const locations = await result.locations()
-        const url = data.url
-
-        if (!groupedResults.has(url)) {
-          groupedResults.set(url, {
-            title: data.meta.title,
-            url,
-            excerpts: [],
-            count: 0
-          })
-        }
-
-        const group = groupedResults.get(url)
-        group.excerpts.push({
-          text: data.excerpt,
-          hash: locations[0]?.hash || ''
-        })
-        group.count++
-      }))
-
-      // 渲染分组结果
-      const resultsHTML = Array.from(groupedResults.entries()).map(([url, group]) => {
-        const excerptsList = group.excerpts
-          .slice(0, 3) // 最多显示3个匹配片段
-          .map((excerpt:any) => `
-            <div class="search-results-excerpt-item">
-              <span class="search-results-excerpt-text">${excerpt.text}</span>
-              ${excerpt.hash ? `<span class="search-results-excerpt-location">在 ${excerpt.hash} 处</span>` : ''}
-            </div>
-          `).join('')
-
-        return `
-          <div class="search-results-item">
-            <div class="search-results-header">
-              <a href="${url}${group.excerpts[0].hash}" class="search-results-title">
-                ${group.title}
-                ${group.count > 1 ? `<span class="search-results-count">(${group.count}处匹配)</span>` : ''}
-              </a>
-            </div>
-            <div class="search-results-excerpts">
-              ${excerptsList}
-              ${group.excerpts.length > 3 ? 
-                `<button class="search-results-more" data-url="${url}" data-count="${group.excerpts.length - 3}">显示更多 ${group.excerpts.length - 3} 处匹配</button>` : 
-                ''}
-            </div>
-          </div>`
-      })
-
-      searchResults.innerHTML = resultsHTML.join('') || '<div class="p-4 text-muted-foreground">未找到相关内容</div>'
-
-      // 添加"显示更多"按钮的点击事件
-      const moreButtons = searchResults.querySelectorAll('.search-results-more')
-      moreButtons.forEach(button => {
-        button.addEventListener('click', async (e) => {
-          const btn = e.target as HTMLButtonElement
-          const url = btn.dataset.url
-          const parent = btn.closest('.search-results-item')
-          if (!parent || !url) return
-
-          const group = groupedResults.get(url)
-          if (!group) return
-
-          const excerptsList = group.excerpts
-            .slice(3)
-            .map((excerpt:any) => `
-              <div class="search-results-excerpt-item">
-                <span class="search-results-excerpt-text">${excerpt.text}</span>
-                ${excerpt.hash ? `<span class="search-results-excerpt-location">在 ${excerpt.hash} 处</span>` : ''}
-              </div>
-            `).join('')
-
-          const container = document.createElement('div')
-          container.className = 'search-results-more-content'
-          container.innerHTML = excerptsList
-
-          btn.parentElement?.insertBefore(container, btn)
-          btn.remove()
-        })
-      })
-    } catch (error) {
-      console.error('Search error:', error)
-      searchResults.innerHTML = '<div class="p-4 text-muted-foreground">搜索出错，请稍后重试</div>'
-=======
     if (import.meta.env.PROD) {
       const target = e.target as HTMLInputElement
       const search = await pagefind.search(target.value)
@@ -229,10 +133,9 @@
         <div class="search-results-title">Search</div>
         <div class="search-results-excerpt">Search in development mode</div>
       </a>`
->>>>>>> parent of 76cb97e (Refactor (SearchSwitch): Optimize search function logic and event handling)
     }
   }
-  
+
   searchInput?.addEventListener('input', handleInput)
 </script>
 
@@ -242,22 +145,9 @@
     async function loadPagefind() {
       const pagefind = await import(scriptUrl)
 
-<<<<<<< HEAD
-      pagefindLoadPromise = (async () => {
-        try {
-          const pagefind = await import(scriptUrl)
-          await pagefind.options({
-            excerptLength: 30, // 增加摘要长度
-            filter: {
-              // 只搜索 Post 内容
-              collectionType: ['post']
-            }
-          })
-=======
       await pagefind.options({
         'excerptLength': 20
       })
->>>>>>> parent of 76cb97e (Refactor (SearchSwitch): Optimize search function logic and event handling)
 
       pagefind.init()
       window.pagefind = pagefind
