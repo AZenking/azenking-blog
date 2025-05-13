@@ -50,7 +50,7 @@
   /* 中文字体 */
   @font-face {
     font-family: 'ShangguSansSCVF';
-    src: url('/fonts/ShangguSansSC-VF.ttf') format('truetype');
+    src: url('/fonts/ShangguSansSC-VF.woff2') format('woff2');
     font-display: swap;
   }
 
@@ -79,13 +79,13 @@
   /* 等宽字体 */
   @font-face {
     font-family: 'DM Mono';
-    src: url('/fonts/DMMono-Regular.ttf') format('truetype');
+    src: url('/fonts/DMMono-Regular.woff2') format('woff2');
     font-weight: 400;
     font-display: swap;
   }
   @font-face {
     font-family: 'DM Mono';
-    src: url('/fonts/DMMono-Medium.ttf') format('truetype');
+    src: url('/fonts/DMMono-Medium.woff2') format('woff2');
     font-weight: 500;
     font-display: swap;
   }
