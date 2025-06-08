@@ -1,15 +1,29 @@
-// 检查 localStorage 是否可用，并获取主题设置
-// Check if localStorage is available and get the theme setting
+// public/js/theme.js
 ;(function () {
-  if (typeof localStorage !== 'undefined' && localStorage.getItem('theme')) {
-    // 如果主题存在，则添加到文档根元素
-    // If the theme exists, add it to the document root element
-    document.documentElement.classList.add(localStorage.getItem('theme'))
-  } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
-    // 如果没有主题设置，且用户偏好为暗色模式，则添加暗色类
-    // If there is no theme setting and the user prefers dark mode, add the dark class
-    document.documentElement.classList.add('dark')
+  // 获取系统主题偏好
+  const systemTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
+
+  // 获取存储的主题或使用系统主题
+  const theme = localStorage.getItem('theme') || 'system'
+  const root = document.documentElement
+
+  // 立即应用主题
+  if (theme === 'dark' || (theme === 'system' && systemTheme === 'dark')) {
+    root.classList.add('dark')
+  } else {
+    root.classList.remove('dark')
   }
+
+  // 监听系统主题变化
+  window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
+    if (theme === 'system') {
+      if (e.matches) {
+        root.classList.add('dark')
+      } else {
+        root.classList.remove('dark')
+      }
+    }
+  })
 })()
 
 // 监听 astro:after-swap 事件以更新主题
