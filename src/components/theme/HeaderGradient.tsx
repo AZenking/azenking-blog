@@ -2,9 +2,9 @@ import type React from 'react'
 
 export default function HeaderGradient(): React.ReactElement {
   return (
-    <div className="fixed inset-0 mx-0 max-w-none overflow-hidden hidden md:block opacity-40 pointer-events-none">
+    <div className="fixed inset-0 mx-0 max-w-none overflow-hidden hidden md:block opacity-40 pointer-events-none dark:opacity-100">
       <div className="absolute left-1/2 top-[-14.5px] ml-[-41.5rem] h-[25rem] w-[80rem] dark:[mask-image:linear-gradient(white,transparent)]">
-        <div className="absolute inset-0 bg-gradient-to-r from-blue-300 to-purple-500 opacity-40 [mask-image:radial-gradient(farthest-side_at_top,white,transparent)] dark:from-purple-300/30 dark:to-blue-600/30"></div>
+        <div className="absolute inset-0 bg-gradient-to-r from-blue-300 to-purple-500 opacity-40 [mask-image:radial-gradient(farthest-side_at_top,white,transparent)] dark:from-blue-500/30 dark:to-blue-800/30 dark:opacity-100"></div>
         <svg
           viewBox="0 0 1113 440"
           aria-hidden="true"
