@@ -1,5 +1,5 @@
 ---
-import { SITE, SOCIAL_LINKS } from '~/config.ts'
+import { SITE, SKILLSSHOWCASE_CONFIG, SOCIAL_LINKS } from '~/config.ts'
 import { GET } from './api/github.ts'
 import { GITHUB_CONFIG, POSTS_CONFIG } from '~/config.ts'
 import { padMissingWeeks, postsSort } from '~/lib/utils'
@@ -9,9 +9,11 @@ import SectionDivider from '~/components/base/SectionDivider.astro'
 import GithubContributions from '~/components/base/GithubContributions.astro'
 import SocialLink from '~/components/base/SocialLink.astro'
 import List from '~/components/posts/card/List.astro'
+import SkillsShowcase from '~/components/base/SkillsShowcase.astro'
 
 const { ENABLED } = GITHUB_CONFIG
 const { size, type } = POSTS_CONFIG.homePageConfig
+const { SKILLS_ENABLED, SKILLS_DATA } = SKILLSSHOWCASE_CONFIG
 
 let githubFollowerCount = null
 let githubGraphqlData: Additional.Github.Week[] = []
@@ -79,6 +81,20 @@ const posts = postsSort(allPosts).slice(0, size)
               <p class="text-muted-foreground mb-6 mt-1">Most recent contributions.</p>
             </div>
             <GithubContributions weeks={githubGraphqlData} />
+          </div>
+        </>
+      )
+    }
+    {
+      SKILLS_ENABLED && SKILLS_DATA.length > 0 && (
+        <>
+          <SectionDivider />
+          <div class="py-8 pb-10 px-6 max-md:px-6">
+            <div class="px-2 max-md:px-0">
+              <h2 class="text-2xl sm:text-3xl">Skills</h2>
+              <p class="text-muted-foreground mb-6 mt-1">Here are some of the skills I use:</p>
+            </div>
+            <SkillsShowcase skillsData={SKILLS_DATA} />
           </div>
         </>
       )

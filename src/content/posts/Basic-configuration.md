@@ -155,6 +155,11 @@ Each social link object supports the following properties:
 ![](~/assets/images/base-configuration/spotlight-light.jpg)(class:img-dark)
 :::
 
+> [!caution]
+> Since this theme uses static mode, the display function is currently unable to achieve automatic daily updates. If you think this affects the use of this function, you can turn off this display.
+>
+> If you have a good solution, you are welcome to submit a **PR**.
+
 When you visit the homepage, you'll notice the GitHub data display area (Spotlight) as shown in the image. This feature can be enabled through the following configuration.
 
 ### Obtaining a Github Token
@@ -205,6 +210,90 @@ If you choose to use mock data (`USE_MOCK_DATA_FOR_DEVELOPMENT: true`), you can 
 >
 > Note: When GitHub integration is enabled, the actual follower count from your GitHub account takes precedence and automatically overrides github manually configured count in SOCIAL_LINKS configuration.
 
+## Skills Configuration
+
+:::image-figure[skills]
+![](~/assets/images/base-configuration/skills-dark.png)(class:img-light)
+
+![](~/assets/images/base-configuration/skills-light.png)(class:img-dark)
+:::
+
+The Skill module is configured via `SKILLSSHOWCASE_CONFIG` in `config.ts`.
+
+```ts title="src/config.ts"
+
+export const SKILLSSHOWCASE_CONFIG: SkillsShowcaseConfig = {
+  SKILLS_ENABLED: true,
+  SKILLS_DATA: [
+    {
+      direction: 'left',
+      skills: [
+        {
+          name: 'JavaScript',
+          icon: 'icon-[mdi--language-javascript]',
+        },
+        {
+          name: 'CSS',
+          icon: 'icon-[mdi--language-css3]',
+        },
+        {
+          name: 'HTML',
+          icon: 'icon-[mdi--language-html5]',
+        },
+        {
+          name: 'TypeScript',
+          icon: 'icon-[mdi--language-typescript]',
+        },
+      ],
+    },
+    {
+      direction: 'right',
+      skills: [
+        {
+          name: 'Astro',
+          icon: 'icon-[lineicons--astro]',
+        },
+        {
+          name: 'Node.js',
+          icon: 'icon-[mdi--nodejs]',
+        },
+        {
+          name: 'React',
+          icon: 'icon-[mdi--react]',
+        },
+        {
+          name: 'Next.js',
+          icon: 'icon-[devicon--nextjs]',
+        },
+        {
+          name: 'Tailwind CSS',
+          icon: 'icon-[mdi--tailwind]',
+        },
+        {
+          name: 'Iconify',
+          icon: 'icon-[line-md--iconify2-static]',
+        },
+      ],
+    },
+  ],
+}
+```
+
+The following is a detailed explanation of the various properties in the `SKILLSSHOWCASE_CONFIG` configuration object:
+
+| Property | Description | Details |
+|---|---|---|
+| **SKILLS_ENABLED** | Whether to enable the skill display function | Set to `true` to enable the skill display module, set to `false` to disable |
+| **SKILLS_DATA** | Skill display data array | Contains multiple skill groups, each group can have different directions and skill lists |
+| &nbsp;&nbsp;direction | Skill group display direction | Optional values: `left` or `right`, determines the animation direction of the skill group on the page |
+| &nbsp;&nbsp;skills | Skill list | All skill items under this direction group |
+| &nbsp;&nbsp;&nbsp;&nbsp;name | Skill name | Displayed skill name text |
+| &nbsp;&nbsp;&nbsp;&nbsp;icon | Skill icon | Icon in Iconify format, available from [Iconify Icon Set](https://icon-sets.iconify.design/) get |
+
+The skill display module allows you to showcase your technology stack and professional skills on your personal homepage. With the `direction` property, you can create skill groups with alternating directions to make the page more dynamic and visually appealing. Each skill item contains a name and an icon. The icon is integrated using Iconify, providing thousands of optional icons.
+
+You can add as many skill groups as you want, and each group can contain as many skills as you want. For example, you can organize skills by technology category (front-end, back-end, tools, etc.) or proficiency level.
+
 ## Posts Configuration
 
 Litos provides comprehensive configuration options for blog posts through the `POSTS_CONFIG` object in `src/config.ts`. This section covers post display settings, pagination, and layout options.
@@ -213,6 +302,7 @@ Litos provides comprehensive configuration options for blog posts through the `P
 export const POSTS_CONFIG: PostConfig = {
   title: 'Posts',
   description: 'Posts by Dnzzk2',
+  introduce: 'Here, I will share the usage instructions for this theme to help you quickly use it.',
   author: 'Dnzzk2',
   homePageConfig: {
     size: 5,
@@ -239,12 +329,13 @@ export const POSTS_CONFIG: PostConfig = {
 }
 ```
 
-The following is a detailed explanation of the various properties in the POSTS_CONFIG configuration object:
+The following is a detailed explanation of the various properties in the `POSTS_CONFIG` configuration object:
 
 | Property | Description | Details |
 |---|---|---|
 | **title** | Posts Page Title | Displayed in the browser tab and search results |
 | **description** | Posts Page Description | Used for SEO |
+| **introduce** | Posts Page Introduce | Introduce below the page title |
 | **author** | Posts Author | Used in meta tags and attribution information |
 | **homePageConfig** | Homepage Post Display Settings | Configures the display of posts on the homepage |
 | &nbsp;&nbsp;size | Number of Posts per Page | The upper limit of displayed posts |
@@ -295,6 +386,7 @@ In order to maintain the richness of the page style, I have set three values for
 
 Configure the style you think is suitable on three pages, and of course, you can also create your own card style by creating your card file in `src/components/posts/card` and importing it to `List.astro` in the same directory for configuration.
 
+
 ## Tags Configuration
 
 Tags Configuration only provides two basic configuration properties:
@@ -303,6 +395,7 @@ Tags Configuration only provides two basic configuration properties:
 export const TAGS_CONFIG: TagsConfig = {
   title: 'Tags',
   description: 'Tags by Dnzzk2',
+  introduce: 'All the tags for posts are here, you can click to filter them.',
 }
 ```
 
@@ -310,6 +403,7 @@ export const TAGS_CONFIG: TagsConfig = {
 |---|---|---|
 | **title** | Tags Page Title | Displayed in the browser tab and search results |
 | **description** | Tags Page Description | Used for SEO |
+| **introduce** | Tags Page Introduce | Introduce below the page title |
 
 ## Projects Configuration
 
@@ -319,6 +413,7 @@ Projects Configuration only provides two basic configurations:
 export const PROJECTS_CONFIG: ProjectsConfig = {
   title: 'Projects',
   description: 'Projects by Dnzzk2',
+  introduce: 'The examples of my projects.',
 }
 ```
 
@@ -352,6 +447,7 @@ export const ProjectList: Project[] = [
 |---|---|---|
 | **name** | Project Name | Project name |
 | **description** | Project Description | Project description |
+| **introduce** | Project Page Introduce | Introduce below the page title |
 | **githubUrl** (optional) | Project GitHub URL | Project github address |
 | **website** (optional)| Project Website URL | Project URL |
 | **type** | Project Type | Used for displaying the project type: `icon`、`image` |

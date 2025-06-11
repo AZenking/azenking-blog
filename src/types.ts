@@ -18,26 +18,26 @@ export type Site = {
 }
 
 /**
- * 文章封面图宽高比类型 / Hero image aspect ratio type
+ * 随笔封面图宽高比类型 / Hero image aspect ratio type
  * @description 可选值为 '16/9' 和 '3/4' / Possible values: '16/9' and '3/4'
  */
 export type HeroImageAspectRatio = '16/9' | '3/4'
 
 /**
- * 文章封面图布局类型 / Hero image layout type
+ * 随笔封面图布局类型 / Hero image layout type
  * @description 可选值为 'left' 和 'right' / Possible values: 'left' and 'right'
  */
 export type HeroImageLayout = 'left' | 'right'
 
 /**
- * 文章卡片类型 / PostCardType
+ * 随笔卡片类型 / PostCardType
  * @description 可选值为 'compact' 、'image' 和 'time-line' / Possible values: 'compact', 'image' and 'timeLine'
  */
 export type PostCardType = 'compact' | 'image' | 'time-line'
 
 /**
- * 文章卡片页面基础配置接口 / Post card page configuration interface
- * @description 用于配置文章卡片页面的显示方式 / Used to configure how post cards are displayed on pages
+ * 随笔卡片页面基础配置接口 / Post card page configuration interface
+ * @description 用于配置随笔卡片页面的显示方式 / Used to configure how post cards are displayed on pages
  * @property {PostCardType} type - 卡片展示类型 / Card display type
  * @property {number} size - 每页显示数量 / Number of items per page
  * @property {HeroImageLayout} heroImageLayout - 特色图片布局方式 / Hero image layout position
@@ -49,28 +49,30 @@ export interface PostCardPageConfig {
 }
 
 /**
- * 文章配置接口 / Post configuration interface
- * @description 用于配置博客文章相关的全局设置 / Used to configure global settings for blog posts
- * @property {string} title - 文章标题 / Post title
- * @property {string} description - 文章描述 / Post description
+ * 随笔配置接口 / Post configuration interface
+ * @description 用于配置博客随笔相关的全局设置 / Used to configure global settings for blog posts
+ * @property {string} title - 随笔标题 / Post title
+ * @property {string} description - 随笔描述 / Post description
+ * @property {string} introduce - 随笔介绍 / Post introduce
  * @property {string} author - 作者名称 / Author name
- * @property {PostCardPageConfig} homePageConfig - 首页文章展示配置 / Home page posts display configuration
- * @property {PostCardPageConfig} postPageConfig - 文章列表页展示配置 / Posts list page display configuration
- * @property {PostCardPageConfig} tagsPageConfig - 标签页文章展示配置 / Post display configuration for tags page
- * @property {string} defaultHeroImage - 默认文章封面图 / Default hero image for posts
+ * @property {PostCardPageConfig} homePageConfig - 首页随笔展示配置 / Home page posts display configuration
+ * @property {PostCardPageConfig} postPageConfig - 随笔列表页展示配置 / Posts list page display configuration
+ * @property {PostCardPageConfig} tagsPageConfig - 标签页随笔展示配置 / Post display configuration for tags page
+ * @property {string} defaultHeroImage - 默认随笔封面图 / Default hero image for posts
  * @property {HeroImageAspectRatio} defaultHeroImageAspectRatio - 默认图片宽高比 / Default image aspect ratio
  * @property {boolean} imageDarkenInDark - 是否在暗黑模式下对图片进行暗化处理 / Whether to darken images in dark mode
  * @property {string} readMoreText - "阅读更多"按钮文本 / "Read more" button text
  * @property {string} prevPageText - 上一页按钮文本 / Previous page button text
  * @property {string} nextPageText - 下一页按钮文本 / Next page button text
  * @property {string} tocText - 目录文本 / Table of contents text
- * @property {string} backToPostsText - 返回文章列表按钮文本 / Back to posts list button text
- * @property {string} nextPostText - 下一篇文章按钮文本 / Next post button text
- * @property {string} prevPostText - 上一篇文章按钮文本 / Previous post button text
+ * @property {string} backToPostsText - 返回随笔列表按钮文本 / Back to posts list button text
+ * @property {string} nextPostText - 下一篇随笔按钮文本 / Next post button text
+ * @property {string} prevPostText - 上一篇随笔按钮文本 / Previous post button text
  */
 export interface PostConfig {
   title: string
   description: string
+  introduce: string
   author: string
   homePageConfig: PostCardPageConfig
   postPageConfig: PostCardPageConfig
@@ -91,10 +93,36 @@ export interface PostConfig {
  * 标签配置接口 / Tags configuration interface
  * @property {string} title - 标签页标题 / Tags page title
  * @property {string} description - 标签页描述 / Tags page description
+ * @property {string} introduce - 标签页介绍 / Tags page introduce
  */
 export interface TagsConfig {
   title: string
   description: string
+  introduce: string
+}
+
+export interface Skill {
+  icon: string
+  name: string
+}
+
+export interface SkillData {
+  direction: 'left' | 'right'
+  skills: Skill[]
+}
+
+/**
+ * SkillsShowcase 配置接口 / SkillsShowcase configuration type
+ * @property {boolean} SKILLS_ENABLED  - 是否启用SkillsShowcase功能 / Whether to enable SkillsShowcase features
+ * @property {Object} SKILLS_DATA - 技能展示数据 / Skills showcase data
+ * @property {string} SKILLS_DATA.direction - 技能展示方向 / Skills showcase direction
+ * @property {Object} SKILLS_DATA.skills - 技能展示数据 / Skills showcase data
+ * @property {string} SKILLS_DATA.skills.icon - 技能图标 / Skills icon
+ * @property {string} SKILLS_DATA.skills.name - 技能名称 / Skills name
+ */
+export interface SkillsShowcaseConfig {
+  SKILLS_ENABLED: boolean
+  SKILLS_DATA: SkillData[]
 }
 
 /**
@@ -137,10 +165,12 @@ export type SocialLink = {
  * 项目配置接口 / Project configuration interface
  * @property {string} title - 项目标题 / Project title
  * @property {string} description - 项目描述 / Project description
+ * @property {string} introduce - 项目介绍 / Project introduce
  */
 export interface ProjectConfig {
   title: string
   description: string
+  introduce: string
 }
 
 // 项目图标类型 / Project icon type
