@@ -53,6 +53,7 @@ export interface PostCardPageConfig {
  * @description 用于配置博客文章相关的全局设置 / Used to configure global settings for blog posts
  * @property {string} title - 文章标题 / Post title
  * @property {string} description - 文章描述 / Post description
+ * @property {string} introduce - 文章介绍 / Post introduce
  * @property {string} author - 作者名称 / Author name
  * @property {PostCardPageConfig} homePageConfig - 首页文章展示配置 / Home page posts display configuration
  * @property {PostCardPageConfig} postPageConfig - 文章列表页展示配置 / Posts list page display configuration
@@ -71,6 +72,7 @@ export interface PostCardPageConfig {
 export interface PostConfig {
   title: string
   description: string
+  introduce: string
   author: string
   homePageConfig: PostCardPageConfig
   postPageConfig: PostCardPageConfig
@@ -91,10 +93,36 @@ export interface PostConfig {
  * 标签配置接口 / Tags configuration interface
  * @property {string} title - 标签页标题 / Tags page title
  * @property {string} description - 标签页描述 / Tags page description
+ * @property {string} introduce - 标签页介绍 / Tags page introduce
  */
 export interface TagsConfig {
   title: string
   description: string
+  introduce: string
+}
+
+export interface Skill {
+  icon: string
+  name: string
+}
+
+export interface SkillData {
+  direction: 'left' | 'right'
+  skills: Skill[]
+}
+
+/**
+ * SkillsShowcase 配置接口 / SkillsShowcase configuration type
+ * @property {boolean} SKILLS_ENABLED  - 是否启用SkillsShowcase功能 / Whether to enable SkillsShowcase features
+ * @property {Object} SKILLS_DATA - 技能展示数据 / Skills showcase data
+ * @property {string} SKILLS_DATA.direction - 技能展示方向 / Skills showcase direction
+ * @property {Object} SKILLS_DATA.skills - 技能展示数据 / Skills showcase data
+ * @property {string} SKILLS_DATA.skills.icon - 技能图标 / Skills icon
+ * @property {string} SKILLS_DATA.skills.name - 技能名称 / Skills name
+ */
+export interface SkillsShowcaseConfig {
+  SKILLS_ENABLED: boolean
+  SKILLS_DATA: SkillData[]
 }
 
 /**
@@ -137,10 +165,12 @@ export type SocialLink = {
  * 项目配置接口 / Project configuration interface
  * @property {string} title - 项目标题 / Project title
  * @property {string} description - 项目描述 / Project description
+ * @property {string} introduce - 项目介绍 / Project introduce
  */
 export interface ProjectConfig {
   title: string
   description: string
+  introduce: string
 }
 
 // 项目图标类型 / Project icon type

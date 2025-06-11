@@ -22,14 +22,14 @@ interface Props {
 }
 
 const { page } = Astro.props
-const { title, description } = POSTS_CONFIG
+const { title, description, introduce } = POSTS_CONFIG
 ---
 
 <Layout {title} {description}>
   <div class="fullPage relative z-[1] py-8 pb-10 px-6 sm:px-8">
     <h1 class="tracking-tight text-5xl bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent pb-1.5">{title}</h1>
     <div class="pro text-muted-foreground">
-      <p class="mt-2">Here, I will share the usage instructions for this theme to help you quickly use it.</p>
+      <p class="mt-2">{introduce}</p>
     </div>
 
     <div class="fade-up mt-12">
