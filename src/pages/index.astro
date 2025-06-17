@@ -1,38 +1,18 @@
 ---
 import { SITE, SKILLSSHOWCASE_CONFIG, SOCIAL_LINKS } from '~/config.ts'
-import { GET } from './api/github.ts'
 import { GITHUB_CONFIG, POSTS_CONFIG } from '~/config.ts'
-import { padMissingWeeks, postsSort } from '~/lib/utils'
+import { postsSort } from '~/lib/utils'
 import { getCollection } from 'astro:content'
 import Layout from '~/layouts/Layout.astro'
 import SectionDivider from '~/components/base/SectionDivider.astro'
-import GithubContributions from '~/components/base/GithubContributions.astro'
+import GithubContributions from '~/components/base/GithubContributions.tsx'
 import SocialLink from '~/components/base/SocialLink.astro'
 import List from '~/components/posts/card/List.astro'
 import SkillsShowcase from '~/components/base/SkillsShowcase.astro'
 
-const { ENABLED } = GITHUB_CONFIG
+const { ENABLED, GITHUB_USERNAME, TOOLTIP_ENABLED } = GITHUB_CONFIG
 const { size, type } = POSTS_CONFIG.homePageConfig
 const { SKILLS_ENABLED, SKILLS_DATA } = SKILLSSHOWCASE_CONFIG
-
-let githubFollowerCount = null
-let githubGraphqlData: Additional.Github.Week[] = []
-
-if (ENABLED) {
-  try {
-    const githubInfo = await GET(Astro)
-    const githubData = await githubInfo.json()
-
-    // 默认53周，不足53周则填充
-    const last53weeks = githubData?.data?.viewer?.contributionsCollection?.contributionCalendar?.weeks.slice(-53)
-    const newWeeks = padMissingWeeks(last53weeks, 53)
-
-    githubGraphqlData = newWeeks
-    githubFollowerCount = githubData?.data.viewer.followers.totalCount || null
-  } catch (error) {
-    console.error('Failed to fetch GitHub data:', error)
-  }
-}
 
 const allPosts = await getCollection('posts')
 const posts = postsSort(allPosts).slice(0, size)
@@ -60,19 +40,13 @@ const posts = postsSort(allPosts).slice(0, size)
       <div class="mt-6 flex gap-6">
         {
           SOCIAL_LINKS.map((item) => {
-            const isGithub = item.name.toLowerCase() === 'github'
-            if (isGithub && ENABLED && githubFollowerCount !== null) {
-              return (
-                <SocialLink href={item.url} icon={item.icon} count={githubFollowerCount} label="followers" aria-label="Follow on Github" />
-              )
-            }
             return <SocialLink href={item.url} icon={item.icon} aria-label={`Link of ${item.name}`} count={item.count} label="followers" />
           })
         }
       </div>
     </div>
     {
-      ENABLED && githubGraphqlData.length > 0 && (
+      ENABLED && (
         <>
           <SectionDivider />
           <div class="py-8 pb-10 px-6 max-md:px-6">
@@ -80,7 +54,7 @@ const posts = postsSort(allPosts).slice(0, size)
               <h2 class="text-2xl sm:text-3xl">Spotlight</h2>
               <p class="text-muted-foreground mb-6 mt-1">Most recent contributions.</p>
             </div>
-            <GithubContributions weeks={githubGraphqlData} />
+            <GithubContributions username={GITHUB_USERNAME} tooltipEnabled={TOOLTIP_ENABLED} client:load transition:animate="none" />
           </div>
         </>
       )

@@ -128,13 +128,13 @@ export interface SkillsShowcaseConfig {
 /**
  * GitHub配置类型 / GitHub configuration type
  * @property {boolean} ENABLED - 是否启用GitHub功能 / Whether to enable GitHub features
- * @property {number} CACHE_DURATION - 缓存持续时间(秒) / Cache duration in seconds
- * @property {boolean} USE_MOCK_DATA_FOR_DEVELOPMENT - 开发时使用模拟数据 / Use mock data in development
+ * @property {string} GITHUB_USERNAME - GITHUB用户名 / GitHub username
+ * @property {boolean} TOOLTIP_ENABLED - 是否开启Tooltip功能 / Whether to enable Github Tooltip features
  */
 export type GithubConfig = {
   ENABLED: boolean
-  CACHE_DURATION: number
-  USE_MOCK_DATA_FOR_DEVELOPMENT: boolean
+  GITHUB_USERNAME: string
+  TOOLTIP_ENABLED: boolean
 }
 
 /**

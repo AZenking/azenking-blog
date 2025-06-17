@@ -155,31 +155,7 @@ Each social link object supports the following properties:
 ![](~/assets/images/base-configuration/spotlight-light.jpg)(class:img-dark)
 :::
 
-> [!caution]
-> Since this theme uses static mode, the display function is currently unable to achieve automatic daily updates. If you think this affects the use of this function, you can turn off this display.
->
-> If you have a good solution, you are welcome to submit a **PR**.
-
 When you visit the homepage, you'll notice the GitHub data display area (Spotlight) as shown in the image. This feature can be enabled through the following configuration.
-
-### Obtaining a Github Token
-
-1. Visit the [Github Token settings page](https://github.com/settings/tokens)
-2. Click "Generate new token" > "Generate new token (classic)"
-3. Set a Token name (Note)
-4. Select the following required permissions:
-   - `repo`: Full repository access permissions
-   - `user`: Read user information permissions
-5. Set an appropriate expiration time (Token expiration)
-6. Click "Generate token" and save the generated Token
-
-Create a `.env` file in the project root directory and add the following content:
-
-```ts title=".env"
-SECRET_GITHUB_TOKEN=YOUR_GITHUB_TOKEN
-```
-
-Replace `YOUR_GITHUB_TOKEN` with the Github Token you just generated.
 
 ### Configuration Details
 
@@ -188,8 +164,8 @@ Configure GitHub-related features in the `src/config.ts` file:
 ```ts title="src/config.ts"
 export const GITHUB_CONFIG: GithubConfig = {
   ENABLED: true,
-  CACHE_DURATION: 60 * 60 * 1.5 + 60 * 5,
-  USE_MOCK_DATA_FOR_DEVELOPMENT: true,
+  GITHUB_USERNAME: 'Dnzzk2',
+  TOOLTIP_ENABLED: true,
 }
 ```
 
@@ -198,17 +174,11 @@ Configuration options explained:
 | Property | Description | Details |
 |---|---|---|
 | **ENABLED** | Enable GitHub Features | Type: boolean, Default: true. When enabled, displays Spotlight and automatically updates GitHub follower count in Social Links |
-| **CACHE_DURATION** | GitHub Data Cache Duration | Type: number, Default: 5700 seconds. Calculated as: 1.5 hours (5400 seconds) + 5 minutes (300 seconds) |
-| **USE_MOCK_DATA_FOR_DEVELOPMENT** | Development Mode Data Source | Type: boolean, Default: true. When enabled, uses mock data to avoid frequent GitHub API requests |
-
-### Mock Data Configuration
-
-If you choose to use mock data (`USE_MOCK_DATA_FOR_DEVELOPMENT: true`), you can set the data format in the `DEFAULT_GITHUB_RESPONSE` constant within the `src/pages/api/github.ts` file.
+| **GITHUB_USERNAME** | GitHub Username | Type: string, Username to retrieve data |
+| **TOOLTIP_ENABLED** | Whether to enable tooltip | Type: boolean, Default: true. When the mouse hovers, the specific contribution value is displayed  |
 
 > [!TIP]
-> To ensure correct mock data format, it's recommended to first fetch real data using an actual Token and copy the returned data structure as a template for mock data. This prevents display issues caused by mismatched data structures.
->
-> Note: When GitHub integration is enabled, the actual follower count from your GitHub account takes precedence and automatically overrides github manually configured count in SOCIAL_LINKS configuration.
+> This feature has been moved from a build request to a client request, using the API provided by :link[github-contributions-api]{id=https://github.com/grubersjoe/github-contributions-api}. Many thanks to them for opening up.
 
 ## Skills Configuration
 
