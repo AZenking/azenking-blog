@@ -42,6 +42,12 @@ export const remarkPlugins = [
       image: {
         stripParagraph: false,
       },
+      video: {
+        platforms: {
+          // 禁止自动播放，避免干扰
+          bilibili: 'https://player.bilibili.com/player.html?bvid={id}&autoplay=0',
+        },
+      },
     },
   ],
   remarkImgAttr,

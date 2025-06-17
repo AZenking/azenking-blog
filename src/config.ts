@@ -149,14 +149,14 @@ export const SKILLSSHOWCASE_CONFIG: SkillsShowcaseConfig = {
  * GitHub配置 / GitHub configuration
  *
  * @property {boolean} ENABLED - 是否启用GitHub功能 / Whether to enable GitHub features
- * @property {number} CACHE_DURATION - 缓存持续时间(秒) / Cache duration in seconds
- * @property {boolean} USE_MOCK_DATA_FOR_DEVELOPMENT - 开发时使用模拟数据 / Use mock data in development
+ * @property {string} GITHUB_USERNAME - GITHUB用户名 / GitHub username
+ * @property {boolean} TOOLTIP_ENABLED - 是否开启Tooltip功能 / Whether to enable Github Tooltip features
  */
 
 export const GITHUB_CONFIG: GithubConfig = {
   ENABLED: true,
-  CACHE_DURATION: 60 * 60 * 1.5 + 60 * 5,
-  USE_MOCK_DATA_FOR_DEVELOPMENT: true,
+  GITHUB_USERNAME: 'Dnzzk2',
+  TOOLTIP_ENABLED: true,
 }
 
 export const POSTS_CONFIG: PostConfig = {
