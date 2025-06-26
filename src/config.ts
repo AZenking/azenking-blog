@@ -182,7 +182,7 @@ export const POSTS_CONFIG: PostConfig = {
   readMoreText: 'Read more',
   prevPageText: 'Previous',
   nextPageText: 'Next',
-  tocText: 'Catalogue',
+  tocText: 'On this page',
   backToPostsText: 'Back to Posts',
   nextPostText: 'Next Post',
   prevPostText: 'Previous Post',
