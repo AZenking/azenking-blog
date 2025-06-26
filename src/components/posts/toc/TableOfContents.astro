@@ -35,18 +35,18 @@ const indentClass = new Map([
 
 <div class={cn('fixed top-30 right-[calc(50%-384px)] translate-x-full w-64', className)}>
   <nav class="p-4">
-    {/* 添加 loading="eager" 提高渲染优先级 */}
-    <h2 class="text-lg font-medium mb-4 text-foreground/80">{POSTS_CONFIG.tocText}</h2>
+    <h3 class="text-sm font-medium mb-4 text-foreground/80 flex items-center gap-2 pl-2">
+      <span class="icon-[fluent--list-20-filled] w-4 h-4 opacity-85"></span>
+      {POSTS_CONFIG.tocText}
+    </h3>
     <div class="relative overflow-hidden h-[calc(100vh-24rem)]">
-      {/* 使用 will-change 提示浏览器优化渲染 */}
       <ul
-        class="space-y-2 absolute w-full transition-transform duration-300 will-change-transform"
+        class="space-y-1 absolute w-full transition-transform duration-300 will-change-transform"
         data-desktop-toc-list
         style="content-visibility: auto;"
       >
         {
           filteredHeadings.map((heading) => {
-            // 预计算样式类，减少运行时计算
             const depthClass = heading.depth === 1 ? 'font-medium text-foreground' : 'text-foreground/60 hover:text-foreground/90'
 
             return (
@@ -105,7 +105,6 @@ const indentClass = new Map([
               if (link.getAttribute('href') === `#${id}`) {
                 link.setAttribute('data-active', '')
 
-                // 使用 requestAnimationFrame 优化滚动性能
                 if (scrollTimeout) {
                   window.cancelAnimationFrame(scrollTimeout)
                 }
@@ -118,11 +117,9 @@ const indentClass = new Map([
                     const activeLinkHeight = activeLinkElement.offsetHeight
                     const tocListHeight = tocList.offsetHeight
 
-                    // 计算目标滚动位置，使活动链接居中
                     let targetTransform = Math.max(0, activeLinkTop - containerHeight / 2 + activeLinkHeight / 2)
                     targetTransform = Math.min(targetTransform, tocListHeight - containerHeight)
 
-                    // 添加平滑滚动效果
                     tocList.style.transition = 'transform 0.3s ease-out'
                     tocList.style.transform = `translateY(-${targetTransform}px)`
                   }

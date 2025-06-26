@@ -5,6 +5,8 @@ import HeaderGradient from '~/components/theme/HeaderGradient.astro'
 import SectionDivider from '~/components/base/SectionDivider.astro'
 import HeaderLink from '~/components/base/HeaderLink.astro'
 import SearchSwitch from '~/components/base/SearchSwitch.astro'
+import { Image } from 'astro:assets'
+import favicon from '../../public/favicon.svg'
 
 const { pathname } = Astro.url
 ---
@@ -13,10 +15,8 @@ const { pathname } = Astro.url
 <header>
   <div class="mx-auto max-w-3xl flex justify-between px-6 sm:px-8 py-4 lg:px-8">
     <div class="flex gap-6 items-center">
-      <a href="/" class="pointer-events-auto select-none">
-        <svg class="size-7 fill-current">
-          <use href="/favicon.svg#logo"></use>
-        </svg>
+      <a href="/" class="pointer-events-auto select-none" transition:persist>
+        <Image src={favicon} alt="Logo" class="size-8 border-2 border-transparent dark:border-border" />
       </a>
       <div class="flex gap-2 sm:flex">
         {
