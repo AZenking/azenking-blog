@@ -7,6 +7,7 @@ import Horizontal from '~/components/posts/layouts/Horizontal.astro'
 import Vertical from '~/components/posts/layouts/Vertical.astro'
 import PostNavigation from '~/components/posts/base/PostNavigation.astro'
 import PostFeatures from '~/components/posts/toc/PostFeatures.astro'
+import TocMobile from '~/components/posts/toc/TocMobile.astro'
 
 export async function getStaticPaths() {
   const posts = await getCollection('posts')
@@ -41,7 +42,8 @@ const PostLayout = layoutMap[layoutKey]
 ---
 
 <Layout title={frontmatter.title} description={frontmatter.description || frontmatter.title} image={frontmatter.ogImage}>
-  <div class="fullPage relative flex flex-col justify-between">
+  <div class="relative flex flex-col justify-between h-fit">
+    <TocMobile {post} {posts} {headings} />
     <PostLayout {frontmatter} minutesRead={remarkPluginFrontmatter.minutesRead}>
       <Content />
     </PostLayout>

@@ -1,0 +1,395 @@
+---
+import type { CollectionEntry } from 'astro:content'
+import type { MarkdownHeading } from 'astro'
+import SimpleProgressRing from './SimpleProgressRing.astro'
+
+interface Props {
+  post: CollectionEntry<'posts'>
+  posts: CollectionEntry<'posts'>[]
+  headings: MarkdownHeading[]
+}
+
+const { post, posts, headings } = Astro.props
+const hasHeadings = headings.length > 0
+
+// 过滤并处理标题
+const filteredHeadings = headings.reduce((acc, heading) => {
+  if (heading.depth <= 4 && heading.text.trim()) {
+    acc.push({
+      ...heading,
+      text: heading.text.replace(/\s*[Hh][1-6]$/g, ''),
+    })
+  }
+  return acc
+}, [] as MarkdownHeading[])
+---
+
+{
+  hasHeadings && (
+    <div class="lg:hidden sticky top-0 z-30" data-toc-mobile-container>
+      <div
+        class="relative md:bg-transparent bg-background/95 backdrop-blur-sm border-b border-border/60 px-6 sm:px-8 py-3 flex items-center justify-between cursor-pointer select-none"
+        data-toc-mobile-trigger
+      >
+        <div class="flex gap-4 items-center min-w-0 flex-1">
+          <SimpleProgressRing size={16} strokeWidth={2} class="flex-shrink-0"/>
+          <div class="text-sm font-medium text-foreground/80 truncate" data-current-heading>
+            Overview
+          </div>
+        </div>
+        <div class="flex items-center gap-2 pl-2">
+          <span
+            class="icon-[ph--caret-down] w-4 h-4 text-primary/70 transition-transform duration-200"
+            data-toc-arrow
+            style="transform: rotate(0deg);"
+          />
+        </div>
+      </div>
+      <div
+          class="md:bg-transparent bg-background/98 backdrop-blur-sm border-b border-border/30  overflow-hidden"
+          data-toc-content
+          style="height: 0; transition: height 300ms ease-out, box-shadow 300ms ease-out;"
+        >
+          <div class="relative">
+            <!-- 上方渐变遮罩 -->
+            <div 
+              class="absolute top-0 left-0 right-0 h-8 bg-gradient-to-b from-background/98 to-transparent pointer-events-none z-10 opacity-0 transition-opacity duration-200"
+              data-fade-top
+            ></div>
+            
+            <!-- 下方渐变遮罩 -->
+            <div 
+              class="absolute bottom-0 left-0 right-0 h-8 bg-gradient-to-t from-background/98 to-transparent pointer-events-none z-10 opacity-0 transition-opacity duration-200"
+              data-fade-bottom
+            ></div>
+            
+            <div class="max-h-[30vh] overflow-y-auto no-scrollbar" data-scroll-container>
+              <div class="px-6 sm:px-8 py-2">
+                <div class="space-y-2 ">
+                  {filteredHeadings.map((heading, index) => {
+                    const indentClass =
+                      {
+                        2: '',
+                        3: 'ml-3',
+                        4: 'ml-6',
+                      }[heading.depth] || ''
+
+                    return (
+                      <div class={`flex items-start gap-2 min-w-0 ${indentClass}`} data-toc-item={heading.slug}>
+                        <span class="text-primary/40 font-mono text-xs mt-1 min-w-[1.5rem] transition-colors duration-200 flex-shrink-0" data-toc-number>
+                          {(index + 1).toString().padStart(2, '0')}
+                        </span>
+                        <a
+                          href={`#${heading.slug}`}
+                          class="text-sm text-foreground/70 hover:text-primary hover:underline transition-colors duration-200 leading-relaxed truncate"
+                          data-toc-link
+                        >
+                          {heading.text}
+                        </a>
+                      </div>
+                    )
+                  })}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+    </div>
+  )
+}
+
+<!-- 不需要占位元素，sticky定位自然跟随文档流 -->
+
+<script>
+  /**
+   * 移动端目录展开/收起功能
+   */
+  function setupMobileTocToggle() {
+    const tocContainer = document.querySelector('[data-toc-mobile-container]') as HTMLElement
+    const tocTrigger = document.querySelector('[data-toc-mobile-trigger]') as HTMLElement
+    const tocContent = document.querySelector('[data-toc-content]') as HTMLElement
+    const tocArrow = document.querySelector('[data-toc-arrow]') as HTMLElement
+    const tocLinks = document.querySelectorAll('[data-toc-link]')
+    const tocNumbers = document.querySelectorAll('[data-toc-number]')
+    const currentHeadingElement = document.querySelector('[data-current-heading]') as HTMLElement
+    const fadeTop = document.querySelector('[data-fade-top]') as HTMLElement
+    const fadeBottom = document.querySelector('[data-fade-bottom]') as HTMLElement
+    const scrollContainer = document.querySelector('[data-scroll-container]') as HTMLElement
+
+    if (!tocContainer || !tocTrigger || !tocContent || !tocArrow || !currentHeadingElement || !fadeTop || !fadeBottom || !scrollContainer) return
+
+    let isExpanded = false
+    let currentActiveHeading = ''
+
+    // 获取所有标题元素和对应的目录文本
+    const headingElements = Array.from(document.querySelectorAll('h1, h2, h3, h4, h5, h6'))
+      .filter((el) => el.id)
+      .map((el) => {
+        const tocLink = document.querySelector(`[data-toc-link][href="#${el.id}"]`) as HTMLElement
+        return {
+          element: el as HTMLElement,
+          id: el.id,
+          text: tocLink?.textContent?.trim() || el.textContent?.trim() || '',
+          top: 0,
+        }
+      })
+
+    const updateHeadingPositions = () => {
+      const tocHeight = tocTrigger.offsetHeight
+      headingElements.forEach((heading) => {
+        heading.top = heading.element.offsetTop - tocHeight - 32
+      })
+    }
+
+    const updateActiveHeading = () => {
+      const scrollTop = window.scrollY
+      let activeHeading = ''
+      let activeHeadingText = 'Overview'
+
+      for (let i = headingElements.length - 1; i >= 0; i--) {
+        if (scrollTop >= headingElements[i].top) {
+          activeHeading = headingElements[i].id
+          activeHeadingText = headingElements[i].text
+          break
+        }
+      }
+
+      if (activeHeading !== currentActiveHeading) {
+        currentActiveHeading = activeHeading
+
+        // 更新当前标题显示
+        if (currentHeadingElement) {
+          currentHeadingElement.textContent = activeHeadingText || 'Overview'
+        }
+
+        // 更新目录中的活跃状态
+        tocNumbers.forEach((number) => {
+          number.classList.remove('text-primary', 'font-semibold')
+          number.classList.add('text-primary/40')
+        })
+
+        tocLinks.forEach((link) => {
+          link.classList.remove('text-primary', 'font-semibold')
+          link.classList.add('text-foreground/70')
+        })
+
+        if (activeHeading) {
+          const activeItem = document.querySelector(`[data-toc-item="${activeHeading}"]`)
+          if (activeItem) {
+            const activeNumber = activeItem.querySelector('[data-toc-number]')
+            const activeLink = activeItem.querySelector('[data-toc-link]')
+            if (activeNumber) {
+              activeNumber.classList.remove('text-primary/40')
+              activeNumber.classList.add('text-primary', 'font-semibold')
+            }
+            if (activeLink) {
+              activeLink.classList.remove('text-foreground/70')
+              activeLink.classList.add('text-primary', 'font-semibold')
+            }
+          }
+        }
+      }
+    }
+
+        const updateScrollFade = () => {
+      const scrollTop = scrollContainer.scrollTop
+      const scrollHeight = scrollContainer.scrollHeight
+      const clientHeight = scrollContainer.clientHeight
+      
+      // 计算是否显示渐变遮罩
+      const showTopFade = scrollTop > 10
+      const showBottomFade = scrollTop < scrollHeight - clientHeight - 10
+      
+      // 更新遮罩透明度
+      fadeTop.style.opacity = showTopFade ? '1' : '0'
+      fadeBottom.style.opacity = showBottomFade ? '1' : '0'
+    }
+
+    const scrollToActiveItem = () => {
+      if (!currentActiveHeading) return
+
+      const activeItem = document.querySelector(`[data-toc-item="${currentActiveHeading}"]`)
+      if (!activeItem) return
+
+      const containerRect = scrollContainer.getBoundingClientRect()
+      const itemRect = activeItem.getBoundingClientRect()
+      
+      // 计算相对于滚动容器的位置
+      const relativeTop = itemRect.top - containerRect.top + scrollContainer.scrollTop
+      const itemHeight = itemRect.height
+      const containerHeight = containerRect.height
+      
+      // 将活跃项滚动到容器中央
+      const targetScrollTop = relativeTop - containerHeight / 2 + itemHeight / 2
+      
+      scrollContainer.scrollTo({
+        top: Math.max(0, targetScrollTop),
+        behavior: 'smooth',
+      })
+      
+      // 滚动完成后更新渐变遮罩
+      setTimeout(() => {
+        updateScrollFade()
+      }, 300)
+    }
+
+    const toggleToc = (forceClose = false) => {
+      if (forceClose) {
+        isExpanded = true
+      }
+      isExpanded = !isExpanded
+
+            if (isExpanded) {
+        const actualHeight = scrollContainer?.scrollHeight || tocContent.scrollHeight
+        const maxHeight = Math.min(actualHeight, window.innerHeight * 0.3)
+        tocContent.style.height = `${maxHeight}px`
+        tocArrow.style.transform = 'rotate(180deg)'
+        
+        // 延迟滚动到当前活跃项，等待动画完成
+        setTimeout(() => {
+          scrollToActiveItem()
+          updateScrollFade()
+        }, 350)
+      } else {
+        tocContent.style.height = '0'
+        tocContent.style.boxShadow = 'none'
+        tocArrow.style.transform = 'rotate(0deg)'
+        
+        // 重置渐变遮罩
+        fadeTop.style.opacity = '0'
+        fadeBottom.style.opacity = '0'
+      }
+    }
+
+    const shouldIgnoreClick = (target: HTMLElement): boolean => {
+      if (target.tagName === 'IMG') return true
+      if (target.tagName === 'PICTURE') return true
+      if (target.closest('picture')) return true
+      if (target.hasAttribute('data-zoom') || target.closest('[data-zoom]')) return true
+      if (target.classList.contains('zoom-image') || target.closest('.zoom-image')) return true
+      if (target.classList.contains('medium-zoom-image') || target.closest('.medium-zoom-image')) return true
+      if (target.classList.contains('medium-zoom-overlay') || target.closest('.medium-zoom-overlay')) return true
+      if (target.closest('.prose img') || target.closest('.markdown img')) return true
+      if (target.closest('header') || target.closest('#header')) return true
+      if (target.closest('footer') || target.closest('#footer')) return true
+      return false
+    }
+
+    let scrollTimeout: number
+    const throttledUpdate = () => {
+      if (scrollTimeout) {
+        cancelAnimationFrame(scrollTimeout)
+      }
+      scrollTimeout = requestAnimationFrame(() => {
+        updateActiveHeading()
+      })
+    }
+
+    const init = () => {
+      updateHeadingPositions()
+      updateActiveHeading()
+    }
+
+    // 监听目录内容滚动
+    scrollContainer.addEventListener('scroll', updateScrollFade, { passive: true })
+
+    // 延迟初始化，确保DOM完全渲染
+    setTimeout(init, 100)
+
+    // 监听滚动和窗口大小变化
+    window.addEventListener('scroll', throttledUpdate, { passive: true })
+    window.addEventListener('resize', () => {
+      init()
+      if (isExpanded) {
+        toggleToc(true)
+      }
+    })
+
+    // 点击触发器切换目录
+    tocTrigger.addEventListener('click', (e) => {
+      e.stopPropagation()
+      toggleToc()
+    })
+
+    // 防止点击目录内容时关闭
+    tocContent.addEventListener('click', (e) => {
+      e.stopPropagation()
+    })
+
+    // 点击外部区域关闭目录
+    document.addEventListener('click', (e) => {
+      const target = e.target as HTMLElement
+      if (shouldIgnoreClick(target)) {
+        return
+      }
+      if (isExpanded && !tocContainer.contains(target)) {
+        toggleToc(true)
+      }
+    })
+
+    // 点击目录链接时的处理
+    tocLinks.forEach((link) => {
+      link.addEventListener('click', (e) => {
+        e.preventDefault()
+        e.stopPropagation()
+        const href = link.getAttribute('href')
+        if (href) {
+          const target = document.querySelector(href)
+          if (target) {
+            // 先关闭目录
+            if (isExpanded) {
+              toggleToc(true)
+            }
+
+            // 延迟滚动，等待目录关闭动画完成
+            setTimeout(() => {
+              const tocHeight = tocTrigger.offsetHeight
+              const targetTop = (target as HTMLElement).offsetTop
+              const scrollToPosition = Math.max(0, targetTop - tocHeight - 16)
+
+              window.scrollTo({
+                top: scrollToPosition,
+                behavior: 'smooth',
+              })
+
+              // 滚动完成后更新状态
+              setTimeout(() => {
+                updateHeadingPositions()
+                updateActiveHeading()
+              }, 100)
+            }, 300)
+          }
+        }
+      })
+    })
+
+    // ESC键关闭目录
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && isExpanded) {
+        toggleToc(true)
+      }
+      // F5刷新前关闭目录
+      if (e.key === 'F5' && isExpanded) {
+        toggleToc(true)
+      }
+    })
+
+    // 监听页面刷新事件
+    window.addEventListener('beforeunload', () => {
+      if (isExpanded) {
+        toggleToc(true)
+      }
+    })
+
+    // 清理函数
+    return () => {
+      window.removeEventListener('scroll', throttledUpdate)
+      scrollContainer.removeEventListener('scroll', updateScrollFade)
+      if (scrollTimeout) {
+        cancelAnimationFrame(scrollTimeout)
+      }
+    }
+  }
+
+  document.addEventListener('astro:page-load', setupMobileTocToggle)
+</script>

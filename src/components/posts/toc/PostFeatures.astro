@@ -1,10 +1,9 @@
 ---
 import type { CollectionEntry } from 'astro:content'
 import type { MarkdownHeading } from 'astro'
-import { POSTS_CONFIG } from '~/config'
-import PostActionButton from '~/components/posts/base/PostActionButton.astro'
 import TableOfContents from './TableOfContents.astro'
-import MobileTocModal from './MobileTocModal.astro'
+import BackButton from './BackButton.astro'
+import BackToTop from './BackToTop.astro'
 
 interface Props {
   post: CollectionEntry<'posts'>
@@ -14,83 +13,17 @@ interface Props {
 
 const { post, posts, headings } = Astro.props
 const hasHeadings = headings.length > 0
-
-// 计算文章在第几页
-const postIndex = posts.findIndex((p) => p.slug === post.slug)
-const pageSize = POSTS_CONFIG.postPageConfig.size
-const pageNumber = Math.floor(postIndex / pageSize) + 1
 ---
 
 {hasHeadings && <TableOfContents headings={headings} class="hidden lg:block" />}
 
-<!-- 移动端功能按钮 -->
-<div class="lg:hidden fixed bottom-24 right-2 z-50 flex flex-col gap-3">
-  {
-    hasHeadings && (
-      <PostActionButton
-        id="tocTrigger"
-        icon="icon-[ph--list-bold] transition-transform duration-200 group-hover:-translate-y-0.5"
-        label="Catalogue"
-      />
-    )
-  }
-  <PostActionButton
-    id="backToTop"
-    icon="icon-[ph--arrow-up] transition-transform duration-200 group-hover:-translate-y-0.5"
-    label="Back to top"
-    class="opacity-0 invisible translate-y-4 transition-all duration-300 ease-out"
-  />
+<div class="lg:hidden fixed bottom-14 sm:right-8 right-6 z-50 flex flex-col gap-3">
+  <BackToTop id="backToTopMobile" />
 </div>
 
-<!-- 桌面端功能按钮 -->
 <div class="hidden lg:flex fixed bottom-24 right-[calc(50%-384px)] translate-x-full p-4">
   <div class="flex items-center gap-2">
-    <a
-      href={pageNumber === 1 ? '/posts' : `/posts/${pageNumber}`}
-      class="group flex items-center gap-2 px-3 py-2 bg-primary/4 hover:bg-primary/10 text-primary/70 hover:text-primary transition-colors duration-200 dark:bg-primary/10 dark:hover:bg-primary/15"
-    >
-      <span class="icon-[ph--arrow-left] size-4 transition-transform duration-200 group-hover:-translate-x-0.5"></span>
-      <span class="text-sm font-medium">{POSTS_CONFIG.backToPostsText}</span>
-    </a>
-    <PostActionButton
-      id="backToTopDesktop"
-      icon="icon-[ph--arrow-up] transition-transform duration-200 group-hover:-translate-y-0.5"
-      label="Back to top"
-      class="opacity-0 invisible translate-y-4 transition-all duration-300 ease-out"
-    />
+    <BackButton {post} {posts} />
+    <BackToTop id="backToTopDesktop" />
   </div>
 </div>
-
-{hasHeadings && <MobileTocModal headings={headings} />}
-
-<script>
-  function handleScroll() {
-    const backToTopButtons = document.querySelectorAll('#backToTop, #backToTopDesktop')
-    if (!backToTopButtons.length) return
-
-    if (window.scrollY > 300) {
-      backToTopButtons.forEach((btn) => btn.classList.remove('opacity-0', 'invisible', 'translate-y-4'))
-    } else {
-      backToTopButtons.forEach((btn) => btn.classList.add('opacity-0', 'invisible', 'translate-y-4'))
-    }
-  }
-
-  function setupFeatures() {
-    const backToTopButtons = document.querySelectorAll('#backToTop, #backToTopDesktop')
-    backToTopButtons.forEach((btn) => {
-      btn.addEventListener('click', () => {
-        window.scrollTo({ top: 0, behavior: 'smooth' })
-      })
-    })
-
-    const tocTrigger = document.getElementById('tocTrigger')
-    const tocModal = document.getElementById('tocModal')
-    tocTrigger?.addEventListener('click', () => {
-      tocModal?.classList.remove('opacity-0', 'pointer-events-none')
-    })
-
-    window.addEventListener('scroll', handleScroll)
-  }
-
-  document.addEventListener('astro:page-load', setupFeatures)
-</script>

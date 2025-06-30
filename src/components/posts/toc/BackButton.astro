@@ -20,18 +20,9 @@ const pageUrl = pageNumber === 1 ? '/posts' : `/posts/${pageNumber}`
 
 <a
   href={pageUrl}
-  class={cn(
-    'group flex items-center gap-2',
-    'px-2 h-8 rounded-md',
-    'bg-primary/10 hover:bg-primary/15',
-    'text-primary/70 hover:text-primary',
-    'transition-colors duration-200',
-    'dark:bg-primary/15 dark:hover:bg-primary/25',
-    'dark:text-primary/80 dark:hover:text-primary',
-    className
-  )}
-  aria-label="Back to posts"
+  class="group flex items-center gap-2 px-3 py-2 bg-primary/4 hover:bg-primary/10 text-primary/70 hover:text-primary transition-colors duration-200 dark:bg-primary/10 dark:hover:bg-primary/15"
+  aria-label={POSTS_CONFIG.backToPostsText}
 >
-  <span class="icon-[ph--arrow-left] w-4 h-4"></span>
-  <span class="text-sm font-medium">Back to posts</span>
+  <span class="icon-[ph--arrow-left] size-4 transition-transform duration-200 group-hover:-translate-x-0.5"></span>
+  <span class="text-sm font-medium">{POSTS_CONFIG.backToPostsText}</span>
 </a>
