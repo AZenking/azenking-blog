@@ -50,11 +50,26 @@ const { class: className, id = 'backToTopDesktop' } = Astro.props
         shouldShow = footerTop > windowHeight - 100
       }
 
-      // 根据 shouldShow 状态切换按钮可见性
-      if (shouldShow) {
-        button.classList.remove('opacity-0', 'invisible', 'translate-y-4')
+      const buttonElement = button as HTMLElement
+      if (isMobile) {
+        // 移动端：滑动隐藏到屏幕外
+        if (shouldShow) {
+          button.classList.remove('opacity-0', 'invisible', 'translate-y-4')
+          buttonElement.style.transform = 'translateY(0)'
+          buttonElement.style.pointerEvents = 'auto'
+        } else {
+          button.classList.add('opacity-0', 'invisible')
+          // 滑动到屏幕外底部，完全避开交互区域
+          buttonElement.style.transform = 'translateY(120px)'
+          buttonElement.style.pointerEvents = 'none'
+        }
       } else {
-        button.classList.add('opacity-0', 'invisible', 'translate-y-4')
+        // 桌面端：保持原有动画
+        if (shouldShow) {
+          button.classList.remove('opacity-0', 'invisible', 'translate-y-4')
+        } else {
+          button.classList.add('opacity-0', 'invisible', 'translate-y-4')
+        }
       }
     })
   }
