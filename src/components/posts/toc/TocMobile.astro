@@ -25,8 +25,11 @@ const filteredHeadings = headings
 {
   hasHeadings && (
     <div id="mobile-toc-container" class="lg:hidden sticky top-0 z-30">
-      <details class="group">
-        <summary class="flex w-full cursor-pointer items-center justify-between relative md:bg-transparent bg-background/95 backdrop-blur-sm border-b border-border/60 px-6 sm:px-8 py-3 select-none">
+      <div class="relative">
+        <button
+          class="flex w-full cursor-pointer items-center justify-between relative md:bg-transparent bg-background/95 backdrop-blur-sm border-b border-border/60 px-6 sm:px-8 py-3 select-none"
+          data-toc-toggle
+        >
           <div class="flex gap-4 items-center min-w-0 flex-1">
             <SimpleProgressRing size={16} strokeWidth={2} class="flex-shrink-0" />
             <span id="mobile-toc-current-section" class="text-sm font-medium text-foreground/80 truncate">
@@ -34,11 +37,14 @@ const filteredHeadings = headings
             </span>
           </div>
           <div class="flex items-center gap-2 pl-2">
-            <span class="icon-[ph--caret-down] w-4 h-4 text-primary/70 transition-transform duration-200 group-open:rotate-180" />
+            <span class="icon-[ph--caret-down] w-4 h-4 text-primary/70 transition-transform duration-200" data-toc-arrow />
           </div>
-        </summary>
+        </button>
 
-        <div class="md:bg-transparent bg-background/98 backdrop-blur-sm border-b border-border/30 overflow-hidden" data-toc-content>
+        <div
+          class="md:bg-transparent bg-background/98 backdrop-blur-sm border-b border-border/30 overflow-hidden max-h-0 transition-[max-height] duration-300 ease-in-out"
+          data-toc-content
+        >
           <div class="relative">
             <div
               class="absolute top-0 left-0 right-0 h-8 bg-gradient-to-b from-background/98 to-transparent pointer-events-none z-10 opacity-0 transition-opacity duration-200"
@@ -82,14 +88,14 @@ const filteredHeadings = headings
             </div>
           </div>
         </div>
-      </details>
+      </div>
     </div>
   )
 }
 
 <script>
   const INITIAL_OVERVIEW_TEXT = 'Overview'
-  const TOC_OFFSET = 36
+  const TOC_OFFSET = 48
 
   class MobileTOCState {
     currentSectionText: HTMLElement | null = null
@@ -271,9 +277,31 @@ const filteredHeadings = headings
     }
 
     static setupInteraction(): void {
+      const toggleButton = document.querySelector('[data-toc-toggle]') as HTMLElement | null
+      const tocContent = document.querySelector('[data-toc-content]') as HTMLElement | null
+      const tocArrow = document.querySelector('[data-toc-arrow]') as HTMLElement | null
+
+      let isOpen = false
+
+      if (toggleButton && tocContent && tocArrow) {
+        toggleButton.addEventListener('click', () => {
+          isOpen = !isOpen
+
+          if (isOpen) {
+            // 使用一个足够大的 max-height 值来容纳内容
+            tocContent.style.maxHeight = '31vh'
+            tocArrow.style.transform = 'rotate(180deg)'
+            setTimeout(() => TOCScrollMask.update(), 100)
+          } else {
+            tocContent.style.maxHeight = '0'
+            tocArrow.style.transform = 'rotate(0deg)'
+          }
+        })
+      }
+
       if (!state.listElement) return
 
-      // 点击目录链接时关闭详情
+      // 点击Overview链接时关闭
       state.listElement.querySelectorAll('.mobile-toc-item').forEach((item) => {
         item.addEventListener('click', (e) => {
           e.preventDefault()
@@ -283,19 +311,22 @@ const filteredHeadings = headings
           const target = document.querySelector(href)
           if (!target) return
 
-          // 关闭详情
-          if (state.detailsElement) {
-            state.detailsElement.open = false
+          // 手动关闭Overview
+          if (isOpen && tocContent && tocArrow) {
+            isOpen = false
+            tocContent.style.maxHeight = '0'
+            tocArrow.style.transform = 'rotate(0deg)'
           }
 
           // 平滑滚动到目标
           setTimeout(() => {
-            const targetTop = (target as HTMLElement).offsetTop - TOC_OFFSET
+            const tocHeight = document.getElementById('mobile-toc-container')?.querySelector('button')?.offsetHeight || TOC_OFFSET
+            const targetTop = (target as HTMLElement).offsetTop - tocHeight
             window.scrollTo({
               top: Math.max(0, targetTop),
               behavior: 'smooth',
             })
-          }, 200)
+          }, 300) // 等待关闭动画
         })
       })
 
@@ -303,26 +334,41 @@ const filteredHeadings = headings
       if (state.scrollArea) {
         state.scrollArea.addEventListener('scroll', TOCScrollMask.update, { passive: true })
       }
-
-      // 详情展开时更新遮罩
-      if (state.detailsElement) {
-        state.detailsElement.addEventListener('toggle', () => {
-          if (state.detailsElement?.open) {
-            setTimeout(TOCScrollMask.update, 100)
-          }
-        })
-      }
     }
   }
 
   class MobileTOCController {
     private static scrollRAF: number | null = null
     private static resizeRAF: number | null = null
+    private static observer: IntersectionObserver | null = null
+    private static isStuck = false
+    private static lastScrollY = 0
+    private static boundHandleScroll: (() => void) | null = null
+    private static boundHandleResize: (() => void) | null = null
 
     static handleScroll(): void {
       if (this.scrollRAF) return
 
       this.scrollRAF = requestAnimationFrame(() => {
+        const currentScrollY = window.scrollY
+        const isScrollingDown = currentScrollY > this.lastScrollY
+
+        // 如果 sticky 未激活且向下滚动，则关闭Overview
+        if (!this.isStuck && isScrollingDown) {
+          const tocContent = document.querySelector('[data-toc-content]') as HTMLElement | null
+          const tocArrow = document.querySelector('[data-toc-arrow]') as HTMLElement | null
+
+          if (tocContent && tocArrow) {
+            const isOpen = tocContent.style.maxHeight !== '0px' && tocContent.style.maxHeight !== '' && tocContent.style.maxHeight !== '0'
+            if (isOpen) {
+              tocContent.style.maxHeight = '0'
+              tocArrow.style.transform = 'rotate(0deg)'
+            }
+          }
+        }
+
+        this.lastScrollY = currentScrollY
+
         const newActiveIds = HeadingRegions.getVisibleIds()
 
         if (JSON.stringify(newActiveIds) !== JSON.stringify(state.activeIds)) {
@@ -354,7 +400,50 @@ const filteredHeadings = headings
       state.reset()
       HeadingRegions.build()
 
+      // 初始化滚动位置
+      this.lastScrollY = window.scrollY
+
       if (!state.currentSectionText) return
+
+      // 添加 sticky 状态检测
+      const tocContainer = document.getElementById('mobile-toc-container')
+      const tocContent = document.querySelector('[data-toc-content]') as HTMLElement
+
+      if (tocContainer && tocContent) {
+        // 创建检测元素
+        const sentinel = document.createElement('div')
+        sentinel.style.position = 'absolute'
+        sentinel.style.height = '1px'
+        sentinel.style.top = `${tocContainer.offsetTop - 1}px`
+        tocContainer.parentElement?.insertBefore(sentinel, tocContainer)
+
+        // 观察器
+        this.observer = new IntersectionObserver(
+          ([entry]) => {
+            this.isStuck = !entry.isIntersecting
+
+            // 动态切换定位模式
+            if (this.isStuck) {
+              // sticky 激活：变为浮层
+              tocContent.style.position = 'absolute'
+              tocContent.style.top = '100%'
+              tocContent.style.left = '0'
+              tocContent.style.right = '0'
+              tocContent.style.zIndex = '10'
+            } else {
+              // sticky 未激活：占据文档流
+              tocContent.style.position = 'static'
+              tocContent.style.top = 'auto'
+              tocContent.style.left = 'auto'
+              tocContent.style.right = 'auto'
+              tocContent.style.zIndex = 'auto'
+            }
+          },
+          { threshold: [0] }
+        )
+
+        this.observer.observe(sentinel)
+      }
 
       if (state.headings.length === 0) {
         state.currentSectionText.textContent = INITIAL_OVERVIEW_TEXT
@@ -366,8 +455,11 @@ const filteredHeadings = headings
       MobileTOCLinks.setupInteraction()
 
       // 使用 passive 监听器优化性能
-      window.addEventListener('scroll', this.handleScroll, { passive: true })
-      window.addEventListener('resize', this.handleResize, { passive: true })
+      this.boundHandleScroll = () => this.handleScroll()
+      this.boundHandleResize = () => this.handleResize()
+
+      window.addEventListener('scroll', this.boundHandleScroll, { passive: true })
+      window.addEventListener('resize', this.boundHandleResize, { passive: true })
     }
 
     static cleanup(): void {
@@ -379,9 +471,22 @@ const filteredHeadings = headings
         cancelAnimationFrame(this.resizeRAF)
         this.resizeRAF = null
       }
+      if (this.observer) {
+        this.observer.disconnect()
+        this.observer = null
+      }
 
-      window.removeEventListener('scroll', this.handleScroll)
-      window.removeEventListener('resize', this.handleResize)
+      this.lastScrollY = 0
+
+      if (this.boundHandleScroll) {
+        window.removeEventListener('scroll', this.boundHandleScroll)
+        this.boundHandleScroll = null
+      }
+
+      if (this.boundHandleResize) {
+        window.removeEventListener('resize', this.boundHandleResize)
+        this.boundHandleResize = null
+      }
 
       state.activeIds = []
       state.headings = []
