@@ -10,6 +10,7 @@
 @theme {
   /* 字体 */
   --font-serif: var(--font-lexend);
+  --font-sans: var(--font-sans);
   --font-mono: var(--font-dm-mono);
 
   /* 基础颜色 */
@@ -46,13 +47,6 @@
     src: url('/fonts/Geist[wght].woff2') format('woff2');
     font-display: swap;
   }
-
-  /* 中文字体 */
-  /* @font-face {
-    font-family: 'ShangguSansSCVF';
-    src: url('/fonts/ShangguSansSC-VF.woff2') format('woff2');
-    font-display: swap;
-  } */
 
   /* 英文字体 */
   @font-face {
@@ -230,10 +224,13 @@
   }
 
   /* 主题切换动画 */
-  .theme-transition {
-    transition:
-      background-color 0.3s ease,
-      color 0.3s ease;
+  html.disable-transition,
+  html.disable-transition * {
+    transition: none !important;
+    /* 禁用 view-transition 动画 */
+    view-transition-name: none !important;
+    /* 禁用 Astro 视图过渡 */
+    --astro-view-transition: none !important;
   }
 }
 

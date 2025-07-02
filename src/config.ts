@@ -45,6 +45,7 @@ export const SOCIAL_LINKS: SocialLink[] = [
     name: 'github',
     url: 'https://github.com/yourname',
     icon: 'icon-[ri--github-fill]',
+    count: 12,
   },
   {
     name: 'twitter',

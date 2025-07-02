@@ -12,13 +12,35 @@ import { SITE } from './src/config'
 export default defineConfig({
   site: SITE.website,
   base: SITE.base,
-  prefetch: true,
+  prefetch: {
+    prefetchAll: true,
+    defaultStrategy: 'viewport',
+  },
   vite: {
     plugins: [tailwindcss()],
     envDir: '.',
     build: {
       chunkSizeWarningLimit: 1200,
+      rollupOptions: {
+        output: {
+          manualChunks: {
+            'react-vendor': ['react', 'react-dom'],
+            'framer-vendor': ['framer-motion'],
+            'utils': ['clsx', 'tailwind-merge'],
+          },
+        },
+      },
     },
+  },
+  image: {
+    service: {
+      entrypoint: 'astro/assets/services/sharp',
+    },
+    remotePatterns: [
+      {
+        protocol: 'https',
+      },
+    ],
   },
   markdown: {
     syntaxHighlight: false,

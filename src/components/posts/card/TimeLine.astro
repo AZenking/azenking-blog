@@ -62,9 +62,10 @@ const { post }: Props = Astro.props
       {
         post.data.tags?.length > 0 && (
           <div class="mt-2.5 flex flex-wrap gap-1.5">
-            {post.data.tags.map((tag) => (
-              <PostTag tag={tag} class="text-xs px-1.5 py-0.5 " />
+            {post.data.tags.slice(0, 3).map((tag) => (
+              <PostTag tag={tag} size="sm" />
             ))}
+            {post.data.tags.length > 3 && <span class="text-xs text-muted-foreground/60">+{post.data.tags.length - 3} more</span>}
           </div>
         )
       }

@@ -1,42 +1,33 @@
-// public/js/theme.js
+// 🚀 高性能主题切换
 ;(function () {
-  // 获取系统主题偏好
-  const systemTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
+  const STORAGE_KEY = 'theme'
 
-  // 获取存储的主题或使用系统主题
-  const theme = localStorage.getItem('theme') || 'system'
+  // 🎯 避免重复计算
+  const prefersDark = window.matchMedia('(prefers-color-scheme: dark)')
   const root = document.documentElement
 
-  // 立即应用主题
-  if (theme === 'dark' || (theme === 'system' && systemTheme === 'dark')) {
-    root.classList.add('dark')
-  } else {
-    root.classList.remove('dark')
+  // 立即应用主题，避免闪烁
+  function applyTheme(theme) {
+    const isDark = theme === 'dark' || (theme === 'system' && prefersDark.matches)
+
+    // 使用 toggleAttribute 性能更好
+    root.toggleAttribute('data-theme', isDark ? 'dark' : 'light')
+    root.classList.toggle('dark', isDark)
   }
 
-  // 监听系统主题变化
-  window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
-    if (theme === 'system') {
-      if (e.matches) {
-        root.classList.add('dark')
-      } else {
-        root.classList.remove('dark')
-      }
+  // 初始化
+  const savedTheme = localStorage.getItem(STORAGE_KEY) || 'system'
+  applyTheme(savedTheme)
+
+  // 🔧 优化系统主题监听
+  prefersDark.addEventListener('change', () => {
+    if (localStorage.getItem(STORAGE_KEY) === 'system') {
+      applyTheme('system')
     }
   })
+
+  // Astro 路由切换时重新应用
+  document.addEventListener('astro:after-swap', () => {
+    applyTheme(localStorage.getItem(STORAGE_KEY) || 'system')
+  })
 })()
-
-// 监听 astro:after-swap 事件以更新主题
-// Listen for the astro:after-swap event to update the theme
-document.addEventListener('astro:after-swap', () => {
-  const theme = localStorage.getItem('theme')
-  const root = document.documentElement
-
-  // 根据主题设置或系统偏好来添加或移除暗色类
-  // Add or remove the dark class based on the theme setting or system preference
-  if (theme === 'dark' || (theme === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-    root.classList.add('dark')
-  } else {
-    root.classList.remove('dark')
-  }
-})

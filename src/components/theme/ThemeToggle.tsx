@@ -50,14 +50,14 @@ const ThemeToggle = () => {
     const root = document.documentElement
 
     // 添加过渡类
-    root.classList.add('theme-transition')
+    root.classList.add('disable-transition')
 
     const isDark = newTheme === 'dark' || (newTheme === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches)
     root.classList.toggle('dark', isDark)
 
     // 移除过渡类
     setTimeout(() => {
-      root.classList.remove('theme-transition')
+      root.classList.remove('disable-transition')
     }, 300)
   }
 
