@@ -157,7 +157,7 @@ export default function GithubContributions({ username, tooltipEnabled }: Props)
                 <Tooltip key={dayIndex} content={tooltipContent} disabled={!tooltipEnabled || errorVisible}>
                   <div
                     className={cn(
-                      'size-2 relative hover:scale-125 transition-all duration-500',
+                      'size-2 relative transition-colors duration-500 hover:scale-125 hover:transition-none',
                       count === 0
                         ? 'bg-zinc-200 dark:bg-zinc-900'
                         : count < 5
