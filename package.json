@@ -2,6 +2,7 @@
   "name": "litos",
   "type": "module",
   "version": "0.3.0",
+  "license": "MIT",
   "scripts": {
     "dev": "astro dev",
     "build": "astro check && astro build",
