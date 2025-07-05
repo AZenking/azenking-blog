@@ -48,6 +48,8 @@ export interface PostCardPageConfig {
   heroImageLayout?: HeroImageLayout
 }
 
+export type PostType = 'no-image' | 'vertical' | 'horizontal' | 'jap'
+
 /**
  * 文章配置接口 / Post configuration interface
  * @description 用于配置博客文章相关的全局设置 / Used to configure global settings for blog posts
@@ -79,6 +81,7 @@ export interface PostConfig {
   tagsPageConfig: PostCardPageConfig
   defaultHeroImage: string
   defaultHeroImageAspectRatio: HeroImageAspectRatio
+  postType: PostType
   imageDarkenInDark: boolean
   readMoreText: string
   prevPageText: string

@@ -288,6 +288,7 @@ export const POSTS_CONFIG: PostConfig = {
   },
   defaultHeroImage: '/og-image.jpg',
   defaultHeroImageAspectRatio: '16/9', // '16/9' || '3/4'
+  postType: 'horizontal',
   imageDarkenInDark: true,
   readMoreText: 'Read more',
   prevPageText: 'Previous',
@@ -321,6 +322,7 @@ The following is a detailed explanation of the various properties in the `POSTS_
 | &nbsp;&nbsp;heroImageLayout | Position of the image | The position of the image in the card: `left`、`right`. When the type is an image, it can be used. The default is one left and one right. This attribute can be used to force changes, but its priority is not as high as the **frontmatter** inside MD |
 | **defaultHeroImage** | Default Hero Image | The default cover image displayed in image mode in the post list |
 | **defaultHeroImageAspectRatio** | Default Hero Image Aspect Ratio | The aspect ratio of the default cover image |
+| **postType** | Default style for metadata at the top of the article | Customize the display style of meta information at the top of the article |
 | **imageDarkenInDark** | Darken Hero Image in Dark Mode | Whether to darken the cover image in dark mode |
 | **readMoreText** | Read More Text | The text content of "Read More" under the picture card |
 | **prevPageText** | Previous Page Text | The text displayed on the previous page button |

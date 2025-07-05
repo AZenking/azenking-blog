@@ -23,6 +23,23 @@ const { class: className } = Astro.props
   document.addEventListener('astro:page-load', () => {
     zoom.detach()
     zoom.attach('.markdown img:not(.no-zoom):not(a img)')
+
+    const lqipImages = document.querySelectorAll('.markdown img[style*="--lqip:"]')
+    lqipImages.forEach((img) => {
+      const imageEl = img as HTMLImageElement
+
+      // 去除占位符，避免闪烁
+      function handleImageLoad() {
+        imageEl.style.removeProperty('--lqip')
+      }
+
+      if (imageEl.complete && imageEl.naturalHeight !== 0) {
+        handleImageLoad()
+      } else {
+        imageEl.addEventListener('load', handleImageLoad)
+        imageEl.addEventListener('error', handleImageLoad)
+      }
+    })
   })
 </script>
 

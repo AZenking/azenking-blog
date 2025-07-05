@@ -5,6 +5,7 @@ import remarkDirectiveSugar from 'remark-directive-sugar'
 import remarkImgAttr from 'remark-imgattr'
 import remarkMath from 'remark-math'
 import remarkReadingTime from './remark-reading-time'
+import remarkLQIP from './remark-lqip.js'
 
 import rehypeSlug from 'rehype-slug'
 import rehypeUnwrapImages from 'rehype-unwrap-images'
@@ -53,6 +54,7 @@ export const remarkPlugins = [
   remarkImgAttr,
   remarkMath,
   remarkReadingTime,
+  remarkLQIP,
 ] as RemarkPlugin[]
 
 export const rehypePlugins = [

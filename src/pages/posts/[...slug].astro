@@ -8,6 +8,8 @@ import Vertical from '~/components/posts/layouts/Vertical.astro'
 import PostNavigation from '~/components/posts/base/PostNavigation.astro'
 import PostFeatures from '~/components/posts/toc/PostFeatures.astro'
 import TocMobile from '~/components/posts/toc/TocMobile.astro'
+import Jap from '~/components/posts/layouts/Jap.astro'
+import { POSTS_CONFIG } from '~/config'
 
 export async function getStaticPaths() {
   const posts = await getCollection('posts')
@@ -31,15 +33,14 @@ const { Content, headings, remarkPluginFrontmatter } = await post.render()
 const filterHeadings = headings.filter((heading) => heading.slug !== 'footnote-label')
 
 const hasValidHeadings = filterHeadings.length > 1
-const hasImage = !!frontmatter.heroImage
-const isVertical = frontmatter.heroImageAspectRatio === '3/4'
 const layoutMap = {
   'no-image': NoImage,
   'vertical': Vertical,
   'horizontal': Horizontal,
+  'jap': Jap,
 }
 
-const layoutKey = !hasImage ? 'no-image' : isVertical ? 'vertical' : 'horizontal'
+const layoutKey = frontmatter.postType || POSTS_CONFIG.postType
 const PostLayout = layoutMap[layoutKey]
 ---
 

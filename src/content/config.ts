@@ -1,7 +1,7 @@
 import { defineCollection, z } from 'astro:content'
 
 import { POSTS_CONFIG } from '~/config'
-import type { HeroImageAspectRatio, HeroImageLayout } from '~/types'
+import type { HeroImageAspectRatio, HeroImageLayout, PostType } from '~/types'
 
 const posts = defineCollection({
   type: 'content',
@@ -40,6 +40,8 @@ const posts = defineCollection({
     heroImageAspectRatio: z.custom<HeroImageAspectRatio>().default(POSTS_CONFIG.defaultHeroImageAspectRatio),
     // 文章标签列表
     tags: z.array(z.string()),
+    // 文章类型
+    postType: z.custom<PostType>().optional(),
   }),
 })
 

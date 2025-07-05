@@ -94,7 +94,7 @@ The theme uses the Catppuccin color scheme with extensive customization options:
 
 ```ts title="ec.config.mjs"
 themes: ['catppuccin-macchiato', 'catppuccin-latte'],  // Dark and light themes / 暗色和亮色主题
-themeCssSelector: (theme) => 
+themeCssSelector: (theme) =>
   (theme.name === 'catppuccin-macchiato' ? '.dark' : ':root:not(.dark)'),  // Theme selector / 主题选择器
 useDarkModeMediaQuery: false,   // Use system dark mode preference / 使用系统暗色模式偏好
 useStyleReset: false,          // Reset default styles / 重置默认样式

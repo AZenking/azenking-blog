@@ -27,8 +27,8 @@ title: 'Your Post Title'
 description: 'A brief description of your post'
 pubDate: 2025-05-01
 updatedDate: 2025-05-01
-author: 'Dnzzk2' 
-recommend: false 
+author: 'Dnzzk2'
+recommend: false
 heroImage: 'image-filename.png'
 ogImage: 'og-image-filename.png'
 heroImageLayout: 'left'
@@ -61,6 +61,11 @@ When the post list type is set to `image`, the theme provides flexible image han
 - If `ogImage` is omitted, the site's default `ogimage` is applied
 
 ### Display Variations
+
+> [!IMPORTANT] 2025/07/25
+> Added `Jap` style, which can be configured for `postType` use in Front Matter, worth trying.
+>
+> This theme no longer determines which meta information display style to use based on the presence or proportion of images, but rather allows you to define it yourself. You can configure `postType` in `config.ts` to determine the default style, and in front matter of the MD document, you can specify the display style of this MD file through `postType`.
 
 The theme supports three distinct image display styles based on the `heroImage` configuration:
 

@@ -179,6 +179,7 @@ export const POSTS_CONFIG: PostConfig = {
   },
   defaultHeroImage: '/og-image.jpg',
   defaultHeroImageAspectRatio: '16/9',
+  postType: 'horizontal',
   imageDarkenInDark: true,
   readMoreText: 'Read more',
   prevPageText: 'Previous',

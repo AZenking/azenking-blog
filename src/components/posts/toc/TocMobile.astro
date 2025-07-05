@@ -9,7 +9,7 @@ interface Props {
   headings: MarkdownHeading[]
 }
 
-const { post, posts, headings } = Astro.props
+const { headings } = Astro.props
 const hasHeadings = headings.length > 0
 
 // 过滤并处理标题
