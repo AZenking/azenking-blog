@@ -89,9 +89,9 @@
 @layer base {
   :root {
     /* 字体族 */
-    --font-lexend: 'Lexend', 'CJKEmDash', 'Nubmers', 'Onest', 'ShangguSansSCVF', sans-serif;
-    --font-sans: 'CJKEmDash', 'Nubmers', 'Onest', 'ShangguSansSCVF', system-ui, sans-serif;
-    --font-dm-mono: 'DM Mono', 'Input Mono', 'Fira Code', 'ShangguSansSCVF', monospace;
+    --font-lexend: 'Lexend', 'CJKEmDash', 'Nubmers', 'Onest', 'ShangguSansSC-VF', sans-serif;
+    --font-sans: 'CJKEmDash', 'Nubmers', 'Onest', 'ShangguSansSC-VF', system-ui, sans-serif;
+    --font-dm-mono: 'DM Mono', 'Input Mono', 'Fira Code', 'ShangguSansSC-VF', monospace;
 
     /* 基础色调 */
     /* gray */
@@ -374,4 +374,25 @@ input[type='search']::-moz-search-cancel-button {
     border-radius: 0.25em;
     font-weight: 500;
   }
+}
+
+/* 3D 透视工具类 */
+.perspective-1000 {
+  perspective: 1000px;
+}
+
+/* 时间线滑入动画 */
+@keyframes slide-down {
+  0% {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0px);
+  }
+}
+
+.animate-slide-down {
+  animation: slide-down 0.3s ease-out forwards;
 }
