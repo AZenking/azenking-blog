@@ -14,9 +14,9 @@ const { pathname } = Astro.url
 {!pathname.includes('/posts/') && <HeaderGradient />}
 <header>
   <div class="mx-auto max-w-3xl flex justify-between px-6 sm:px-8 py-4 lg:px-8">
-    <div class="flex gap-6 items-center">
+    <div class="flex gap-6 items-center flex-shrink-0">
       <a href="/" class="pointer-events-auto select-none" transition:persist>
-        <Image src={favicon} alt="Logo" class="size-8 border-2 border-transparent dark:border-border" />
+        <Image src={favicon} width={32} height={32} alt="Logo" class="w-8 h-8 border-2 border-transparent dark:border-border" />
       </a>
       <div class="flex gap-2 sm:flex">
         {

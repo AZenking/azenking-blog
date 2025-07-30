@@ -43,7 +43,8 @@
   /* 数字字体 */
   @font-face {
     font-family: 'Nubmers';
-    unicode-range: U+0030-0039;
+    /* 取消注释即可启动Onest字体 */
+    /* unicode-range: U+0030-0039; */
     src: url('/fonts/Geist[wght].woff2') format('woff2');
     font-display: swap;
   }

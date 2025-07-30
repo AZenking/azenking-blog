@@ -6,115 +6,150 @@
       <head>
         <title><xsl:value-of select="/rss/channel/title"/></title>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link rel="icon" type="image/x-icon" sizes="16x16 32x32 48x48" href="/favicon.ico" />
+        <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+        <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+        <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
         <style type="text/css">
-          /* 极简/学术风格 */
           body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif; /* 清晰的无衬线字体 */
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
             line-height: 1.7;
             margin: 0 auto;
-            max-width: 720px; /* 适中宽度 */
+            max-width: 720px;
             padding: 3em 1.5em;
-            background-color: #fdfdfd; /* 非常浅的灰色背景 */
-            color: #333; /* 深灰色文字 */
-            font-size: 16px; /* 标准字体大小 */
+            background-color: #fdfdfd;
+            color: #333;
+            font-size: 16px;
           }
 
-          /* 标题样式 */
           h1 {
-            font-size: 1.75em; /* 相对小一点的标题 */
+            font-size: 1.75em;
             margin-bottom: 1em;
-            border-bottom: 1px solid #eee; /* 非常浅的边框 */
+            border-bottom: 1px solid #eee;
             padding-bottom: 0.4em;
-            font-weight: 500; /* Medium weight */
-            color: #111; /* 黑色标题 */
+            font-weight: 500;
+            color: #111;
+            display: flex;
+            align-items: center;
           }
+
           h1 a {
             color: inherit;
             text-decoration: none;
-          }
-          h1 a:hover {
-             text-decoration: underline; /* 悬停下划线 */
+            display: flex;
+            align-items: center;
           }
 
-          /* 描述文字 */
+          h1 a:hover {
+             text-decoration: underline;
+          }
+
+          .site-logo {
+            width: 32px;
+            height: 32px;
+            margin-right: 12px;
+            flex-shrink: 0;
+            border-radius: 6px;
+          }
+
           p {
             margin: 0.5em 0 2.5em 0;
-            color: #555; /* 中灰色 */
+            color: #555;
             font-size: 1em;
           }
 
-          /* 列表样式 */
+          .rss-info {
+            background: linear-gradient(135deg, #2D3748 0%, #4A5568 100%);
+            color: white;
+            padding: 1em 1.5em;
+            border-radius: 8px;
+            margin-bottom: 2em;
+            box-shadow: 0 2px 10px rgba(45, 55, 72, 0.2);
+          }
+
+          .rss-info h3 {
+            margin: 0 0 0.5em 0;
+            font-size: 1.1em;
+            font-weight: 600;
+          }
+
+          .rss-info p {
+            margin: 0;
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 0.9em;
+          }
+
           ul {
             list-style: none;
             padding: 0;
           }
 
-          /* 列表项样式 - 移除边框和阴影，增加间距 */
           li {
-            background-color: transparent; /* 透明背景 */
-            border: none; /* 无边框 */
-            border-radius: 0; /* 无圆角 */
-            margin-bottom: 2em; /* 增加列表项间距 */
-            padding: 0; /* 无内边距 */
-            box-shadow: none; /* 无阴影 */
-            border-bottom: 1px dotted #ddd; /* 用虚线分隔 */
-            padding-bottom: 1.5em; /* 虚线下方的间距 */
+            background-color: transparent;
+            border: none;
+            border-radius: 0;
+            margin-bottom: 2em;
+            padding: 0;
+            box-shadow: none;
+            border-bottom: 1px dotted #ddd;
+            padding-bottom: 1.5em;
           }
+
           li:last-child {
-             border-bottom: none; /* 最后一项无分隔线 */
+             border-bottom: none;
              padding-bottom: 0;
              margin-bottom: 0;
           }
-          li:hover {
-             /* 无悬停效果，保持简洁 */
-          }
 
-
-          /* 列表项标题 */
           li h2 {
             margin: 0 0 0.3em 0;
-            font-size: 1.15em; /* 稍大一点 */
-            font-weight: 500; /* Medium weight */
+            font-size: 1.15em;
+            font-weight: 500;
           }
+
           li h2 a {
-            color: #0056b3; /* 蓝色链接 */
+            color: #0056b3;
             text-decoration: none;
             transition: color 0.2s ease-in-out;
           }
+
           li h2 a:hover {
-            color: #003d80; /* 深蓝色悬停 */
+            color: #003d80;
             text-decoration: underline;
           }
 
-          /* 发布日期样式 */
           .pubDate {
-            color: #777; /* 灰色日期 */
-            font-size: 0.875em; /* text-sm */
+            color: #777;
+            font-size: 0.875em;
             margin-bottom: 0.5em;
             display: block;
           }
 
-          /* 描述内容样式 */
           .description {
-            color: #444; /* 稍深的灰色 */
+            color: #444;
             font-size: 0.95em;
           }
 
-          /* 页脚样式 */
           footer {
             margin-top: 4em;
             padding-top: 1em;
-            border-top: 1px solid #eee; /* 非常浅的边框 */
-            font-size: 0.875em; /* text-sm */
-            color: #888; /* 浅灰色页脚 */
-            text-align: center;
-            line-height: 1.5; /* 增加行高以便容纳多行 */
+            border-top: 1px solid #eee;
+            font-size: 0.875em;
+            color: #888;
+            line-height: 1.5;
           }
         </style>
       </head>
       <body>
-        <h1><a href="{/rss/channel/link}" target="_blank"><xsl:value-of select="/rss/channel/title"/></a></h1>
+        <h1>
+          <a href="{/rss/channel/link}" target="_blank">
+            <xsl:value-of select="/rss/channel/title"/>
+          </a>
+        </h1>
+
         <p><xsl:value-of select="/rss/channel/description"/></p>
+
         <ul>
           <xsl:for-each select="/rss/channel/item">
             <li>
@@ -128,8 +163,9 @@
             </li>
           </xsl:for-each>
         </ul>
+
         <footer>
-          Generated by Astro using @astrojs/rss <br /> 
+          Generated by Astro using @astrojs/rss <br />
           Powered by <a href="https://github.com/Dnzzk2/Litos" target="_blank" style="color: #0056b3; text-decoration: none;">Litos Theme</a>
         </footer>
       </body>
