@@ -90,8 +90,8 @@
 @layer base {
   :root {
     /* 字体族 */
-    --font-lexend: 'Lexend', 'CJKEmDash', 'Nubmers', 'Onest', 'ShangguSansSC-VF', sans-serif;
-    --font-sans: 'CJKEmDash', 'Nubmers', 'Onest', 'ShangguSansSC-VF', system-ui, sans-serif;
+    --font-lexend: 'Lexend', 'CJKEmDash', 'Nubmers', 'ShangguSansSC-VF', ui-sans-serif, system-ui, sans-serif;
+    --font-sans: 'CJKEmDash', 'Nubmers', 'ShangguSansSC-VF', ui-sans-serif, system-ui, sans-serif;
     --font-dm-mono: 'DM Mono', 'Input Mono', 'Fira Code', 'ShangguSansSC-VF', monospace;
 
     /* 基础色调 */

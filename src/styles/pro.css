@@ -198,7 +198,7 @@
 .markdown code {
   color: var(--inline-code-text);
   font-family: var(--font-dm-mono);
-  font-size: 0.9375em;
+  font-size: 0.875em;
 }
 .markdown a code {
   color: inherit;
@@ -217,7 +217,7 @@
 }
 .markdown pre code {
   background-color: transparent;
-  border-width: 0;
+  border-width: 0 !important;
   border-radius: 0;
   padding: 0;
   font-weight: 400;
@@ -647,7 +647,6 @@ html:not(.dark) .img-dark {
 .new-tab-icon {
   margin-left: 0.1rem;
   margin-bottom: 0.3rem;
-
   font-size: 0.6em;
 }
 
@@ -659,16 +658,15 @@ html:not(.dark) .img-dark {
 .markdown :where(code):not(:where(pre *, a *)) {
   background-color: var(--inline-code-bg);
   color: var(--inline-code-text);
-  padding: 0.1em 0.4em;
-  margin: 0 0.2em;
-  font-size: 0.875em;
-  font-family: var(--font-dm-mono);
+  padding-block: 0.2rem;
+  padding-inline: 0.3rem;
   word-wrap: break-word;
-  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.05);
+  /* box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.05); */
+  white-space: nowrap;
 }
 
 .dark .markdown :where(code):not(:where(pre *, a *)) {
-  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.1);
+  /* box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.1); */
 }
 
 .markdown p code::before,
