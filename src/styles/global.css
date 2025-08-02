@@ -186,7 +186,7 @@
   h4,
   h5,
   h6 {
-    @apply font-serif font-medium! tracking-tight;
+    @apply font-serif font-medium tracking-tight;
   }
 
   /* 链接样式 */
