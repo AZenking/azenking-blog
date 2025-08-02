@@ -2,8 +2,7 @@
 import type { HeroImageAspectRatio } from '~/types'
 import { formatDate } from '~/lib/utils'
 import { POSTS_CONFIG } from '~/config'
-import PostTag from '~/components/posts/base/PostTag.astro'
-import RecommendBadge from '~/components/posts/base/RecommendBadge.astro'
+import Badge from '~/components/posts/base/Badge.astro'
 import type { CardProps } from './List.astro'
 
 interface Props extends CardProps {}
@@ -51,8 +50,8 @@ const defaultHeroImage = POSTS_CONFIG.defaultHeroImage
 
   <div class={`w-full ${isVertical ? 'md:w-3/4' : 'md:w-3/5'} flex flex-col justify-start`}>
     <div class="flex flex-wrap items-center gap-1.5 sm:gap-2 mb-3 md:mb-4">
-      {post.data.recommend && <RecommendBadge />}
-      {post.data.tags?.map((tag) => <PostTag tag={tag} />)}
+      {post.data.recommend && <Badge type="recommend" content="RECOMMEND" />}
+      {post.data.tags?.map((tag) => <Badge type="tag" content={tag} />)}
     </div>
 
     <div class="flex flex-wrap items-center gap-3 text-xs sm:text-sm text-muted-foreground/90">

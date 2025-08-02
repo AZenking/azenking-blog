@@ -7,11 +7,9 @@ import HeaderLink from '~/components/base/HeaderLink.astro'
 import SearchSwitch from '~/components/base/SearchSwitch.astro'
 import { Image } from 'astro:assets'
 import favicon from '../../public/favicon.svg'
-
-const { pathname } = Astro.url
 ---
 
-{!pathname.includes('/posts/') && <HeaderGradient />}
+<HeaderGradient />
 <header>
   <div class="mx-auto max-w-3xl flex justify-between px-6 sm:px-8 py-4 lg:px-8">
     <div class="flex gap-6 items-center flex-shrink-0">
@@ -49,4 +47,4 @@ const { pathname } = Astro.url
     <div class="to-(--color-border)/50 absolute bottom-0 right-0 top-0 w-px bg-gradient-to-b from-transparent to-75%"></div>
   </div>
 </div>
-<SectionDivider position="top" />
+<SectionDivider />

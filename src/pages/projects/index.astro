@@ -29,13 +29,13 @@ const { title, description, introduce } = PROJECTS_CONFIG
                 <a
                   href={project.website}
                   target="_blank"
-                  class="inline-flex items-center justify-between font-semibold font-serif hover:text-primary transition-colors text-xl"
+                  class="inline-flex items-center justify-between font-semibold font-sans hover:text-primary transition-colors text-lg/relaxed "
                 >
                   {project.name}
                 </a>
-                <p class="pr-0 sm:pr-14 text-muted-foreground mt-1">{project.description}</p>
-                <div class="flex flex-col sm:flex-row gap-4 sm:gap-0 items-start sm:items-center justify-between ">
-                  <div class="flex gap-4">
+                <p class="pr-0 sm:pr-14 text-muted-foreground mt-1 mb-3">{project.description}</p>
+                <div class="flex flex-col sm:flex-row gap-4 sm:gap-0 items-start sm:items-center justify-between sm:h-14">
+                  <div class="flex gap-4 ">
                     <div class="flex items-center py-1.5 gap-3">
                       {project.star && (
                         <>
@@ -57,14 +57,14 @@ const { title, description, introduce } = PROJECTS_CONFIG
                       )}
                     </div>
                   </div>
-                  <div class="flex items-center gap-5 text-zinc-500 text-sm z-10">
+                  <div class="flex items-center gap-5 text-zinc-500 text-sm z-10 ">
                     {project.website && (
                       <a
                         href={project.website}
                         target="_blank"
                         class="hover:text-zinc-600 dark:hover:text-zinc-100 flex items-center gap-1"
                       >
-                        <span class="icon-[mdi--web] size-5" />
+                        <span class="icon-[mdi--web] size-4" />
                         <span>Website</span>
                       </a>
                     )}
@@ -74,7 +74,7 @@ const { title, description, introduce } = PROJECTS_CONFIG
                         target="_blank"
                         class="hover:text-zinc-600 dark:hover:text-zinc-100 flex items-center gap-1"
                       >
-                        <span class="icon-[mdi--github] size-5" />
+                        <span class="icon-[mdi--github] size-4" />
                         <span>GitHub</span>
                       </a>
                     )}

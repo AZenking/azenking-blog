@@ -1,6 +1,6 @@
 ---
 import { formatDate } from '~/lib/utils'
-import PostTag from '~/components/posts/base/PostTag.astro'
+import Badge from '~/components/posts/base/Badge.astro'
 import type { CardProps } from './List.astro'
 
 interface Props extends CardProps {}
@@ -39,7 +39,7 @@ const { post }: Props = Astro.props
       post.data.tags?.length > 0 && (
         <div class="flex flex-wrap gap-1.5 mt-2">
           {post.data.tags.slice(0, 4).map((tag) => (
-            <PostTag tag={tag} />
+            <Badge type="tag" content={tag} />
           ))}
           {post.data.tags.length > 4 && <span class="text-xs text-muted-foreground/60">+{post.data.tags.length - 4} more</span>}
         </div>
