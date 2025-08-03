@@ -30,6 +30,10 @@ export const HEADER_LINKS: Link[] = [
     name: 'Projects',
     url: '/projects',
   },
+  {
+    name: 'Photos',
+    url: '/photos',
+  },
 ]
 
 export const FOOTER_LINKS: Link[] = [
@@ -228,7 +232,7 @@ export const ProjectList: Project[] = [
     type: 'image',
     icon: '/projects/logo.png',
     star: 27,
-    fork: 6,
+    fork: 7,
   },
 ]
 

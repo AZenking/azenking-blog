@@ -58,7 +58,7 @@ const ThemeToggle = () => {
     // 移除过渡类
     setTimeout(() => {
       root.classList.remove('disable-transition')
-    }, 300)
+    }, 0)
   }
 
   const handleClick = () => {

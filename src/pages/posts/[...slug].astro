@@ -45,7 +45,7 @@ const PostLayout = layoutMap[layoutKey]
 ---
 
 <Layout title={frontmatter.title} description={frontmatter.description || frontmatter.title} image={frontmatter.ogImage}>
-  <div class="relative flex flex-col justify-between h-fit">
+  <div class="relative flex flex-col justify-between h-fit z-[1]">
     <TocMobile {post} {posts} headings={filterHeadings} />
     <PostLayout {frontmatter} minutesRead={remarkPluginFrontmatter.minutesRead}>
       <Content />

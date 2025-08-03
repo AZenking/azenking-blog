@@ -21,11 +21,13 @@ const { title, description, image }: Props = Astro.props
   <head>
     <Head title={`${title} | ${SITE.title}`} {description} {image} />
   </head>
-  <body>
+  <body class="flex flex-col">
     <Header />
-    <main class="relative fullPage flex-auto border-x border-border/50 max-w-3xl mx-auto">
-      <slot />
-    </main>
+    <div class="grow flex">
+      <main class="relative border-x border-border/50 max-w-3xl mx-auto grow min-w-0">
+        <slot />
+      </main>
+    </div>
     <Footer />
     <div
       class="pointer-events-none fixed bottom-0 left-0 h-28 w-full z-50 bg-background [mask-image:linear-gradient(transparent,hsl(var(--background)))]"

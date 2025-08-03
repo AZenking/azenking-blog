@@ -97,6 +97,9 @@ const duplicateSkills = (skills: Skill[]) => [...skills, ...skills, ...skills, .
     transform: translate3d(0, 0, 0);
     -webkit-backface-visibility: hidden;
     backface-visibility: hidden;
+    /* Chrome 优化 */
+    contain: layout style paint;
+    will-change: transform;
   }
 </style>
 <script>
