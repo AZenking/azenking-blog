@@ -140,7 +140,7 @@ const PhotoGalleryModal: React.FC<Props> = ({ photos, title, description, isOpen
                   onDragEnd={handleDragEnd}
                   transition={{ type: 'tween', duration: 0.5, ease: 'easeOut' }}
                 >
-                  {photos.map((photo, idx) => (
+                  {photos.map((photo) => (
                     <div key={photo.src} className="flex items-center justify-center shrink-0" style={{ width: containerWidth }}>
                       <img
                         draggable={false}
