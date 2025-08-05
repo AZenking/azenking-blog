@@ -231,7 +231,7 @@ export const ProjectList: Project[] = [
     website: 'https://litos.vercel.app/',
     type: 'image',
     icon: '/projects/logo.png',
-    star: 27,
+    star: 29,
     fork: 7,
   },
 ]
