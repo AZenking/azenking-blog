@@ -8,9 +8,9 @@ export function cn(...classes: ClassValue[]) {
 
 // 文章按时间排序
 export function postsSort(posts: CollectionEntry<'posts'>[]) {
-  return posts.sort((a, b) => {
-    const dateA = a.data.updatedDate || a.data.pubDate
-    const dateB = b.data.updatedDate || b.data.pubDate
+  return posts.slice().sort((a, b) => {
+    const dateA = a.data.updatedDate ?? a.data.pubDate
+    const dateB = b.data.updatedDate ?? b.data.pubDate
     return new Date(dateB).getTime() - new Date(dateA).getTime()
   })
 }

@@ -18,16 +18,16 @@ export type Site = {
 }
 
 /**
- * 文章封面图宽高比类型 / Hero image aspect ratio type
+ * 文章封面图宽高比类型 / Cover image aspect ratio type
  * @description 可选值为 '16/9' 和 '3/4' / Possible values: '16/9' and '3/4'
  */
-export type HeroImageAspectRatio = '16/9' | '3/4'
+export type CoverAspectRatio = '16/9' | '3/4'
 
 /**
- * 文章封面图布局类型 / Hero image layout type
+ * 文章封面图布局类型 / Cover image layout type
  * @description 可选值为 'left' 和 'right' / Possible values: 'left' and 'right'
  */
-export type HeroImageLayout = 'left' | 'right'
+export type CoverLayout = 'left' | 'right'
 
 /**
  * 文章卡片类型 / PostCardType
@@ -40,12 +40,12 @@ export type PostCardType = 'compact' | 'image' | 'time-line'
  * @description 用于配置文章卡片页面的显示方式 / Used to configure how post cards are displayed on pages
  * @property {PostCardType} type - 卡片展示类型 / Card display type
  * @property {number} size - 每页显示数量 / Number of items per page
- * @property {HeroImageLayout} heroImageLayout - 特色图片布局方式 / Hero image layout position
+ * @property {CoverLayout} coverLayout - 特色图片布局方式 / Cover image layout position
  */
 export interface PostCardPageConfig {
   type: PostCardType
   size: number
-  heroImageLayout?: HeroImageLayout
+  coverLayout?: CoverLayout
 }
 
 export type PostType = 'no-image' | 'vertical' | 'horizontal' | 'jap'
@@ -60,8 +60,8 @@ export type PostType = 'no-image' | 'vertical' | 'horizontal' | 'jap'
  * @property {PostCardPageConfig} homePageConfig - 首页文章展示配置 / Home page posts display configuration
  * @property {PostCardPageConfig} postPageConfig - 文章列表页展示配置 / Posts list page display configuration
  * @property {PostCardPageConfig} tagsPageConfig - 标签页文章展示配置 / Post display configuration for tags page
- * @property {string} defaultHeroImage - 默认文章封面图 / Default hero image for posts
- * @property {HeroImageAspectRatio} defaultHeroImageAspectRatio - 默认图片宽高比 / Default image aspect ratio
+ * @property {string} cover - 默认文章封面图 / Default cover image for posts
+ * @property {CoverAspectRatio} coverAspectRatio - 默认图片宽高比 / Default image aspect ratio
  * @property {boolean} imageDarkenInDark - 是否在暗黑模式下对图片进行暗化处理 / Whether to darken images in dark mode
  * @property {string} readMoreText - "阅读更多"按钮文本 / "Read more" button text
  * @property {string} prevPageText - 上一页按钮文本 / Previous page button text
@@ -79,8 +79,8 @@ export interface PostConfig {
   homePageConfig: PostCardPageConfig
   postPageConfig: PostCardPageConfig
   tagsPageConfig: PostCardPageConfig
-  defaultHeroImage: string
-  defaultHeroImageAspectRatio: HeroImageAspectRatio
+  cover: string
+  coverAspectRatio: CoverAspectRatio
   postType: PostType
   imageDarkenInDark: boolean
   readMoreText: string

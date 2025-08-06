@@ -4,8 +4,8 @@ description: 'The project structure of Litos Theme Project'
 pubDate: 2025-05-04
 tags: ['Project-structure']
 recommend: true
-heroImage: 'Project-structure.webp'
-ogImage: 'Project-structure.webp'
+cover: './Project-structure.webp'
+ogImage: './Project-structure.webp'
 ---
 
 This post will help you quickly understand the project structure of [Litos theme](https://github.com/Dnzzk2/Litos) .
@@ -25,7 +25,7 @@ Litos
 ├── plugins                               # Custom Markdown plugins for enhanced content formatting
 ├── public                                # Static assets served directly to clients
 │   ├── fonts                             # Custom web fonts for consistent typography
-│   ├── hero-images                       # Featured images for blog post headers
+│   ├── cover-images                       # Featured images for blog post headers
 │   ├── js/                               # Client-side JavaScript for enhanced interactivity
 │   ├── og-images                         # Open Graph images for social media sharing previews
 │   ├── projects                          # Project showcase images and assets
@@ -67,7 +67,7 @@ Litos
 │   │   │   └── github.ts                 # GitHub integration API endpoints
 │   │   ├── posts                         # Blog post routes
 │   │   │   ├── [...page].astro           # Paginated post listing
-│   │   │   └── [...slug].astro           # Individual post pages
+│   │   │   └── [...id].astro             # Individual post pages
 │   │   ├── projects                      # Project showcase section
 │   │   │   └── index.astro               # Project gallery page
 │   │   ├── tags                          # Tag-based navigation

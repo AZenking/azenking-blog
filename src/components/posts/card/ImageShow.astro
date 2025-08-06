@@ -1,5 +1,5 @@
 ---
-import type { HeroImageAspectRatio } from '~/types'
+import type { CoverAspectRatio } from '~/types'
 import { formatDate } from '~/lib/utils'
 import { POSTS_CONFIG } from '~/config'
 import Badge from '~/components/posts/base/Badge.astro'
@@ -7,26 +7,26 @@ import type { CardProps } from './List.astro'
 
 interface Props extends CardProps {}
 
-const { post, index, heroImageLayout }: Props = Astro.props
+const { post, index, coverLayout }: Props = Astro.props
 
-const aspectRatioClass: Record<HeroImageAspectRatio, string> = {
+const aspectRatioClass: Record<CoverAspectRatio, string> = {
   '16/9': 'aspect-[16/9]',
   '3/4': 'aspect-[3/4]',
 }
 
-const isVertical = post.data.heroImageAspectRatio === '3/4'
-const imagePosition = post.data.heroImageLayout || heroImageLayout || (index % 2 === 1 ? 'right' : 'left')
+const isVertical = post.data.coverAspectRatio === '3/4'
+const imagePosition = post.data.coverLayout || coverLayout || (index % 2 === 1 ? 'right' : 'left')
 const isReverse = imagePosition === 'right'
-const defaultHeroImage = POSTS_CONFIG.defaultHeroImage
+const cover = POSTS_CONFIG.cover
 ---
 
 <article class={`group flex flex-col md:flex-row gap-8 ${isReverse ? 'md:flex-row-reverse' : ''}`}>
   <div class={`${isVertical ? 'md:w-1/4' : 'md:w-2/5'} flex flex-col overflow-hidden`}>
-    <a href={`/posts/${post.slug}`} class="block relative">
-      <div class={`${aspectRatioClass[post.data.heroImageAspectRatio]} overflow-hidden bg-muted/30 relative`}>
+    <a href={`/posts/${post.id}`} class="block relative">
+      <div class={`${aspectRatioClass[post.data.coverAspectRatio]} overflow-hidden bg-muted/30 relative`}>
         <div class="absolute inset-0 bg-gradient-to-br from-accent to-muted/50 animate-pulse"></div>
         <img
-          src={post.data.heroImage || defaultHeroImage}
+          src={post.data.cover?.src || cover}
           alt={post.data.title}
           loading="lazy"
           decoding="async"
@@ -38,7 +38,7 @@ const defaultHeroImage = POSTS_CONFIG.defaultHeroImage
     {
       !isVertical && (
         <a
-          href={`/posts/${post.slug}`}
+          href={`/posts/${post.id}`}
           class="hidden md:inline-flex mt-4 items-center gap-2 text-sm font-medium text-foreground/90 hover:text-primary transition-colors group/read"
         >
           {POSTS_CONFIG.readMoreText}
@@ -70,7 +70,7 @@ const defaultHeroImage = POSTS_CONFIG.defaultHeroImage
       }
     </div>
 
-    <a href={`/posts/${post.slug}`} class="mt-2 md:mt-3 group/title">
+    <a href={`/posts/${post.id}`} class="mt-2 md:mt-3 group/title">
       <h2 class="text-xl md:text-2xl font-medium transition-colors group-hover/title:text-primary line-clamp-2">
         {post.data.title}
       </h2>
@@ -83,7 +83,7 @@ const defaultHeroImage = POSTS_CONFIG.defaultHeroImage
     }
 
     <a
-      href={`/posts/${post.slug}`}
+      href={`/posts/${post.id}`}
       class={`${isVertical ? 'md:inline-flex' : 'md:hidden'} mt-3 inline-flex items-center gap-2 text-sm font-medium text-foreground/90 hover:text-primary transition-colors group/read`}
     >
       {POSTS_CONFIG.readMoreText}

@@ -3,8 +3,8 @@ title: 'Markdown Writing Guide for Delicious Recipes'
 description: 'Learn Markdown basics through a delicious pasta recipe'
 pubDate: 2025-04-30
 tags: ['Markdown', 'Guide', 'Food']
-heroImage: 'Markdown-syntax-guide.webp'
-ogImage: 'Markdown-syntax-guide.webp'
+cover: './Markdown-syntax-guide.webp'
+ogImage: './Markdown-syntax-guide.webp'
 ---
 
 This guide will show you how to format text using Markdown through a delicious pasta recipe. Let's explore the world of food while learning Markdown syntax!
@@ -17,10 +17,15 @@ In recipes, we often need different levels of headings to organize content. Mark
 
 ```markdown
 # Classic Garlic Bacon Pasta
+
 ## Ingredients Preparation
+
 ### Main Ingredients
+
 #### Seasonings
+
 ##### Kitchen Tools
+
 ###### Tips
 ```
 
@@ -29,14 +34,14 @@ In recipes, we often need different levels of headings to organize content. Mark
 When describing recipes, we often need to emphasize certain important information:
 
 **Important steps** need to be bold
-*Critical timing* uses italics
-***Special notes*** use both bold and italics
+_Critical timing_ uses italics
+**_Special notes_** use both bold and italics
 ~~Optional steps~~ use strikethrough
 
 ```markdown
 **Important steps** need to be bold
-*Critical timing* uses italics
-***Special notes*** use both bold and italics
+_Critical timing_ uses italics
+**_Special notes_** use both bold and italics
 ~~Optional steps~~ use strikethrough
 ```
 
@@ -86,7 +91,7 @@ When describing recipes, we often need to emphasize certain important informatio
 
 ```markdown
 > Chef's tip: Add a bit of olive oil to the boiling water to prevent the pasta from sticking together.
-> 
+>
 > Remember to save some pasta water, it can be used to adjust the sauce consistency.
 ```
 
@@ -99,7 +104,7 @@ Can be used to show precise ingredient ratios or timing:
 def calculate_ingredients(servings):
     base_pasta = 100  # grams/person
     base_bacon = 50   # grams/person
-    
+
     return {
         "pasta": base_pasta * servings,
         "bacon": base_bacon * servings
@@ -111,14 +116,14 @@ def calculate_ingredients(servings):
 Nutritional Information:
 
 | Nutrient | Amount (per 100g) | % Daily Value |
-|----------|------------------|---------------|
-| Calories | 157 kcal         | 7.85%         |
-| Protein  | 5.7g             | 9.5%          |
-| Carbs    | 21.6g            | 7.2%          |
+| -------- | ----------------- | ------------- |
+| Calories | 157 kcal          | 7.85%         |
+| Protein  | 5.7g              | 9.5%          |
+| Carbs    | 21.6g             | 7.2%          |
 
 ### Links and Images
 
-For more culinary inspiration, visit: [Food Forum](https://example.com/cooking "Food Forum")
+For more culinary inspiration, visit: [Food Forum](https://example.com/cooking 'Food Forum')
 
 Final dish presentation:
 ![Pasta dish](~/assets/images/md-configuration/food.webp)(style:width:50%)

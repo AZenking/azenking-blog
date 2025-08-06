@@ -2,10 +2,10 @@
 title: 'Post Configuration'
 description: 'Comprehensive guide for  post configuration in Litos theme'
 pubDate: 2025-05-01
-tags: ['Configuration','Images','Post']
+tags: ['Configuration', 'Images', 'Post']
 recommend: true
-heroImage: 'MD-Configuration.webp'
-ogImage: 'MD-Configuration.webp'
+cover: './MD-Configuration.webp'
+ogImage: './MD-Configuration.webp'
 ---
 
 This document provides a comprehensive guide for post configuration in the Litos theme, including front matter settings and image display options.
@@ -29,35 +29,35 @@ pubDate: 2025-05-01
 updatedDate: 2025-05-01
 author: 'Dnzzk2'
 recommend: false
-heroImage: 'image-filename.png'
+cover: 'image-filename.png'
 ogImage: 'og-image-filename.png'
-heroImageLayout: 'left'
-heroImageAspectRatio: '16/9'
+coverLayout: 'left'
+coverAspectRatio: '16/9'
 tags: ['tag1', 'tag2']
 ---
 ```
 
 ### Property Specifications
 
-| Property | Type | Required | Default | Description |
-|----------|------|----------|---------|-------------|
-| title | string | Yes | - | The main heading of your article, displayed prominently on the article page and in post listings |
-| description | string | Yes | - | A concise summary of your post, used for SEO optimization and social media preview cards |
-| pubDate | Date | Yes | - | Publication date in YYYY-MM-DD format |
-| updatedDate | Date | No | - | Last modification date in YYYY-MM-DD format |
-| author | string | No | - | Content creator's name; falls back to site's default author if unspecified |
-| recommend | boolean | No | false | Enables featured status for the post, adding a special recommendation indicator |
-| heroImage | string | No | - | Featured image filename (stored in `public/hero-images/`) or external URL |
-| ogImage | string | No | - | Social media preview image (stored in `public/og-images/`) or external URL |
-| heroImageLayout | string | No | - | Image positioning ('left' or 'right') for post listings; takes precedence when post list type is 'image' |
-| heroImageAspectRatio | string | No | '16/9' | Image aspect ratio, supports '16/9' or '3/4' |
-| tags | string[] | No | [] | Array of keywords for content categorization and navigation |
+| Property         | Type     | Required | Default | Description                                                                                              |
+| ---------------- | -------- | -------- | ------- | -------------------------------------------------------------------------------------------------------- |
+| title            | string   | Yes      | -       | The main heading of your article, displayed prominently on the article page and in post listings         |
+| description      | string   | Yes      | -       | A concise summary of your post, used for SEO optimization and social media preview cards                 |
+| pubDate          | Date     | Yes      | -       | Publication date in YYYY-MM-DD format                                                                    |
+| updatedDate      | Date     | No       | -       | Last modification date in YYYY-MM-DD format                                                              |
+| author           | string   | No       | -       | Content creator's name; falls back to site's default author if unspecified                               |
+| recommend        | boolean  | No       | false   | Enables featured status for the post, adding a special recommendation indicator                          |
+| cover            | string   | No       | -       | Featured image filename (stored in `public/cover-images/`) or external URL                               |
+| ogImage          | string   | No       | -       | Social media preview image (stored in `public/og-images/`) or external URL                               |
+| coverLayout      | string   | No       | -       | Image positioning ('left' or 'right') for post listings; takes precedence when post list type is 'image' |
+| coverAspectRatio | string   | No       | '16/9'  | Image aspect ratio, supports '16/9' or '3/4'                                                             |
+| tags             | string[] | No       | []      | Array of keywords for content categorization and navigation                                              |
 
 ## Image Display Configuration
 
 When the post list type is set to `image`, the theme provides flexible image handling:
 
-- If `heroImage` is not specified, the system uses `defaultHeroImage` from `POSTS_CONFIG` in `config.ts`
+- If `cover` is not specified, the system uses `cover` from `POSTS_CONFIG` in `config.ts`
 - If `ogImage` is omitted, the site's default `ogimage` is applied
 
 ### Display Variations
@@ -67,25 +67,25 @@ When the post list type is set to `image`, the theme provides flexible image han
 >
 > This theme no longer determines which meta information display style to use based on the presence or proportion of images, but rather allows you to define it yourself. You can configure `postType` in `config.ts` to determine the default style, and in front matter of the MD document, you can specify the display style of this MD file through `postType`.
 
-The theme supports three distinct image display styles based on the `heroImage` configuration:
+The theme supports three distinct image display styles based on the `cover` configuration:
 
-1. Without Hero Image:
-:::image-figure[noImage]
-![](~/assets/images/md-configuration/noImage-dark.webp)(class:img-light)
+1. Without Cover Image:
+   :::image-figure[noImage]
+   ![](~/assets/images/md-configuration/noImage-dark.webp)(class:img-light)
 
 ![](~/assets/images/md-configuration/noImage-light.webp)(class:img-dark)
 :::
 
-2. With Hero Image (Default 16/9 Ratio):
-:::image-figure[16/9]
-![](~/assets/images/md-configuration/image-16-9-dark.webp)(class:img-light)
+2. With Cover Image (Default 16/9 Ratio):
+   :::image-figure[16/9]
+   ![](~/assets/images/md-configuration/image-16-9-dark.webp)(class:img-light)
 
 ![](~/assets/images/md-configuration/image-16-9-light.webp)(class:img-dark)
 :::
 
-3. With Hero Image (3/4 Ratio):
-:::image-figure[3/4]
-![](~/assets/images/md-configuration/image-3-4-dark.webp)(class:img-light)
+3. With Cover Image (3/4 Ratio):
+   :::image-figure[3/4]
+   ![](~/assets/images/md-configuration/image-3-4-dark.webp)(class:img-light)
 
 ![](~/assets/images/md-configuration/image-3-4-light.webp)(class:img-dark)
 :::
@@ -109,34 +109,38 @@ pnpm run optimize -- [options]
 
 #### Available Options
 
-| Option | Alias | Description | Default |
-|--------|-------|-------------|----------|
-| --input, | -i | Input file or directory path (required) | - |
-| --quality | -q | Compression quality (0-100) | 80 |
-| --width | -w | Maximum width to resize (0 = no resize) | 0 |
-| --format | -f | Output format (jpg, jpeg, png, webp, avif) | Original format |
-| --keepOriginal | -k | Keep original files | false |
-| --recursive | -r | Process subdirectories | true |
-| --outputDir | -o | Custom output directory | Same as input |
+| Option         | Alias | Description                                | Default         |
+| -------------- | ----- | ------------------------------------------ | --------------- |
+| --input,       | -i    | Input file or directory path (required)    | -               |
+| --quality      | -q    | Compression quality (0-100)                | 80              |
+| --width        | -w    | Maximum width to resize (0 = no resize)    | 0               |
+| --format       | -f    | Output format (jpg, jpeg, png, webp, avif) | Original format |
+| --keepOriginal | -k    | Keep original files                        | false           |
+| --recursive    | -r    | Process subdirectories                     | true            |
+| --outputDir    | -o    | Custom output directory                    | Same as input   |
 
 #### Examples
 
 1. Basic optimization with default settings:
+
 ```bash
 pnpm run optimize -- -i public/images
 ```
 
 2. Convert images to WebP with 85% quality:
+
 ```bash
 pnpm run optimize -- -i public/images -f webp -q 85
 ```
 
 3. Resize images to maximum width of 1200px:
+
 ```bash
 pnpm run optimize -- -i public/images -w 1200
 ```
 
 4. Save optimized images to a different directory:
+
 ```bash
 pnpm run optimize -- -i public/images -o public/optimized
 ```
@@ -152,13 +156,14 @@ While the built-in tools are recommended for seamless integration, you can also 
 > [!tip]
 > For best results, consider using WebP format for your images as it provides excellent compression while maintaining high quality. The built-in optimization tool automatically handles WebP conversion when specified.
 
-### Hero image and OG image
+### Cover image and OG image
 
-Hero images and OG images play crucial roles in enhancing your content's visual appeal and social media presence. Here are some recommended tools and guidelines for creating effective images:
+Cover images and OG images play crucial roles in enhancing your content's visual appeal and social media presence. Here are some recommended tools and guidelines for creating effective images:
 
 #### Recommended Tools
 
 1. **OG Image Generators**:
+
    - [Free OG Image Generator](https://ogimage.click/) - Simple and quick OG image creation
 
 2. **OG Preview Tools**:
@@ -167,7 +172,8 @@ Hero images and OG images play crucial roles in enhancing your content's visual 
 
 #### Size Recommendations
 
-- **Hero Images**:
+- **Cover Images**:
+
   - Landscape (16/9): 1200×675px or 1920×1080px
   - Portrait (3/4): 800×1067px or 1200×1600px
 
@@ -201,6 +207,7 @@ The `.vscode/litos.code-snippets` file provides three code snippets for quickly 
   - `${7-8:tag}`: Article tags
 
 **Example Output**:
+
 ```md
 ---
 title: 'Getting Started with TypeScript'
@@ -218,11 +225,12 @@ tags: ['TypeScript', 'Programming']
 - **Trigger**: `postfm16` or `post169`
 - **Purpose**: Creates a template with 16/9 landscape image support
 - **Additional Fields**:
-  - `heroImage`: Cover image filename
+  - `cover`: Cover image filename
   - `ogImage`: Social media preview image
-  - `heroImageAspectRatio`: Fixed to '16/9'
+  - `coverAspectRatio`: Fixed to '16/9'
 
 **Example Output**:
+
 ```md
 ---
 title: 'Modern Web Design Trends'
@@ -231,9 +239,9 @@ pubDate: 2024-01-15
 updatedDate: 2024-01-15
 author: 'Jane Smith'
 recommend: true
-heroImage: 'web-design-trends.png'
+cover: 'web-design-trends.png'
 ogImage: 'web-design-trends.png'
-heroImageAspectRatio: '16/9'
+coverAspectRatio: '16/9'
 tags: ['Design', 'Web Development']
 ---
 ```
@@ -243,9 +251,10 @@ tags: ['Design', 'Web Development']
 - **Trigger**: `postfm34` or `post34`
 - **Purpose**: Creates a template with 3/4 portrait image support
 - **Additional Fields**:
-  - Same as 16/9 template, but `heroImageAspectRatio` is fixed to '3/4'
+  - Same as 16/9 template, but `coverAspectRatio` is fixed to '3/4'
 
 **Example Output**:
+
 ```md
 ---
 title: 'Portrait Photography Tips'
@@ -254,9 +263,9 @@ pubDate: 2024-01-15
 updatedDate: 2024-01-15
 author: 'Alex Johnson'
 recommend: false
-heroImage: 'portrait-tips.png'
+cover: 'portrait-tips.png'
 ogImage: 'portrait-tips.png'
-heroImageAspectRatio: '3/4'
+coverAspectRatio: '3/4'
 tags: ['Photography', 'Tutorial']
 ---
 ```

@@ -22,6 +22,7 @@ interface Props {
 }
 
 const { page } = Astro.props
+
 const { title, description, introduce } = POSTS_CONFIG
 ---
 
@@ -33,7 +34,7 @@ const { title, description, introduce } = POSTS_CONFIG
     </div>
 
     <div class="fade-up mt-12">
-      <List posts={page.data} type={POSTS_CONFIG.postPageConfig.type} heroImageLayout={POSTS_CONFIG.postPageConfig?.heroImageLayout} />
+      <List posts={page.data} type={POSTS_CONFIG.postPageConfig.type} coverLayout={POSTS_CONFIG.postPageConfig?.coverLayout} />
     </div>
 
     <Pagination {page} baseUrl="/posts" />

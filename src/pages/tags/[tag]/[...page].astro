@@ -62,7 +62,7 @@ const description = `Posts with the tag #${tag}`
     </div>
 
     <div class="fade-up space-y-8">
-      <List posts={page.data} type={POSTS_CONFIG.tagsPageConfig.type} heroImageLayout={POSTS_CONFIG.tagsPageConfig?.heroImageLayout} />
+      <List posts={page.data} type={POSTS_CONFIG.tagsPageConfig.type} coverLayout={POSTS_CONFIG.tagsPageConfig?.coverLayout} />
     </div>
 
     <Pagination {page} baseUrl={`/tags/${tag}`} class="mt-12" />

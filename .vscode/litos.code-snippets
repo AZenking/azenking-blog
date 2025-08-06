@@ -1,10 +1,7 @@
 {
   "Astro Post Frontmatter (No Image)": {
     "scope": "markdown,mdx,astro",
-    "prefix": [
-      "postfm",
-      "postnoimg"
-    ],
+    "prefix": ["postfm", "postnoimg"],
     "body": [
       "---",
       "title: '${1:Your Post Title}'",
@@ -22,10 +19,7 @@
   },
   "Astro Post Frontmatter (16:9 Image)": {
     "scope": "markdown,mdx,astro",
-    "prefix": [
-      "postfm16",
-      "post169"
-    ],
+    "prefix": ["postfm16", "post169"],
     "body": [
       "---",
       "title: '${1:Your Post Title}'",
@@ -34,9 +28,9 @@
       "updatedDate: ${4:$CURRENT_YEAR-$CURRENT_MONTH-$CURRENT_DATE}",
       "author: '${5:${TM_FILENAME_BASE}}'",
       "recommend: ${6|false,true|}",
-      "heroImage: '${7:image-filename.jpg}'",
+      "cover: '${7:image-filename.jpg}'",
       "ogImage: '${8:og-image-filename.jpg}'",
-      "heroImageAspectRatio: '16/9'",
+      "coverAspectRatio: '16/9'",
       "tags: ['${9:tag1}', '${10:tag2}']",
       "---",
       "",
@@ -46,10 +40,7 @@
   },
   "Astro Post Frontmatter (3:4 Image)": {
     "scope": "markdown,mdx,astro",
-    "prefix": [
-      "postfm34",
-      "post34"
-    ],
+    "prefix": ["postfm34", "post34"],
     "body": [
       "---",
       "title: '${1:Your Post Title}'",
@@ -58,9 +49,9 @@
       "updatedDate: ${4:$CURRENT_YEAR-$CURRENT_MONTH-$CURRENT_DATE}",
       "author: '${5:${TM_FILENAME_BASE}}'",
       "recommend: ${6|false,true|}",
-      "heroImage: '${7:image-filename.jpg}'",
+      "cover: '${7:image-filename.jpg}'",
       "ogImage: '${8:og-image-filename.jpg}'",
-      "heroImageAspectRatio: '3/4'",
+      "coverAspectRatio: '3/4'",
       "tags: ['${9:tag1}', '${10:tag2}']",
       "---",
       "",

@@ -3,8 +3,8 @@ title: 'ExpressiveCode Configuration Guide'
 description: 'A comprehensive guide to configuring and customizing code blocks in Litos theme'
 pubDate: 2025-05-02
 tags: ['Configuration', 'Code Blocks', 'Styling']
-heroImage: 'ExpressiveCode-Configuration.webp'
-ogImage: 'ExpressiveCode-Configuration.webp'
+cover: './ExpressiveCode-Configuration.webp'
+ogImage: './ExpressiveCode-Configuration.webp'
 recommend: true
 ---
 
@@ -16,14 +16,15 @@ The code blocks in this theme are configured using [Expressive Code](https://exp
 
 ```ts title="ec.config.mjs"
 export default defineEcConfig({
-  defaultLocale: 'en',         // Default language setting / 默认语言设置
-  defaultProps: {              // Default properties / 默认属性配置
-    wrap: false,               // Enable/disable automatic line wrapping / 启用/禁用自动换行
-    collapseStyle: 'collapsible-auto',  // Collapsible style / 折叠样式：'collapsible-auto'|'collapsible-hidden'|'collapsible-visible'
-    showLineNumbers: false,    // Show/hide line numbers / 显示/隐藏行号
-    preserveIndent: true,      // Preserve code indentation / 保留代码缩进
+  defaultLocale: 'en', // Default language setting / 默认语言设置
+  defaultProps: {
+    // Default properties / 默认属性配置
+    wrap: false, // Enable/disable automatic line wrapping / 启用/禁用自动换行
+    collapseStyle: 'collapsible-auto', // Collapsible style / 折叠样式：'collapsible-auto'|'collapsible-hidden'|'collapsible-visible'
+    showLineNumbers: false, // Show/hide line numbers / 显示/隐藏行号
+    preserveIndent: true, // Preserve code indentation / 保留代码缩进
   },
-  minSyntaxHighlightingColorContrast: 0,  // Minimum contrast for syntax highlighting / 语法高亮的最小对比度
+  minSyntaxHighlightingColorContrast: 0, // Minimum contrast for syntax highlighting / 语法高亮的最小对比度
 })
 ```
 
@@ -66,15 +67,17 @@ styleOverrides: {
 The theme includes two built-in plugins:
 
 1. `pluginCollapsibleSections`: Adds collapsible code sections
+
    - `defaultCollapsed`: Controls initial collapse state
    - `collapseButton`: Customizes collapse button appearance
+
    ```ts
    pluginCollapsibleSections({
-     defaultCollapsed: false,     // Initial collapse state / 初始折叠状态
+     defaultCollapsed: false, // Initial collapse state / 初始折叠状态
      collapseButton: {
-       position: 'right',         // Button position: 'left' | 'right' / 按钮位置：左侧或右侧
-       label: 'Toggle code',      // Button label / 按钮文本
-     }
+       position: 'right', // Button position: 'left' | 'right' / 按钮位置：左侧或右侧
+       label: 'Toggle code', // Button label / 按钮文本
+     },
    })
    ```
 
@@ -82,9 +85,9 @@ The theme includes two built-in plugins:
    - Supports custom styling and formatting
    ```ts
    pluginLineNumbers({
-     className: 'custom-line-numbers',  // Custom CSS class / 自定义 CSS 类名
-     format: (n) => `${n}.`,           // Custom line number format / 自定义行号格式
-     style: { opacity: 0.5 }           // Custom styles / 自定义样式
+     className: 'custom-line-numbers', // Custom CSS class / 自定义 CSS 类名
+     format: (n) => `${n}.`, // Custom line number format / 自定义行号格式
+     style: { opacity: 0.5 }, // Custom styles / 自定义样式
    })
    ```
 

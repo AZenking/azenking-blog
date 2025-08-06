@@ -9,14 +9,17 @@ import PostNavigation from '~/components/posts/base/PostNavigation.astro'
 import PostFeatures from '~/components/posts/toc/PostFeatures.astro'
 import TocMobile from '~/components/posts/toc/TocMobile.astro'
 import Jap from '~/components/posts/layouts/Jap.astro'
-import { POSTS_CONFIG } from '~/config'
+import { POSTS_CONFIG, SITE } from '~/config'
+import { render } from 'astro:content'
+import { undefined } from 'astro:schema'
 
 export async function getStaticPaths() {
   const posts = await getCollection('posts')
+
   const sortedPosts = postsSort(posts)
 
   return sortedPosts.map((post, index) => ({
-    params: { slug: post.slug },
+    params: { id: post.id },
     props: {
       post,
       posts: sortedPosts,
@@ -28,9 +31,9 @@ export async function getStaticPaths() {
 
 const { post, posts, prev, next } = Astro.props
 const { data: frontmatter } = post
-const { Content, headings, remarkPluginFrontmatter } = await post.render()
+const { Content, headings, remarkPluginFrontmatter } = await render(post)
 
-const filterHeadings = headings.filter((heading) => heading.slug !== 'footnote-label')
+const filterHeadings = headings.filter((heading: any) => heading.slug !== 'footnote-label')
 
 const hasValidHeadings = filterHeadings.length > 1
 const layoutMap = {
@@ -44,7 +47,11 @@ const layoutKey = frontmatter.postType || POSTS_CONFIG.postType
 const PostLayout = layoutMap[layoutKey]
 ---
 
-<Layout title={frontmatter.title} description={frontmatter.description || frontmatter.title} image={frontmatter.ogImage}>
+<Layout
+  title={frontmatter.title}
+  description={frontmatter.description || frontmatter.title}
+  image={frontmatter.ogImage?.src ? `${SITE.website}${frontmatter.ogImage.src}` : SITE.ogImage}
+>
   <div class="relative flex flex-col justify-between h-fit z-[1]">
     <TocMobile {post} {posts} headings={filterHeadings} />
     <PostLayout {frontmatter} minutesRead={remarkPluginFrontmatter.minutesRead}>

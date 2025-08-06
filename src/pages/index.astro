@@ -80,7 +80,7 @@ const posts = postsSort(allPosts).slice(0, size)
       <p class="text-muted-foreground mb-6 mt-1">
         Recent {posts.length} blog posts, hoping to be helpful.
       </p>
-      <List {posts} {type} heroImageLayout={POSTS_CONFIG.homePageConfig?.heroImageLayout} />
+      <List {posts} {type} coverLayout={POSTS_CONFIG.homePageConfig?.coverLayout} />
     </div>
   </div>
 </Layout>
