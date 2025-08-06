@@ -11,7 +11,6 @@ import TocMobile from '~/components/posts/toc/TocMobile.astro'
 import Jap from '~/components/posts/layouts/Jap.astro'
 import { POSTS_CONFIG, SITE } from '~/config'
 import { render } from 'astro:content'
-import { undefined } from 'astro:schema'
 
 export async function getStaticPaths() {
   const posts = await getCollection('posts')
