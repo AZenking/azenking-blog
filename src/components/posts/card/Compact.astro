@@ -9,7 +9,7 @@ const { post }: Props = Astro.props
 ---
 
 <div class="group relative block py-6 border-b border-border/60 last:border-none">
-  <article class="relative z-1 flex flex-col gap-3 transform transition-transform duration-300 group-hover:translate-x-4">
+  <article class="relative z-1 flex flex-col gap-2 transform transition-transform duration-300 group-hover:translate-x-4">
     <div class="flex sm:items-center gap-2 sm:gap-3 text-sm text-muted-foreground">
       <span class="inline-flex items-center gap-1.5">
         <span class="icon-[ph--calendar-blank] size-3.5 sm:size-4"></span>
@@ -20,7 +20,7 @@ const { post }: Props = Astro.props
       {
         post.data.updatedDate && (
           <span class="inline-flex items-center gap-1.5">
-            <span class="icon-[ph--clock-clockwise-light] size-3.5 sm:size-4" />
+            <span class="icon-[ph--clock-clockwise] size-3.5 sm:size-4" />
             <time datetime={post.data.updatedDate.toISOString()} class="text-xs sm:text-sm">
               {formatDate(post.data.updatedDate)}
             </time>
@@ -28,16 +28,16 @@ const { post }: Props = Astro.props
         )
       }
     </div>
-    <a href={`/posts/${post.id}`} class="block -my-[2px]">
-      <h3 class="text-base sm:text-lg font-medium text-foreground group-hover:text-primary transition-colors">
+    <a href={`/posts/${post.id}`} class="block">
+      <div class="text-base font-semibold text-foreground group-hover:text-primary transition-colors line-clamp-2">
         {post.data.title}
-      </h3>
-      {post.data.description && <p class="mt-1.5 text-sm sm:text-base text-muted-foreground/80 line-clamp-2">{post.data.description}</p>}
+      </div>
+      {post.data.description && <p class="mt-1 text-sm text-muted-foreground/80 leading-5 line-clamp-2">{post.data.description}</p>}
     </a>
 
     {
       post.data.tags?.length > 0 && (
-        <div class="flex flex-wrap gap-1.5 mt-2">
+        <div class="flex flex-wrap gap-1.5">
           {post.data.tags.slice(0, 4).map((tag) => (
             <Badge type="tag" content={tag} />
           ))}

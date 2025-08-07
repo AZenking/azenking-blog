@@ -24,7 +24,7 @@ const { frontmatter, minutesRead } = Astro.props
         {
           frontmatter.updatedDate && (
             <div class="flex items-center gap-1.5">
-              <span class="icon-[ph--clock-clockwise-light] w-4 h-4 opacity-85" />
+              <span class="icon-[ph--clock-clockwise] w-4 h-4 opacity-85" />
               <time datetime={frontmatter.updatedDate.toISOString()}>{formatDate(frontmatter.updatedDate)}</time>
             </div>
           )
@@ -43,7 +43,7 @@ const { frontmatter, minutesRead } = Astro.props
           <div class="space-y-4">
             <h1
               data-pagefind-body
-              class="text-2xl sm:text-3xl font-serif leading-tight tracking-wide bg-gradient-to-r from-foreground/90 to-foreground/70 bg-clip-text text-transparent"
+              class="text-2xl sm:text-3xl font-serif leading-tight bg-gradient-to-r from-foreground/90 to-foreground/70 bg-clip-text text-transparent"
             >
               {frontmatter.title}
             </h1>

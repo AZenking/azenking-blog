@@ -40,7 +40,7 @@ const { title, description, introduce } = PROJECTS_CONFIG
                       {project.star && (
                         <>
                           <span class="text-xs uppercase tracking-wide font-medium text-muted-foreground">Stars</span>
-                          <span class="font-mono font-semibold text-lg">
+                          <span class="font-mono font-semibold text-lg tracking-wider">
                             <NumberTicker play value={project.star} client:load />
                           </span>
                         </>
@@ -50,7 +50,7 @@ const { title, description, introduce } = PROJECTS_CONFIG
                       {project.fork && (
                         <>
                           <span class="text-xs uppercase tracking-wide font-medium text-muted-foreground">Forks</span>
-                          <span class="font-mono font-semibold text-lg">
+                          <span class="font-mono font-semibold text-lg tracking-wider">
                             <NumberTicker play value={project.fork} client:load />
                           </span>
                         </>

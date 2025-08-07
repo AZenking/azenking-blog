@@ -37,7 +37,7 @@
   /* 数字字体 */
   @font-face {
     font-family: 'Numbers';
-    src: url('/fonts/Geist[wght].woff2') format('woff2');
+    src: url('/fonts/GeistVF.woff2') format('woff2');
     font-display: swap;
   }
 
@@ -163,7 +163,7 @@
   h4,
   h5,
   h6 {
-    @apply font-serif font-medium! tracking-tight;
+    @apply font-serif font-medium;
   }
 
   /* 链接样式 */

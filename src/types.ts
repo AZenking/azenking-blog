@@ -42,7 +42,7 @@ export interface PostCardPageConfig {
   coverLayout?: CoverLayout
 }
 
-export type PostType = 'no-image' | 'horizontal' | 'jap'
+export type PostType = 'no-image' | 'horizontal'
 
 /**
  * 文章配置接口 / Post configuration interface

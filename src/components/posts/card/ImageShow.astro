@@ -41,17 +41,12 @@ const isReverse = imagePosition === 'right'
       class="hidden md:inline-flex mt-2 items-center gap-2 text-sm font-medium text-foreground/60 hover:text-primary transition-colors group/read"
     >
       {POSTS_CONFIG.readMoreText}
-      <span class="icon-[ph--arrow-right-light] size-4 transition-transform group-hover/read:translate-x-1"></span>
+      <span class="icon-[ph--arrow-right] size-4 transition-transform group-hover/read:translate-x-1"></span>
     </a>
   </div>
 
   <div class="w-full md:w-4/6 flex flex-col justify-start">
-    <div class="flex flex-wrap items-center gap-2 mb-4">
-      {post.data.recommend && <Badge type="recommend" content="REC" />}
-      {post.data.tags?.map((tag) => <Badge type="tag" content={tag} />)}
-    </div>
-
-    <div class="flex flex-wrap items-center gap-4 text-sm text-muted-foreground/90 mb-3">
+    <div class="flex flex-wrap items-center gap-4 text-sm text-muted-foreground/90 mb-2">
       <time class="flex items-center gap-2">
         <span class="icon-[ph--calendar-blank] size-4"></span>
         {formatDate(post.data.pubDate)}
@@ -60,7 +55,7 @@ const isReverse = imagePosition === 'right'
       {
         post.data.updatedDate && (
           <time class="flex items-center gap-2">
-            <span class="icon-[ph--clock-clockwise-light] size-4" />
+            <span class="icon-[ph--clock-clockwise] size-4" />
             {formatDate(post.data.updatedDate)}
           </time>
         )
@@ -68,19 +63,24 @@ const isReverse = imagePosition === 'right'
     </div>
 
     <a href={`/posts/${post.id}`} class="group/title">
-      <h2 class="text-base md:text-lg font-medium transition-colors group-hover/title:text-primary line-clamp-2 leading-tight mb-3">
+      <div class="text-base font-semibold transition-colors group-hover/title:text-primary line-clamp-2 leading-5 mb-1">
         {post.data.title}
-      </h2>
+      </div>
     </a>
 
-    {post.data.description && <p class="text-sm text-muted-foreground/80 line-clamp-3 leading-relaxed mb-4">{post.data.description}</p>}
+    {post.data.description && <p class="text-sm text-muted-foreground/80 line-clamp-3 leading-5 mb-3">{post.data.description}</p>}
+
+    <div class="flex flex-wrap items-center gap-2 mb-3">
+      {post.data.recommend && <Badge type="recommend" content="REC" />}
+      {post.data.tags?.map((tag) => <Badge type="tag" content={tag} />)}
+    </div>
 
     <a
       href={`/posts/${post.id}`}
       class="md:hidden mt-auto inline-flex items-center gap-2 text-sm font-medium text-foreground/90 hover:text-primary transition-colors group/read"
     >
       {POSTS_CONFIG.readMoreText}
-      <span class="icon-[ph--arrow-right-light] size-4 transition-transform group-hover/read:translate-x-1"></span>
+      <span class="icon-[ph--arrow-right] size-4 transition-transform group-hover/read:translate-x-1"></span>
     </a>
   </div>
 </article>

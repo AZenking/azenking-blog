@@ -187,19 +187,19 @@ export const POSTS_CONFIG: PostConfig = {
   author: 'Dnzzk2',
   homePageConfig: {
     size: 5,
-    type: 'minimal',
+    type: 'compact',
   },
   postPageConfig: {
     size: 10,
     type: 'image',
-    coverLayout: 'left',
+    coverLayout: 'right',
   },
   tagsPageConfig: {
     size: 10,
     type: 'time-line',
   },
   ogImageUseCover: false,
-  postType: 'jap',
+  postType: 'no-image',
   imageDarkenInDark: true,
   readMoreText: 'Read more',
   prevPageText: 'Previous',

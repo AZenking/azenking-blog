@@ -50,7 +50,7 @@
 .markdown h6 {
   color: var(--heading);
   font-family: var(--font-sans);
-  font-weight: 500 !important;
+  font-weight: 600 !important;
   margin-top: 1.5em;
   margin-bottom: 0.5em;
 }
@@ -125,7 +125,7 @@
 .markdown ol > li,
 .markdown ul > li {
   position: relative;
-  padding-left: 1.75em;
+  padding-left: 1.6em;
   margin: 0.5em 0;
 }
 

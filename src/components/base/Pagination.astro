@@ -32,7 +32,7 @@ const visiblePages = getVisiblePages(page.currentPage, page.lastPage)
         page.url.prev ? 'text-foreground hover:bg-muted cursor-pointer' : 'text-muted-foreground/40 cursor-not-allowed pointer-events-none'
       }`}
     >
-      <span class="icon-[ph--caret-left-light] size-3.5 sm:size-4"></span>
+      <span class="icon-[ph--caret-left] size-3.5 sm:size-4"></span>
       <span class="hidden sm:inline">{POSTS_CONFIG.prevPageText}</span>
     </a>
 
@@ -64,7 +64,7 @@ const visiblePages = getVisiblePages(page.currentPage, page.lastPage)
       }`}
     >
       <span class="hidden sm:inline">{POSTS_CONFIG.nextPageText}</span>
-      <span class="icon-[ph--caret-right-light] size-3.5 sm:size-4"></span>
+      <span class="icon-[ph--caret-right] size-3.5 sm:size-4"></span>
     </a>
   </div>
 </nav>
