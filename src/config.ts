@@ -187,18 +187,18 @@ export const POSTS_CONFIG: PostConfig = {
   author: 'Dnzzk2',
   homePageConfig: {
     size: 5,
-    type: 'compact',
+    type: 'minimal',
   },
   postPageConfig: {
     size: 10,
-    type: 'time-line',
+    type: 'image',
+    coverLayout: 'left',
   },
   tagsPageConfig: {
     size: 10,
     type: 'time-line',
   },
-  cover: '/og-image.jpg',
-  coverAspectRatio: '16/9',
+  ogImageUseCover: false,
   postType: 'jap',
   imageDarkenInDark: true,
   readMoreText: 'Read more',
@@ -231,7 +231,7 @@ export const ProjectList: Project[] = [
     website: 'https://litos.vercel.app/',
     type: 'image',
     icon: '/projects/logo.png',
-    star: 29,
+    star: 30,
     fork: 7,
   },
 ]

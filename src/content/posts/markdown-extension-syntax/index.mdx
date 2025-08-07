@@ -4,9 +4,8 @@ description: 'A comprehensive guide to enhanced Markdown features in Litos theme
 pubDate: 2025-04-29
 author: 'Dnzzk2'
 recommend: true
-cover: './markdown-extension-syntax.webp'
-ogImage: './markdown-extension-syntax.webp'
-coverAspectRatio: '16/9'
+cover: 'assets/markdown-extension-syntax.png'
+ogImage: 'assets/markdown-extension-syntax.png'
 tags: ['Markdown', 'Guide']
 ---
 
@@ -325,61 +324,61 @@ Use the [`:::image`](https://github.com/lin-stephanie/remark-directive-sugar?tab
 
 ```md title=':::image-figure.md'
 :::image-figure[This Is a **Figcaption** with _`<figure>` Attrs_]{style="text-align:center;color:orange"}
-![](~/assets/images/markdown-extension-syntax/markdown-extension-syntax.png)
+![](assets/markdown-extension-syntax.png)
 :::
 
 :::image-figure[This is a **figcaption** with _`<img>` attrs_.]
-![](~/assets/images/markdown-extension-syntax/markdown-extension-syntax.png)(style: width:600px;)
+![](assets/markdown-extension-syntax.png)(style: width:600px;)
 :::
 
 <!-- 💡 Use `(class:no-zoom)` to disable zoom -->
 
 :::image-figure[This is a **figcaption** with `class:no-zoom`.]
-![](~/assets/images/markdown-extension-syntax/markdown-extension-syntax.png)(class:no-zoom)
+![](assets/markdown-extension-syntax.png)(class:no-zoom)
 :::
 
 <!-- 💡 If no `[caption]`, use `[alt]` as figcaption. -->
 
 :::image-figure
-![If `[caption]` not set, the alt text from `![]()` will be used as the figcaption.](~/assets/images/markdown-extension-syntax/markdown-extension-syntax.png)
+![If `[caption]` not set, the alt text from `![]()` will be used as the figcaption.](assets/markdown-extension-syntax.png)
 :::
 
 <!-- 💡 Images for light (img-light) and dark (img-dark) modes -->
 <!-- ⚠️ At least one line must separate two image syntaxes (![]()), or won't work. -->
 
 :::image-figure[This example shows different images for light (add `class:img-light`) and dark (add `class:img-dark`) modes.]
-![](~/assets/images/markdown-extension-syntax/image-16-9-light.png)(class:img-light)
+![](assets/image-16-9-light.png)(class:img-light)
 
-![](~/assets/images/markdown-extension-syntax/image-16-9-light.png)(class:img-dark)
+![](assets/image-16-9-light.png)(class:img-dark)
 :::
 
 <!-- ❌ If no text is available for the figcaption, it won't work.  -->
 
 :::image-figure
-![](~/assets/images/markdown-extension-syntax/markdown-extension-syntax.png)
+![](assets/markdown-extension-syntax.png)
 :::
 ```
 
 :::image-figure[This Is a **Figcaption** with _`<figure>` Attrs_]{style="text-align:center;color:orange"}
-![](~/assets/images/markdown-extension-syntax/markdown-extension-syntax.png)
+![](assets/markdown-extension-syntax.png)
 :::
 
 :::image-figure[This is a **figcaption** with _`<img>` attrs_.]
-![](~/assets/images/markdown-extension-syntax/markdown-extension-syntax.png)(style: width:600px;)
+![](assets/markdown-extension-syntax.png)(style: width:600px;)
 :::
 
 :::image-figure[This is a **figcaption** with `class:no-zoom`.]
-![](~/assets/images/markdown-extension-syntax/markdown-extension-syntax.png)(class:no-zoom)
+![](assets/markdown-extension-syntax.png)(class:no-zoom)
 :::
 
 :::image-figure
-![If `[caption]` not set, the alt text from `![]()` will be used as the figcaption.](~/assets/images/markdown-extension-syntax/markdown-extension-syntax.png)
+![If `[caption]` not set, the alt text from `![]()` will be used as the figcaption.](assets/markdown-extension-syntax.png)
 :::
 
 :::image-figure[This example shows different images for light (add `class:img-light`) and dark (add `class:img-dark`) modes.]
-![](~/assets/images/markdown-extension-syntax/image-16-9-dark.png)(class:img-light)
+![](assets/image-16-9-dark.png)(class:img-light)
 
-![](~/assets/images/markdown-extension-syntax/image-16-9-light.png)(class:img-dark)
+![](assets/image-16-9-light.png)(class:img-dark)
 :::
 
 > [!warning]
@@ -396,37 +395,37 @@ The custom directive wraps an image inside a link, making it clickable.
 
 ```md title=':::image-a.md'
 :::image-a{href="https://github.com/Dnzzk2/Litos"}
-![OG image](~/assets/images/markdown-extension-syntax/markdown-extension-syntax.png)
+![OG image](assets/markdown-extension-syntax.png)
 :::
 
 :::image-a{href="https://github.com/Dnzzk2/Litos" style="display:block" .custom-class}
-![OG image](~/assets/images/markdown-extension-syntax/markdown-extension-syntax.png)(style: margin-bottom: -1rem; transform:scaleX(1.1) scaleY(1.1);, loading: eager)
+![OG image](assets/markdown-extension-syntax.png)(style: margin-bottom: -1rem; transform:scaleX(1.1) scaleY(1.1);, loading: eager)
 :::
 
 ::::image-a{href="https://github.com/Dnzzk2/Litos"}
 :::image-figure[This example shows `:::image-a` wraps around `:::image-figure` (both are interchangeable).]
-![OG image](~/assets/images/markdown-extension-syntax/markdown-extension-syntax.png)
+![OG image](assets/markdown-extension-syntax.png)
 :::
 ::::
 
 <!-- ❌ No external links provided, it won't work.-->
 
 :::image-a
-![OG image](~/assets/images/markdown-extension-syntax/markdown-extension-syntax.png)
+![OG image](assets/markdown-extension-syntax.png)
 :::
 ```
 
 :::image-a{href="https://github.com/Dnzzk2/Litos"}
-![OG image](~/assets/images/markdown-extension-syntax/markdown-extension-syntax.png)
+![OG image](assets/markdown-extension-syntax.png)
 :::
 
 :::image-a{href="https://github.com/Dnzzk2/Litos" style="display:block" .custom-class}
-![OG image](~/assets/images/markdown-extension-syntax/markdown-extension-syntax.png)(style: margin-bottom: -1rem; transform:scaleX(1.1) scaleY(1.1);, loading: eager)
+![OG image](assets/markdown-extension-syntax.png)(style: margin-bottom: -1rem; transform:scaleX(1.1) scaleY(1.1);, loading: eager)
 :::
 
 ::::image-a{href="https://github.com/Dnzzk2/Litos"}
 :::image-figure[This example shows `:::image-a` wraps around `:::image-figure` (both are interchangeable).]
-![OG image](~/assets/images/markdown-extension-syntax/markdown-extension-syntax.png)(style:padding-top:1rem;)
+![OG image](assets/markdown-extension-syntax.png)(style:padding-top:1rem;)
 :::
 ::::
 
@@ -439,13 +438,13 @@ In order to ensure the style size on the phone, I have set a minimum width of 30
 ```md title=':::image-figure-polaroid.md'
 :::::image-div-polaroid
 :::image-figure-polaroid[This is a **figcaption** with _`<img>` attrs_.]
-![OG image](~/assets/images/markdown-extension-syntax/markdown-extension-syntax.png)
+![OG image](assets/markdown-extension-syntax.png)
 :::
 :::::
 
 :::::image-div-polaroid
 :::image-figure-polaroid
-![OG image](~/assets/images/markdown-extension-syntax/markdown-extension-syntax.png)
+![OG image](assets/markdown-extension-syntax.png)
 
 markdown-extension-syntax.png
 :::
@@ -453,7 +452,7 @@ markdown-extension-syntax.png
 
 :::::image-div-polaroid
 :::image-figure-polaroid
-![OG image](~/assets/images/markdown-extension-syntax/markdown-extension-syntax.png)
+![OG image](assets/markdown-extension-syntax.png)
 :::
 :::::
 
@@ -461,20 +460,20 @@ markdown-extension-syntax.png
 
 :::::image-div-polaroid
 :::image-figure-polaroid{style="width:500px;"}
-![OG image](~/assets/images/markdown-extension-syntax/markdown-extension-syntax.png)
+![OG image](assets/markdown-extension-syntax.png)
 :::
 :::::
 ```
 
 :::::image-div-polaroid
 :::image-figure-polaroid[This is a **figcaption** with _`<img>` attrs_.]
-![OG image](~/assets/images/markdown-extension-syntax/markdown-extension-syntax.png)
+![OG image](assets/markdown-extension-syntax.png)
 :::
 :::::
 
 :::::image-div-polaroid
 :::image-figure-polaroid
-![OG image](~/assets/images/markdown-extension-syntax/markdown-extension-syntax.png)
+![OG image](assets/markdown-extension-syntax.png)
 
 markdown-extension-syntax.png
 :::
@@ -482,13 +481,13 @@ markdown-extension-syntax.png
 
 :::::image-div-polaroid
 :::image-figure-polaroid
-![OG image](~/assets/images/markdown-extension-syntax/markdown-extension-syntax.png)
+![OG image](assets/markdown-extension-syntax.png)
 :::
 :::::
 
 :::::image-div-polaroid
 :::image-figure-polaroid{style="width:500px;"}
-![OG image](~/assets/images/markdown-extension-syntax/markdown-extension-syntax.png)
+![OG image](assets/markdown-extension-syntax.png)
 :::
 :::::
 

@@ -1,0 +1,26 @@
+---
+import { formatDate } from '~/lib/utils'
+import type { CardProps } from './List.astro'
+
+interface Props extends CardProps {}
+
+const { post }: Props = Astro.props
+
+// 优先使用更新时间，否则使用发布时间
+const displayDate = post.data.updatedDate || post.data.pubDate
+---
+
+<!-- 最简洁的文章列表项：只有标题和时间 -->
+<article class="group flex items-center justify-between py-3 border-b border-border/30 last:border-b-0">
+  <!-- 标题区域 -->
+  <a href={`/posts/${post.id}`} class="flex-1 pr-4 group/title">
+    <h2 class="text-base text-foreground group-hover/title:text-primary transition-colors duration-200 line-clamp-1">
+      {post.data.title}
+    </h2>
+  </a>
+
+  <!-- 时间区域：单一时间显示，使用点号格式 -->
+  <time class="flex-shrink-0 text-sm text-muted-foreground/80 whitespace-nowrap font-mono">
+    {formatDate(displayDate, 'dot')}
+  </time>
+</article>

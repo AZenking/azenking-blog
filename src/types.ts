@@ -18,12 +18,6 @@ export type Site = {
 }
 
 /**
- * 文章封面图宽高比类型 / Cover image aspect ratio type
- * @description 可选值为 '16/9' 和 '3/4' / Possible values: '16/9' and '3/4'
- */
-export type CoverAspectRatio = '16/9' | '3/4'
-
-/**
  * 文章封面图布局类型 / Cover image layout type
  * @description 可选值为 'left' 和 'right' / Possible values: 'left' and 'right'
  */
@@ -33,7 +27,7 @@ export type CoverLayout = 'left' | 'right'
  * 文章卡片类型 / PostCardType
  * @description 可选值为 'compact' 、'image' 和 'time-line' / Possible values: 'compact', 'image' and 'timeLine'
  */
-export type PostCardType = 'compact' | 'image' | 'time-line'
+export type PostCardType = 'compact' | 'image' | 'time-line' | 'minimal'
 
 /**
  * 文章卡片页面基础配置接口 / Post card page configuration interface
@@ -48,7 +42,7 @@ export interface PostCardPageConfig {
   coverLayout?: CoverLayout
 }
 
-export type PostType = 'no-image' | 'vertical' | 'horizontal' | 'jap'
+export type PostType = 'no-image' | 'horizontal' | 'jap'
 
 /**
  * 文章配置接口 / Post configuration interface
@@ -60,8 +54,7 @@ export type PostType = 'no-image' | 'vertical' | 'horizontal' | 'jap'
  * @property {PostCardPageConfig} homePageConfig - 首页文章展示配置 / Home page posts display configuration
  * @property {PostCardPageConfig} postPageConfig - 文章列表页展示配置 / Posts list page display configuration
  * @property {PostCardPageConfig} tagsPageConfig - 标签页文章展示配置 / Post display configuration for tags page
- * @property {string} cover - 默认文章封面图 / Default cover image for posts
- * @property {CoverAspectRatio} coverAspectRatio - 默认图片宽高比 / Default image aspect ratio
+ * @property {boolean} ogImageUseCover - 是否使用文章封面图作为OGP图片 / Whether to use the article cover image as the OGP image
  * @property {boolean} imageDarkenInDark - 是否在暗黑模式下对图片进行暗化处理 / Whether to darken images in dark mode
  * @property {string} readMoreText - "阅读更多"按钮文本 / "Read more" button text
  * @property {string} prevPageText - 上一页按钮文本 / Previous page button text
@@ -79,9 +72,8 @@ export interface PostConfig {
   homePageConfig: PostCardPageConfig
   postPageConfig: PostCardPageConfig
   tagsPageConfig: PostCardPageConfig
-  cover: string
-  coverAspectRatio: CoverAspectRatio
   postType: PostType
+  ogImageUseCover: boolean
   imageDarkenInDark: boolean
   readMoreText: string
   prevPageText: string

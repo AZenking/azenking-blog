@@ -15,10 +15,38 @@ export function postsSort(posts: CollectionEntry<'posts'>[]) {
   })
 }
 
-// 日期格式化
-export const formatDate = (date: Date) =>
-  date.toLocaleDateString('en-US', {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric',
-  })
+// 日期格式化类型
+export type DateFormat = 'default' | 'dot' | 'short' | 'iso'
+
+// 日期格式化函数
+export const formatDate = (date: Date, format: DateFormat = 'default'): string => {
+  switch (format) {
+    case 'dot':
+      // 2020.03.03 格式
+      const year = date.getFullYear()
+      const month = String(date.getMonth() + 1).padStart(2, '0')
+      const day = String(date.getDate()).padStart(2, '0')
+      return `${year}.${month}.${day}`
+    
+    case 'short':
+      // Mar 3, 2020 格式
+      return date.toLocaleDateString('en-US', {
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric',
+      })
+    
+    case 'iso':
+      // 2020-03-03 格式
+      return date.toISOString().split('T')[0]
+    
+    case 'default':
+    default:
+      // March 3, 2020 格式（默认）
+      return date.toLocaleDateString('en-US', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+      })
+  }
+}
