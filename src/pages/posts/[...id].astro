@@ -2,8 +2,8 @@
 import { getCollection } from 'astro:content'
 import { postsSort } from '~/lib/utils'
 import Layout from '~/layouts/Layout.astro'
-import NoImage from '~/components/posts/layouts/NoImage.astro'
-import Horizontal from '~/components/posts/layouts/Horizontal.astro'
+import MetaOnly from '~/components/posts/layouts/MetaOnly.astro'
+import CoverSplit from '~/components/posts/layouts/CoverSplit.astro'
 import PostNavigation from '~/components/posts/base/PostNavigation.astro'
 import PostFeatures from '~/components/posts/toc/PostFeatures.astro'
 import TocMobile from '~/components/posts/toc/TocMobile.astro'
@@ -34,8 +34,8 @@ const filterHeadings = headings.filter((heading: any) => heading.slug !== 'footn
 
 const hasValidHeadings = filterHeadings.length > 1
 const layoutMap = {
-  'no-image': NoImage,
-  'horizontal': Horizontal,
+  metaOnly: MetaOnly,
+  coverSplit: CoverSplit,
 }
 
 const layoutKey = frontmatter.postType || POSTS_CONFIG.postType

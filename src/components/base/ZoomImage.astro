@@ -1,14 +1,44 @@
 ---
+import { Image } from 'astro:assets'
+
 interface Props {
-  src: string
+  src: any
   alt: string
   class?: string
+  sizes?: string
 }
 
-const { src, alt, class: className } = Astro.props
+const { src, alt, class: className, sizes } = Astro.props
+const isOptimizable = typeof src !== 'string' || src?.src // local import or ImageMetadata
 ---
 
-<img {src} {alt} class={className} data-zoomable />
+{isOptimizable ? (
+  <Image
+    src={src}
+    alt={alt}
+    width={1200}
+    height={630}
+    class={className}
+    data-zoomable
+    loading="lazy"
+    decoding="async"
+    format="webp"
+    quality={85}
+    sizes={sizes ?? '(max-width: 768px) 100vw, 45vw'}
+  />
+) : (
+  <img
+    src={src}
+    alt={alt}
+    width={1200}
+    height={630}
+    class={className}
+    data-zoomable
+    loading="lazy"
+    decoding="async"
+    style="aspect-ratio: 1200 / 630; object-fit: cover; width: 100%; height: auto;"
+  />
+)}
 
 <script>
   import mediumZoom from 'medium-zoom'
