@@ -272,7 +272,10 @@ input[type='search']::-moz-search-cancel-button {
   display: block;
   padding: 0.875rem 1rem;
   border-bottom: 1px solid hsl(var(--border) / 0.7);
-  transition: background-color 0.18s ease, transform 0.12s ease, color 0.18s ease;
+  transition:
+    background-color 0.18s ease,
+    transform 0.12s ease,
+    color 0.18s ease;
 }
 
 /* 连续主结果之间增加轻微的垂直间距 */
