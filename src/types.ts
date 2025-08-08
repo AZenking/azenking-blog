@@ -42,7 +42,7 @@ export interface PostCardPageConfig {
   coverLayout?: CoverLayout
 }
 
-export type PostType = 'metaOnly' | 'coverSplit'
+export type PostType = 'metaOnly' | 'coverSplit' | 'coverTop'
 
 /**
  * 文章配置接口 / Post configuration interface

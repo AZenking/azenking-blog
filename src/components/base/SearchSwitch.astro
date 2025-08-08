@@ -13,7 +13,7 @@
 
 <div id="search-mask" class="fixed z-200 hidden inset-0 bg-background/80 backdrop-blur-md dark:bg-background/90 transition-opacity duration-200 opacity-0">
   <div class="absolute left-1/2 top-20 -translate-x-1/2 transition-transform duration-300 -translate-y-4 search-panel-show">
-    <div id="search-panel" class="grid grid-rows-[auto_1fr] max-h-[80vh] w-[22rem] sm:w-[40rem] bg-background/95 dark:bg-background/95 border border-border shadow-lg dark:shadow-accent/20">
+      <div id="search-panel" class="grid grid-rows-[auto_1fr] max-h-[80vh] w-[22rem] sm:w-[40rem] bg-background/95 dark:bg-background/95 border border-border shadow-lg dark:shadow-accent/20 rounded-xl overflow-hidden">
       <div id="search-bar" class="grid grid-cols-[auto_1fr_auto] items-center gap-2 px-4 h-12 border-b border-border">
         <span class="icon-[material-symbols--manage-search] size-6 text-muted-foreground"></span>
         <label class="sr-only" for="search-input">Search</label>
@@ -26,7 +26,7 @@
         />
         <kbd class="hidden sm:inline-flex items-center gap-1 px-2 py-0.5 text-xs text-muted-foreground bg-muted rounded">ESC</kbd>
       </div>
-      <div id="search-results" class="overflow-y-auto no-scrollbar" data-base="/"></div>
+      <div id="search-results" class="overflow-y-auto no-scrollbar p-1 sm:p-2 overscroll-contain" data-base="/"></div>
     </div>
   </div>
 </div>
@@ -94,15 +94,33 @@
     if (searchResults) {
       searchResults.innerHTML = ''
     }
+    const target = e.target as HTMLInputElement
+    const q = target.value.trim()
+    if (q === '') {
+      const tip = document.createElement('div')
+      tip.className = 'search-results-item py-8'
+      tip.innerHTML = `
+        <div class="flex items-center justify-center gap-2 select-none">
+          <span class="icon-[material-symbols--keyboard] size-5 text-muted-foreground"></span>
+          <span class="text-muted-foreground">Type to search</span>
+        </div>
+      `
+      searchResults?.appendChild(tip)
+      return
+    }
     if (import.meta.env.PROD) {
-      const target = e.target as HTMLInputElement
-      const search = await pagefind.debouncedSearch(target.value)
+      const search = await pagefind.debouncedSearch(q)
 
       // 添加结果长度判断
-      if (!search?.results && search?.results.length === 0 ) {
+      if (!search?.results || search.results.length === 0) {
         const noResults = document.createElement('div')
-        noResults.className = 'search-results-item text-center py-4 text-muted-foreground'
-        noResults.textContent = 'No results found'
+        noResults.className = 'search-results-item py-8'
+        noResults.innerHTML = `
+          <div class="flex items-center justify-center gap-2 select-none">
+            <span class="icon-[material-symbols--help-outline] size-5 text-muted-foreground"></span>
+            <span class="text-muted-foreground">No results found</span>
+          </div>
+        `
         searchResults?.appendChild(noResults)
         return
       }
@@ -144,15 +162,15 @@
       }
       }
     } else {
-      const resultItem = document.createElement('a')
-      resultItem.href = searchResults?.dataset.base || '/'
-      resultItem.className = 'search-results-item'
-      resultItem.innerHTML = `
-        <div class="search-results-title">Search</div>
-        <div class="search-results-excerpt">Search in development mode</div>
+      const noResults = document.createElement('div')
+      noResults.className = 'search-results-item py-8'
+      noResults.innerHTML = `
+        <div class="flex items-center justify-center gap-2 select-none">
+          <span class="icon-[material-symbols--help-outline] size-5 text-muted-foreground"></span>
+          <span class="text-muted-foreground">No results in development mode</span>
+        </div>
       `
-      resultItem.addEventListener('click', closeSearchIn)
-      searchResults?.appendChild(resultItem)
+      searchResults?.appendChild(noResults)
     }
   }
 

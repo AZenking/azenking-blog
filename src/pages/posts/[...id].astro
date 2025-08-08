@@ -4,6 +4,7 @@ import { postsSort } from '~/lib/utils'
 import Layout from '~/layouts/Layout.astro'
 import MetaOnly from '~/components/posts/layouts/MetaOnly.astro'
 import CoverSplit from '~/components/posts/layouts/CoverSplit.astro'
+import CoverTop from '~/components/posts/layouts/CoverTop.astro'
 import PostNavigation from '~/components/posts/base/PostNavigation.astro'
 import PostFeatures from '~/components/posts/toc/PostFeatures.astro'
 import TocMobile from '~/components/posts/toc/TocMobile.astro'
@@ -36,6 +37,7 @@ const hasValidHeadings = filterHeadings.length > 1
 const layoutMap = {
   metaOnly: MetaOnly,
   coverSplit: CoverSplit,
+  coverTop: CoverTop,
 }
 
 const layoutKey = frontmatter.postType || POSTS_CONFIG.postType

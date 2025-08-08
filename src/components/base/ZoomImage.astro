@@ -9,36 +9,21 @@ interface Props {
 }
 
 const { src, alt, class: className, sizes } = Astro.props
-const isOptimizable = typeof src !== 'string' || src?.src // local import or ImageMetadata
 ---
 
-{isOptimizable ? (
-  <Image
-    src={src}
-    alt={alt}
-    width={1200}
-    height={630}
-    class={className}
-    data-zoomable
-    loading="lazy"
-    decoding="async"
-    format="webp"
-    quality={85}
-    sizes={sizes ?? '(max-width: 768px) 100vw, 45vw'}
-  />
-) : (
-  <img
-    src={src}
-    alt={alt}
-    width={1200}
-    height={630}
-    class={className}
-    data-zoomable
-    loading="lazy"
-    decoding="async"
-    style="aspect-ratio: 1200 / 630; object-fit: cover; width: 100%; height: auto;"
-  />
-)}
+<Image
+  {src}
+  {alt}
+  width={1200}
+  height={630}
+  class={className}
+  data-zoomable
+  loading="lazy"
+  decoding="async"
+  format="webp"
+  quality={85}
+  sizes={sizes ?? '(max-width: 768px) 100vw, 45vw'}
+/>
 
 <script>
   import mediumZoom from 'medium-zoom'

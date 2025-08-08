@@ -13,9 +13,9 @@ const { frontmatter, minutesRead } = Astro.props
 ---
 
 <article class="relative fade-up">
-  <header class="bg-accent/50 backdrop-blur-sm px-6 sm:px-8 py-8 sm:py-10 border-b border-border/50">
+  <header class="bg-accent/15 backdrop-blur-sm px-6 sm:px-8 py-8 sm:py-10 border-b border-border/50">
     <div class="max-w-4xl mx-auto">
-      <div class="flex flex-wrap items-center gap-3 text-sm text-muted-foreground/85 mb-8">
+      <div class="flex flex-wrap items-center gap-3 text-sm text-muted-foreground/85 mb-4 sm:mb-2">
         <div class="flex items-center gap-1.5">
           <span class="icon-[ph--calendar-blank] w-4 h-4 opacity-85"></span>
           <time datetime={frontmatter.pubDate.toISOString()}>
@@ -39,8 +39,8 @@ const { frontmatter, minutesRead } = Astro.props
           )
         }
       </div>
-      <div class="flex flex-col md:flex-row gap-8 md:gap-12 md:items-center">
-        <div class="md:w-3/5 space-y-6">
+      <div class="flex flex-col md:flex-row gap-8 md:gap-8 md:items-center">
+        <div class="md:w-3/5">
           <div class="space-y-4">
             <div
               data-pagefind-body
@@ -48,11 +48,7 @@ const { frontmatter, minutesRead } = Astro.props
             >
               {frontmatter.title}
             </div>
-            {
-              frontmatter.description && (
-                <p class="text-base sm:text-lg text-muted-foreground/90 leading-relaxed">{frontmatter.description}</p>
-              )
-            }
+            {frontmatter.description && <p class="text-base text-muted-foreground/90 leading-5">{frontmatter.description}</p>}
             <div class="flex gap-2 sm:gap-2.5 flex-wrap pt-2">
               {frontmatter.recommend && <Badge type="recommend" content="REC" />}
               {frontmatter.tags?.map((tag: string) => <Badge type="tag" content={tag} size="sm" />)}
