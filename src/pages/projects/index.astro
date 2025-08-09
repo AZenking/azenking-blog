@@ -4,6 +4,7 @@ import { ProjectList, PROJECTS_CONFIG } from '~/config'
 import Layout from '~/layouts/Layout.astro'
 import SectionDivider from '~/components/base/SectionDivider.astro'
 import NumberTicker from '~/components/base/NumberTicker'
+import { Image } from 'astro:assets'
 
 const { title, description, introduce } = PROJECTS_CONFIG
 ---
@@ -18,7 +19,7 @@ const { title, description, introduce } = PROJECTS_CONFIG
         <p class="mt-2">{introduce}</p>
       </div>
     </div>
-    <div class="grid grid-cols-1 fade-up">
+    <div class="grid grid-cols-1">
       {
         ProjectList.map((project, index) => {
           return (
@@ -26,23 +27,19 @@ const { title, description, introduce } = PROJECTS_CONFIG
               <div class="group relative hover:bg-muted/30 dark:hover:bg-muted/30 transition-colors duration-300 px-6 sm:px-8 py-4 ">
                 <div class="absolute right-8 top-4 hidden sm:block">
                   {project.type == 'icon' && <span class={cn('size-10', project.icon)} />}
-                  {project.type == 'image' && <img src={project.icon} alt="icon" class={cn('size-10', project.imageClass)} />}
+                  {project.type == 'image' && <Image src={project.icon} alt="icon" width={40} height={40} class={cn(project.imageClass)} />}
                 </div>
-                <a
-                  href={project.website}
-                  target="_blank"
-                  class="inline-flex items-center justify-between font-semibold font-sans hover:text-primary transition-colors text-lg/relaxed "
-                >
+                <a href={project.website} target="_blank" class="inline-flex items-center justify-between font-semibold text-lg/relaxed ">
                   {project.name}
                 </a>
-                <p class="pr-0 sm:pr-14 text-muted-foreground mt-1 mb-3">{project.description}</p>
+                <p class="pr-0 sm:pr-14 text-muted-foreground mb-3">{project.description}</p>
                 <div class="flex flex-col sm:flex-row gap-4 sm:gap-0 items-start sm:items-center justify-between sm:h-14">
                   <div class="flex gap-4 ">
                     <div class="flex items-center py-1.5 gap-3">
                       {project.star && (
                         <>
                           <span class="text-xs uppercase tracking-wide font-medium text-muted-foreground">Stars</span>
-                          <span class="font-mono font-semibold text-lg tracking-wider">
+                          <span class="font-semibold text-lg tracking-wider">
                             <NumberTicker play value={project.star} client:load />
                           </span>
                         </>
@@ -52,7 +49,7 @@ const { title, description, introduce } = PROJECTS_CONFIG
                       {project.fork && (
                         <>
                           <span class="text-xs uppercase tracking-wide font-medium text-muted-foreground">Forks</span>
-                          <span class="font-mono font-semibold text-lg tracking-wider">
+                          <span class="font-semibold text-lg tracking-wider">
                             <NumberTicker play value={project.fork} client:load />
                           </span>
                         </>

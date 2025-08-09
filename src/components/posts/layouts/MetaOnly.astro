@@ -1,5 +1,6 @@
 ---
 import { formatDate } from '~/lib/utils'
+import { POSTS_CONFIG } from '~/config'
 import Prose from '~/components/posts/base/Prose.astro'
 import Badge from '~/components/posts/base/Badge.astro'
 
@@ -9,6 +10,7 @@ interface Props {
 }
 
 const { frontmatter, minutesRead } = Astro.props
+const recommendText = POSTS_CONFIG.recommendText
 ---
 
 <article class="relative fade-up">
@@ -56,7 +58,7 @@ const { frontmatter, minutesRead } = Astro.props
           </div>
 
           <div class="flex gap-2 sm:gap-2.5 lg:gap-3 flex-wrap pt-2 sm:pt-3">
-            {frontmatter.recommend && <Badge type="recommend" content="REC" />}
+            {frontmatter.recommend && <Badge type="recommend" content={recommendText} />}
             {frontmatter.tags?.map((tag: string) => <Badge type="tag" content={tag} size="sm" />)}
           </div>
         </div>

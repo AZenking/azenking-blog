@@ -2,10 +2,12 @@
 import { formatDate } from '~/lib/utils'
 import Badge from '~/components/posts/base/Badge.astro'
 import type { CardProps } from './List.astro'
+import { POSTS_CONFIG } from '~/config'
 
 interface Props extends CardProps {}
 
 const { post }: Props = Astro.props
+const recommendText = POSTS_CONFIG.recommendText
 ---
 
 <article class="group relative pl-10 pr-4 sm:pr-32 md:pr-44">
@@ -17,7 +19,7 @@ const { post }: Props = Astro.props
   <div class="absolute right-0 top-[0.1rem] hidden sm:flex items-end gap-2">
     <div class="flex items-center gap-1.5">
       <span class="icon-[ph--calendar-blank] w-3.5 h-3.5 text-muted-foreground/70"></span>
-      <time class="text-sm text-muted-foreground whitespace-nowrap">
+      <time class="text-xs text-muted-foreground whitespace-nowrap">
         {formatDate(post.data.pubDate)}
       </time>
     </div>
@@ -25,7 +27,7 @@ const { post }: Props = Astro.props
       post.data.updatedDate && (
         <div class="flex items-center gap-1.5">
           <span class="icon-[ph--clock-clockwise] w-3.5 h-3.5 text-primary/70" />
-          <time class="text-sm text-muted-foreground whitespace-nowrap">{formatDate(post.data.updatedDate)}</time>
+          <time class="text-xs text-muted-foreground whitespace-nowrap">{formatDate(post.data.updatedDate)}</time>
         </div>
       )
     }
@@ -62,10 +64,10 @@ const { post }: Props = Astro.props
       {
         post.data.tags?.length > 0 && (
           <div class="mt-2.5 flex flex-wrap gap-1.5">
-            {post.data.tags.slice(0, 3).map((tag) => (
+            {post.data.recommend && <Badge type="recommend" content={recommendText} />}
+            {post.data.tags.map((tag) => (
               <Badge type="tag" content={tag} size="sm" />
             ))}
-            {post.data.tags.length > 3 && <span class="text-xs text-muted-foreground/60">+{post.data.tags.length - 3} more</span>}
           </div>
         )
       }

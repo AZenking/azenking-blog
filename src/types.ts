@@ -82,6 +82,7 @@ export interface PostConfig {
   backToPostsText: string
   nextPostText: string
   prevPostText: string
+  recommendText: string
 }
 
 /**

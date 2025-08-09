@@ -208,6 +208,7 @@ export const POSTS_CONFIG: PostConfig = {
   backToPostsText: 'Back to Posts',
   nextPostText: 'Next Post',
   prevPostText: 'Previous Post',
+  recommendText: 'REC',
 }
 
 export const TAGS_CONFIG: TagsConfig = {

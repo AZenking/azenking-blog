@@ -15,6 +15,7 @@ const IMAGE_HEIGHT = 630
 
 const imagePosition = post.data.coverLayout || coverLayout || (index % 2 === 1 ? 'right' : 'left')
 const isReverse = imagePosition === 'right'
+const recommendText = POSTS_CONFIG.recommendText
 ---
 
 <article class={`group flex flex-col md:flex-row gap-6 md:gap-10 ${isReverse ? 'md:flex-row-reverse' : ''}`}>
@@ -66,12 +67,11 @@ const isReverse = imagePosition === 'right'
       <div class="text-base font-semibold transition-colors group-hover/title:text-primary line-clamp-2 leading-5 mb-1">
         {post.data.title}
       </div>
+      {post.data.description && <p class="text-sm text-muted-foreground/80 line-clamp-3 leading-5 mb-3">{post.data.description}</p>}
     </a>
 
-    {post.data.description && <p class="text-sm text-muted-foreground/80 line-clamp-3 leading-5 mb-3">{post.data.description}</p>}
-
     <div class="flex flex-wrap items-center gap-2 mb-3">
-      {post.data.recommend && <Badge type="recommend" content="REC" />}
+      {post.data.recommend && <Badge type="recommend" content={recommendText} />}
       {post.data.tags?.map((tag) => <Badge type="tag" content={tag} />)}
     </div>
 

@@ -1,5 +1,6 @@
 ---
 import { formatDate } from '~/lib/utils'
+import { POSTS_CONFIG } from '~/config'
 import Prose from '~/components/posts/base/Prose.astro'
 import ZoomImage from '~/components/base/ZoomImage.astro'
 import Badge from '~/components/posts/base/Badge.astro'
@@ -10,10 +11,10 @@ interface Props {
 }
 
 const { frontmatter, minutesRead } = Astro.props
+const recommendText = POSTS_CONFIG.recommendText
 ---
 
 <article class="relative fade-up">
-  <!-- 顶部封面图 -->
   {
     frontmatter.cover && (
       <div class="w-full">
@@ -31,7 +32,6 @@ const { frontmatter, minutesRead } = Astro.props
     )
   }
 
-  <!-- 下方信息区（标题、时间、标签等） -->
   <header class="px-6 sm:px-8 py-6">
     <div class="max-w-3xl mx-auto">
       {frontmatter.description && <p class="text-sm text-muted-foreground/90 leading-relaxed mb-4">{frontmatter.description}</p>}
@@ -71,7 +71,7 @@ const { frontmatter, minutesRead } = Astro.props
       </div>
 
       <div class="flex gap-2 sm:gap-2.5 lg:gap-3 flex-wrap pt-4">
-        {frontmatter.recommend && <Badge type="recommend" content="REC" />}
+        {frontmatter.recommend && <Badge type="recommend" content={recommendText} />}
         {frontmatter.tags?.map((tag: string) => <Badge type="tag" content={tag} size="sm" />)}
       </div>
 
