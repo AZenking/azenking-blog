@@ -22,6 +22,8 @@ const posts = defineCollection({
         recommend: z.boolean().default(false),
         postType: z.custom<PostType>().optional(),
         coverLayout: z.custom<CoverLayout>().optional(),
+        pinned: z.boolean().default(false),
+        draft: z.boolean().default(false),
       })
       .transform((data) => ({
         ...data,
@@ -29,4 +31,24 @@ const posts = defineCollection({
       })),
 })
 
-export const collections = { posts }
+const projects = defineCollection({
+  loader: glob({
+    pattern: '**/*.{md,mdx}',
+    base: './src/content/projects',
+  }),
+  schema: ({ image }) =>
+    z.object({
+      name: z.string(),
+      description: z.string(),
+      githubUrl: z.string(),
+      website: z.string(),
+      type: z.string(),
+      icon: image().optional(),
+      imageClass: z.string().optional(),
+      star: z.number(),
+      fork: z.number(),
+      draft: z.boolean().default(false),
+    }),
+})
+
+export const collections = { posts, projects }

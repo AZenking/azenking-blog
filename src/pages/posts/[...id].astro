@@ -1,6 +1,4 @@
 ---
-import { getCollection } from 'astro:content'
-import { postsSort } from '~/lib/utils'
 import Layout from '~/layouts/Layout.astro'
 import MetaOnly from '~/components/posts/layouts/MetaOnly.astro'
 import CoverSplit from '~/components/posts/layouts/CoverSplit.astro'
@@ -10,12 +8,10 @@ import PostFeatures from '~/components/posts/toc/PostFeatures.astro'
 import TocMobile from '~/components/posts/toc/TocMobile.astro'
 import { POSTS_CONFIG, SITE } from '~/config'
 import { render } from 'astro:content'
+import { getAllPosts } from '~/lib/data'
 
 export async function getStaticPaths() {
-  const posts = await getCollection('posts')
-
-  const sortedPosts = postsSort(posts)
-
+  const sortedPosts = await getAllPosts()
   return sortedPosts.map((post, index) => ({
     params: { id: post.id },
     props: {

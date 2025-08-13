@@ -39,6 +39,10 @@
   line-height: 1.75;
 }
 
+.markdown :where(p, li, blockquote) {
+  text-wrap: pretty;
+}
+
 /* 标题 */
 .markdown h1,
 .markdown h2,

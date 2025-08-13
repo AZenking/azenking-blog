@@ -1,12 +1,14 @@
 ---
 import { cn } from '~/lib/utils'
-import { ProjectList, PROJECTS_CONFIG } from '~/config'
+import { PROJECTS_CONFIG } from '~/config'
 import Layout from '~/layouts/Layout.astro'
 import SectionDivider from '~/components/base/SectionDivider.astro'
 import NumberTicker from '~/components/base/NumberTicker'
 import { Image } from 'astro:assets'
+import { getAllProjects } from '~/lib/data'
 
 const { title, description, introduce } = PROJECTS_CONFIG
+const projects = await getAllProjects()
 ---
 
 <Layout {title} {description}>
@@ -21,45 +23,58 @@ const { title, description, introduce } = PROJECTS_CONFIG
     </div>
     <div class="grid grid-cols-1">
       {
-        ProjectList.map((project, index) => {
+        projects.map((project, index) => {
           return (
             <div>
               <div class="group relative hover:bg-muted/30 dark:hover:bg-muted/30 transition-colors duration-300 px-6 sm:px-8 py-4 ">
                 <div class="absolute right-8 top-4 hidden sm:block">
-                  {project.type == 'icon' && <span class={cn('size-10', project.icon)} />}
-                  {project.type == 'image' && <Image src={project.icon} alt="icon" width={40} height={40} class={cn(project.imageClass)} />}
+                  {project.data.type == 'icon' && <span class={cn('size-10', project.data.icon)} />}
+                  {project.data.type == 'image' && project.data?.icon && (
+                    <Image
+                      src={project.data?.icon}
+                      alt="icon"
+                      width={40}
+                      height={40}
+                      class={cn(project.data.imageClass)}
+                      densities={[1, 2]}
+                    />
+                  )}
                 </div>
-                <a href={project.website} target="_blank" class="inline-flex items-center justify-between font-semibold text-lg/relaxed ">
-                  {project.name}
+                <a
+                  href={project.data.website}
+                  target="_blank"
+                  class="inline-flex items-center justify-between font-semibold text-lg/relaxed "
+                >
+                  {project.data.name}
                 </a>
-                <p class="pr-0 sm:pr-14 text-muted-foreground mb-3">{project.description}</p>
+                <p class="pr-0 sm:pr-14 text-muted-foreground mb-3">{project.data.description}</p>
                 <div class="flex flex-col sm:flex-row gap-4 sm:gap-0 items-start sm:items-center justify-between sm:h-14">
                   <div class="flex gap-4 ">
                     <div class="flex items-center py-1.5 gap-3">
-                      {project.star && (
+                      {project.data.star && (
                         <>
                           <span class="text-xs uppercase tracking-wide font-medium text-muted-foreground">Stars</span>
                           <span class="font-semibold text-lg tracking-wider">
-                            <NumberTicker play value={project.star} client:load />
+                            <NumberTicker play value={project.data.star} client:load />
                           </span>
                         </>
                       )}
                     </div>
                     <div class="flex items-center py-1.5 gap-3">
-                      {project.fork && (
+                      {project.data.fork && (
                         <>
                           <span class="text-xs uppercase tracking-wide font-medium text-muted-foreground">Forks</span>
                           <span class="font-semibold text-lg tracking-wider">
-                            <NumberTicker play value={project.fork} client:load />
+                            <NumberTicker play value={project.data.fork} client:load />
                           </span>
                         </>
                       )}
                     </div>
                   </div>
                   <div class="flex items-center gap-5 text-zinc-500 text-sm z-10 ">
-                    {project.website && (
+                    {project.data.website && (
                       <a
-                        href={project.website}
+                        href={project.data.website}
                         target="_blank"
                         class="hover:text-zinc-600 dark:hover:text-zinc-100 flex items-center gap-1"
                       >
@@ -67,9 +82,9 @@ const { title, description, introduce } = PROJECTS_CONFIG
                         <span>Website</span>
                       </a>
                     )}
-                    {project.githubUrl && (
+                    {project.data.githubUrl && (
                       <a
-                        href={project.githubUrl}
+                        href={project.data.githubUrl}
                         target="_blank"
                         class="hover:text-zinc-600 dark:hover:text-zinc-100 flex items-center gap-1"
                       >
@@ -80,7 +95,7 @@ const { title, description, introduce } = PROJECTS_CONFIG
                   </div>
                 </div>
               </div>
-              <SectionDivider className={index == ProjectList.length - 1 ? 'hidden' : ''} />
+              <SectionDivider className={index == projects.length - 1 ? 'hidden' : ''} />
             </div>
           )
         })

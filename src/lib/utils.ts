@@ -27,7 +27,7 @@ export const formatDate = (date: Date, format: DateFormat = 'default'): string =
       const month = String(date.getMonth() + 1).padStart(2, '0')
       const day = String(date.getDate()).padStart(2, '0')
       return `${year}.${month}.${day}`
-    
+
     case 'short':
       // Mar 3, 2020 格式
       return date.toLocaleDateString('en-US', {
@@ -35,11 +35,11 @@ export const formatDate = (date: Date, format: DateFormat = 'default'): string =
         month: 'short',
         day: 'numeric',
       })
-    
+
     case 'iso':
       // 2020-03-03 格式
       return date.toISOString().split('T')[0]
-    
+
     case 'default':
     default:
       // March 3, 2020 格式（默认）

@@ -4,7 +4,6 @@ import type {
   PhotoData,
   PhotosConfig,
   PostConfig,
-  Project,
   ProjectConfig,
   Site,
   SkillsShowcaseConfig,
@@ -186,7 +185,7 @@ export const POSTS_CONFIG: PostConfig = {
   introduce: 'Here, I will share the usage instructions for this theme to help you quickly use it.',
   author: 'Dnzzk2',
   homePageConfig: {
-    size: 5,
+    size: 3,
     type: 'compact',
   },
   postPageConfig: {
@@ -222,20 +221,6 @@ export const PROJECTS_CONFIG: ProjectConfig = {
   description: 'The examples of my projects.',
   introduce: 'The examples of my projects.',
 }
-
-// get icon https://icon-sets.iconify.design/
-export const ProjectList: Project[] = [
-  {
-    name: 'Litos',
-    description: 'A Simple & Modern Blog Theme for Astro.',
-    githubUrl: 'https://github.com/Dnzzk2/Litos',
-    website: 'https://litos.vercel.app/',
-    type: 'image',
-    icon: '/projects/logo.png',
-    star: 30,
-    fork: 7,
-  },
-]
 
 export const PHOTOS_CONFIG: PhotosConfig = {
   title: 'Photos',

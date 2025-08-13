@@ -1,21 +1,26 @@
 ---
 import { SITE, SKILLSSHOWCASE_CONFIG, SOCIAL_LINKS } from '~/config.ts'
 import { GITHUB_CONFIG, POSTS_CONFIG } from '~/config.ts'
-import { postsSort } from '~/lib/utils'
-import { getCollection } from 'astro:content'
 import Layout from '~/layouts/Layout.astro'
 import SectionDivider from '~/components/base/SectionDivider.astro'
 import GithubContributions from '~/components/base/GithubContributions.tsx'
 import SocialLink from '~/components/base/SocialLink.astro'
 import List from '~/components/posts/card/List.astro'
 import SkillsShowcase from '~/components/base/SkillsShowcase.astro'
+import { getNumPosts, getPinnedPosts } from '~/lib/data'
 
 const { ENABLED, GITHUB_USERNAME, TOOLTIP_ENABLED } = GITHUB_CONFIG
 const { size, type } = POSTS_CONFIG.homePageConfig
 const { SKILLS_ENABLED, SKILLS_DATA } = SKILLSSHOWCASE_CONFIG
 
-const allPosts = await getCollection('posts')
-const posts = postsSort(allPosts).slice(0, size)
+let showPosts = []
+const pinnedPosts = await getPinnedPosts()
+const hasPinnedPosts = pinnedPosts.length > 0
+if (hasPinnedPosts) {
+  showPosts = pinnedPosts
+} else {
+  showPosts = await getNumPosts(size)
+}
 ---
 
 <Layout title="Readme" description={SITE.description}>
@@ -27,15 +32,19 @@ const posts = postsSort(allPosts).slice(0, size)
           A Simple & Modern Blog Theme for Astro
         </span>
       </h1>
-      <div class="pro text-muted-foreground text-balance">
+      <div class="pro text-muted-foreground text-pretty">
         <p>
-          Litos is a modern, high-performance blog theme built on Astro and inspired by
-          <a href="https://github.com/needim" target="_blank" rel="nofollow noreferrer"> @needim</a>, an excellent developer.
+          Litos is a simple and modern Astro blog theme, focusing on content display and reading experience. What's more, it's not just a
+          blog, but also a place to showcase your personal skills, projects, and daily life.
         </p>
         <p>
-          Use Tailwind CSS to achieve elegant responsive design, integrate React components for a smooth interactive experience, support
-          light and dark theme switching, fast response, clean style, and provide a variety of configurable and extensible article display
-          styles.
+          Tailwind CSS is used to achieve an elegant responsive design, and React components are integrated to provide a smooth interactive
+          experience. It supports light and dark theme switching, is responsive, has a clean style, and offers a variety of configurable
+          article display layouts.
+        </p>
+        <p>
+          This theme is inspired by <a href="https://github.com/needim" target="_blank" rel="nofollow noreferrer"> @needim</a> and redesigned
+          by <a href="https://github.com/Dnzzk2" target="_blank" rel="nofollow noreferrer"> @Dnzzk2</a> based on Astro.
         </p>
       </div>
       <div class="mt-6 flex gap-6">
@@ -67,7 +76,7 @@ const posts = postsSort(allPosts).slice(0, size)
           <div class="py-8 pb-10 px-6 max-md:px-6">
             <div class="px-2 max-md:px-0">
               <h2 class="text-2xl sm:text-3xl tracking-tight">Skills</h2>
-              <p class="text-muted-foreground mb-6 mt-1">Here are some of the skills I use:</p>
+              <p class="text-muted-foreground mb-6 mt-1">Here are some skills I have used:</p>
             </div>
             <SkillsShowcase skillsData={SKILLS_DATA} />
           </div>
@@ -78,9 +87,10 @@ const posts = postsSort(allPosts).slice(0, size)
     <div class="py-8 pb-10 px-6 sm:px-8">
       <h2 class="text-2xl sm:text-3xl tracking-tight">Posts</h2>
       <p class="text-muted-foreground mb-6 mt-1">
-        Recent {posts.length} blog posts, hoping to be helpful.
+        {hasPinnedPosts ? `Pinned` : 'Recent'}
+        {showPosts.length} posts, worth a look.
       </p>
-      <List {posts} {type} coverLayout={POSTS_CONFIG.homePageConfig?.coverLayout} />
+      <List posts={showPosts} {type} coverLayout={POSTS_CONFIG.homePageConfig?.coverLayout} />
     </div>
   </div>
 </Layout>

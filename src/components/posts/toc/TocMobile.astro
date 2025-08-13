@@ -2,6 +2,7 @@
 import type { CollectionEntry } from 'astro:content'
 import type { MarkdownHeading } from 'astro'
 import SimpleProgressRing from './SimpleProgressRing.astro'
+import { cn } from '~/lib/utils'
 
 interface Props {
   post: CollectionEntry<'posts'>
@@ -20,6 +21,13 @@ const filteredHeadings = headings
     text: h.text.replace(/\s*[Hh][1-6]$/g, ''),
     order: index + 1,
   }))
+
+// 使用 Map 代替对象，提高查找效率
+const indentClass = new Map([
+  [2, ''],
+  [3, 'ml-3'],
+  [4, 'ml-6'],
+])
 ---
 
 {
@@ -58,15 +66,9 @@ const filteredHeadings = headings
             <div class="max-h-[30vh] overflow-y-auto no-scrollbar" data-toc-scroll-area>
               <ul class="px-6 sm:px-8 py-2 space-y-2" id="mobile-table-of-contents">
                 {filteredHeadings.map((heading) => {
-                  const indentClass =
-                    {
-                      2: '',
-                      3: 'ml-3',
-                      4: 'ml-6',
-                    }[heading.depth] || ''
-
+                  const depthClass = heading.depth === 1 ? 'font-medium text-foreground' : 'text-foreground/60 hover:text-foreground/90'
                   return (
-                    <li class={`flex items-start gap-2 min-w-0 ${indentClass}`}>
+                    <li class={cn('flex items-start gap-2 min-w-0', depthClass, indentClass.get(heading.depth) || '')}>
                       <span
                         class="text-primary/40 font-mono text-xs mt-1 min-w-[1.5rem] transition-colors duration-200 flex-shrink-0 mobile-toc-number"
                         data-order={heading.order}
