@@ -11,7 +11,7 @@
   /* 字体系统 */
   --font-serif: var(--font-lexend);
   --font-sans: var(--font-sans);
-  --font-mono: var(--font-dm-mono);
+  --font-mono: var(--font-geist-mono);
 
   /* 颜色系统 */
   --color-border: hsl(var(--border));
@@ -41,13 +41,6 @@
     font-display: swap;
   }
 
-  /* 英文字体 */
-  @font-face {
-    font-family: 'Onest';
-    src: url('/fonts/Onest[wght].woff2') format('woff2');
-    font-display: swap;
-  }
-
   /* 破折号字体 */
   @font-face {
     font-family: 'CJKEmDash';
@@ -65,15 +58,9 @@
 
   /* 等宽字体 */
   @font-face {
-    font-family: 'DM Mono';
-    src: url('/fonts/DMMono-Regular.woff2') format('woff2');
+    font-family: 'GeistMono';
+    src: url('/fonts/GeistMono[wght].woff2') format('woff2');
     font-weight: 400;
-    font-display: swap;
-  }
-  @font-face {
-    font-family: 'DM Mono';
-    src: url('/fonts/DMMono-Medium.woff2') format('woff2');
-    font-weight: 500;
     font-display: swap;
   }
 }
@@ -84,7 +71,7 @@
     /* 字体族 */
     --font-lexend: 'Lexend', 'CJKEmDash', 'Numbers', 'ShangguSansSC-VF', ui-sans-serif, system-ui, sans-serif;
     --font-sans: 'CJKEmDash', 'Numbers', 'ShangguSansSC-VF', ui-sans-serif, system-ui, sans-serif;
-    --font-dm-mono: 'DM Mono', 'Input Mono', 'Fira Code', 'ShangguSansSC-VF', monospace;
+    --font-geist-mono: 'GeistMono', 'Input Mono', 'Fira Code', 'ShangguSansSC-VF', monospace;
 
     /* 基础色调 */
     --background: 255 100% 100%;

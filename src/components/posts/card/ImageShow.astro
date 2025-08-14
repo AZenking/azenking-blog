@@ -18,8 +18,8 @@ const isReverse = imagePosition === 'right'
 const recommendText = POSTS_CONFIG.recommendText
 ---
 
-<article class={`group flex flex-col md:flex-row gap-6 md:gap-10 ${isReverse ? 'md:flex-row-reverse' : ''}`}>
-  <div class="md:w-2/6 flex flex-col overflow-hidden">
+<article class={`group flex flex-col sm:flex-row gap-6 sm:gap-10 ${isReverse ? 'sm:flex-row-reverse' : ''}`}>
+  <div class="sm:w-2/6 flex flex-col overflow-hidden">
     <a href={`/posts/${post.id}`} class="block relative">
       <div class="aspect-[1200/630] overflow-hidden bg-muted/30 relative">
         {
@@ -39,14 +39,14 @@ const recommendText = POSTS_CONFIG.recommendText
     </a>
     <a
       href={`/posts/${post.id}`}
-      class="hidden md:inline-flex mt-2 items-center gap-2 text-sm font-medium text-foreground/60 hover:text-primary transition-colors group/read"
+      class="hidden sm:inline-flex mt-2 items-center gap-2 text-sm font-medium text-foreground/60 hover:text-primary transition-colors group/read"
     >
       {POSTS_CONFIG.readMoreText}
       <span class="icon-[ph--arrow-right] size-4 transition-transform group-hover/read:translate-x-1"></span>
     </a>
   </div>
 
-  <div class="w-full md:w-4/6 flex flex-col justify-start">
+  <div class="w-full sm:w-4/6 flex flex-col justify-start">
     <div class="flex flex-wrap items-center gap-4 text-sm text-muted-foreground/90 mb-2">
       <time class="flex items-center gap-2">
         <span class="icon-[ph--calendar-blank] size-4"></span>
@@ -77,7 +77,7 @@ const recommendText = POSTS_CONFIG.recommendText
 
     <a
       href={`/posts/${post.id}`}
-      class="md:hidden mt-auto inline-flex items-center gap-2 text-sm font-medium text-foreground/90 hover:text-primary transition-colors group/read"
+      class="sm:hidden mt-auto inline-flex items-center gap-2 text-sm font-medium text-foreground/90 hover:text-primary transition-colors group/read"
     >
       {POSTS_CONFIG.readMoreText}
       <span class="icon-[ph--arrow-right] size-4 transition-transform group-hover/read:translate-x-1"></span>

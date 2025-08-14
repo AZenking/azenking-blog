@@ -60,10 +60,13 @@ const indentClass = new Map([
                     'data-[active]:bg-gradient-to-r data-[active]:from-primary/10 dark:data-[active]:from-primary/25 data-[active]:to-transparent '
                   )}
                 >
-                  <span class="font-mono flex items-center px-2 text-xs text-primary/40 group-hover:text-primary/60 group-data-[active]:text-primary min-w-[2rem]">
+                  <span class="font-mono flex items-center px-2 text-xs text-primary/50 group-hover:text-primary group-data-[active]:text-primary min-w-[2rem]">
                     {heading.order.toString().padStart(2, '0')}
                   </span>
-                  <span class="leading-[1.75rem] truncate pr-2 group-data-[active]:text-primary/90 " title={heading.text}>
+                  <span
+                    class="leading-[1.75rem] truncate pr-2 group-hover:text-primary group-data-[active]:text-primary"
+                    title={heading.text}
+                  >
                     {heading.text}
                   </span>
                 </a>
