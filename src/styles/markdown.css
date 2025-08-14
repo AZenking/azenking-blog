@@ -14,7 +14,8 @@
   --color-anchor: light-dark(#6366f1, #818cf8);
 
   /* 背景颜色 */
-  --color-bg-inline-code: light-dark(#f9f9f9, #181818);
+  --color-bg-inline-code: light-dark(#f1f3f5, #1e1e20);
+  --color-text-inline-code: light-dark(#3b4252, #c9d1d9);
   --color-bg-polaroid: #ffffff;
 
   /* 边框颜色 */
@@ -250,14 +251,14 @@
   /* 行内代码 */
   & :where(code):not(:where(pre *, a *)) {
     background-color: var(--color-bg-inline-code);
-    color: var(--color-text-primary);
+    color: var(--color-text-inline-code);
     padding-block: 0.1rem;
     padding-inline: 0.3rem;
-    border-radius: var(--radius-sm);
     font-family: var(--font-geist-mono);
     font-size: 0.875em;
     word-wrap: break-word;
     font-weight: 500;
+    box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.05);
   }
 
   /* 代码块 */

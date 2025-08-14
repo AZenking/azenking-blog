@@ -64,7 +64,7 @@ export const SOCIAL_LINKS: SocialLink[] = [
     name: 'github',
     url: 'https://github.com/yourname',
     icon: 'icon-[ri--github-fill]',
-    count: 12,
+    count: 11,
   },
   {
     name: 'twitter',
@@ -190,15 +190,14 @@ export const POSTS_CONFIG: PostConfig = {
   },
   postPageConfig: {
     size: 10,
-    type: 'image',
-    coverLayout: 'right',
+    type: 'minimal',
   },
   tagsPageConfig: {
     size: 10,
     type: 'time-line',
   },
   ogImageUseCover: false,
-  postType: 'coverSplit',
+  postType: 'metaOnly',
   imageDarkenInDark: true,
   readMoreText: 'Read more',
   prevPageText: 'Previous',
