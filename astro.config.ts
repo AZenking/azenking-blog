@@ -1,4 +1,3 @@
-// @ts-check
 import { defineConfig } from 'astro/config'
 import tailwindcss from '@tailwindcss/vite'
 import react from '@astrojs/react'
@@ -18,34 +17,11 @@ export default defineConfig({
   },
   vite: {
     plugins: [tailwindcss()],
-    envDir: '.',
-    build: {
-      chunkSizeWarningLimit: 1200,
-      rollupOptions: {
-        output: {
-          manualChunks: {
-            'react-vendor': ['react', 'react-dom'],
-            'framer-vendor': ['framer-motion'],
-            'utils': ['clsx', 'tailwind-merge'],
-          },
-        },
-      },
-    },
-  },
-  image: {
-    service: {
-      entrypoint: 'astro/assets/services/sharp',
-    },
-    remotePatterns: [
-      {
-        protocol: 'https',
-      },
-    ],
   },
   markdown: {
     syntaxHighlight: false,
     remarkPlugins,
     rehypePlugins,
   },
-  integrations: [sitemap(), robotsTxt(), react(), expressiveCode(), mdx()],
+  integrations: [expressiveCode(), mdx(), react(), sitemap(), robotsTxt()],
 })

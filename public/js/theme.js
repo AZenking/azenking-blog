@@ -7,7 +7,6 @@
   function applyTheme(theme) {
     const isDark = theme === 'dark' || (theme === 'system' && prefersDark.matches)
 
-    root.toggleAttribute('data-theme', isDark ? 'dark' : 'light')
     root.classList.toggle('dark', isDark)
   }
 
