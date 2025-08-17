@@ -36,7 +36,7 @@ export const remarkPlugins = [
           const props: ReturnType<PropertiesFromTextDirective> = {
             'aria-hidden': 'true',
           }
-          if (node.attributes?.class?.includes('github')) props.src = 'https://www.google.com/s2/favicons?domain=github.com&sz=128'
+          // if (node.attributes?.class?.includes('github')) props.src = 'https://www.google.com/s2/favicons?domain=github.com&sz=128'
           return props
         },
       },
