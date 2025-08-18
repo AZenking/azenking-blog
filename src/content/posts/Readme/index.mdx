@@ -1,8 +1,91 @@
 ---
 title: 'Litos: Readme Page Config'
 description: ''
-pubDate: 2025-08-17
+pubDate: 2025-08-14
 author: 'Dnzzk2'
 recommend: true
 tags: ['Litos', 'Documentation']
 ---
+
+The following files are compatible with this document:
+
+- `src/pages/index.astro` - readme page
+- `src/config.ts` - readme page config
+- `src/components/base` - most of the components come from here
+
+### Site Config
+
+Configure basic site information:
+
+```ts
+export const SITE: Site = {
+  title: 'Litos',
+  description: 'Litos is a blog theme built with Astro.js and Dnzzk2.',
+  website: 'https://litos.vercel.app/',
+  base: '/',
+  author: 'Dnzzk2',
+  ogImage: '/og-image.jpg',
+}
+```
+
+| Property    | Description                                                                                                                                                                                                             |
+| ----------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| title       | The title of the site.                                                                                                                                                                                                  |
+| description | The description of the site.                                                                                                                                                                                            |
+| website     | Your final, deployed URL. Astro uses this full URL to generate your sitemap and canonical URLs in your final build. It is strongly recommended that you set this configuration to get the most out of Astro.            |
+| base        | The base path to deploy to. Astro will use this path as the root for your pages and assets both in development and in production build. <br /> When you set it to `/docs`, astro dev will start your server at `/docs`. |
+| author      | The author of the site.                                                                                                                                                                                                 |
+| ogImage     | The Open Graph images of the site, but on the specific post page, you can use other ogImage instead.                                                                                                                    |
+
+### Header Links
+
+Top jump link component configuration:
+
+```ts
+export const HEADER_LINKS: Link[] = [
+  {
+    name: 'Posts',
+    url: '/posts',
+  },
+]
+```
+
+### Footer Links
+
+Footer link component configuration:
+
+```ts
+export const FOOTER_LINKS: Link[] = [
+  {
+    name: 'Readme',
+    url: '/',
+  },
+]
+```
+
+### Social Links
+
+In the readme page, you can see a string of icons below the theme introduction, which can be configured below. Icons are from :link[Iconify]{id=https://icon-sets.iconify.design/}.
+
+```ts
+export const SOCIAL_LINKS: SocialLink[] = [
+  {
+    name: 'github',
+    url: 'https://github.com/yourname',
+    icon: 'icon-[ri--github-fill]',
+    count: 11,
+  },
+  {
+    name: 'twitter',
+    url: 'https://x.com/yourname',
+    icon: 'icon-[ri--twitter-x-fill]',
+  },
+]
+```
+
+| Property | Description                                                                     |
+| -------- | ------------------------------------------------------------------------------- |
+| name     | The name of the social link.                                                    |
+| url      | The URL of the social link.                                                     |
+| icon     | The icon of the social link.                                                    |
+| count    | The number of followers of this social media link. This is an `optional` field. |

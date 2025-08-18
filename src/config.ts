@@ -11,6 +11,7 @@ import type {
   TagsConfig,
 } from '~/types'
 
+//--- Readme Page Config ---
 export const SITE: Site = {
   title: 'Litos',
   description: 'Litos is a blog theme built with Astro.js and Dnzzk2.',
@@ -178,6 +179,8 @@ export const GITHUB_CONFIG: GithubConfig = {
   GITHUB_USERNAME: 'Dnzzk2',
   TOOLTIP_ENABLED: true,
 }
+
+//--- Posts Page Config ---
 
 export const POSTS_CONFIG: PostConfig = {
   title: 'Posts',
