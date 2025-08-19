@@ -16,6 +16,7 @@ export const SITE: Site = {
   title: 'Litos',
   description: 'Litos is a blog theme built with Astro.js and Dnzzk2.',
   website: 'https://litos.vercel.app/',
+  lang: 'en',
   base: '/',
   author: 'Dnzzk2',
   ogImage: '/og-image.jpg',
@@ -181,7 +182,6 @@ export const GITHUB_CONFIG: GithubConfig = {
 }
 
 //--- Posts Page Config ---
-
 export const POSTS_CONFIG: PostConfig = {
   title: 'Posts',
   description: 'Posts by Dnzzk2',
@@ -193,7 +193,7 @@ export const POSTS_CONFIG: PostConfig = {
   },
   postPageConfig: {
     size: 10,
-    type: 'minimal',
+    type: 'compact',
   },
   tagsPageConfig: {
     size: 10,
