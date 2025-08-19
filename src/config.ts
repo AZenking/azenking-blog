@@ -193,7 +193,7 @@ export const POSTS_CONFIG: PostConfig = {
   },
   postPageConfig: {
     size: 10,
-    type: 'compact',
+    type: 'minimal',
   },
   tagsPageConfig: {
     size: 10,
