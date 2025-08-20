@@ -557,6 +557,33 @@ image-figure-polaroid {
   }
 }
 
+/* per-type accent */
+.markdown .callout[data-callout='note'] {
+  --accent: #64748b;
+}
+.markdown .callout[data-callout='tip'] {
+  --accent: #3b82f6;
+}
+.markdown .callout[data-callout='important'] {
+  --accent: #8b5cf6;
+}
+.markdown .callout[data-callout='warning'] {
+  --accent: #f59e0b;
+}
+.markdown .callout[data-callout='caution'] {
+  --accent: #ef4444;
+}
+
+.markdown .callout :where(code):not(:where(pre *, a *)) {
+  background: color-mix(in srgb, var(--accent, #6b7280) 12%, transparent);
+  color: inherit;
+  padding-block: 0.1rem;
+  padding-inline: 0.3rem;
+}
+.dark .markdown .callout :where(code):not(:where(pre *, a *)) {
+  background: color-mix(in srgb, var(--accent, #9ca3af) 14%, transparent);
+}
+
 .callout-title-icon {
   padding-inline-end: 2px;
 }

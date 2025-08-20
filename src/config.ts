@@ -19,7 +19,7 @@ export const SITE: Site = {
   lang: 'en',
   base: '/',
   author: 'Dnzzk2',
-  ogImage: '/og-image.jpg',
+  ogImage: '/og-image.webp',
 }
 
 export const HEADER_LINKS: Link[] = [
@@ -188,12 +188,13 @@ export const POSTS_CONFIG: PostConfig = {
   introduce: 'Here, I will share the usage instructions for this theme to help you quickly use it.',
   author: 'Dnzzk2',
   homePageConfig: {
-    size: 3,
+    size: 5,
     type: 'compact',
   },
   postPageConfig: {
     size: 10,
-    type: 'minimal',
+    type: 'image',
+    coverLayout: 'right',
   },
   tagsPageConfig: {
     size: 10,
