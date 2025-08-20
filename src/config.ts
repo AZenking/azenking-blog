@@ -11,13 +11,15 @@ import type {
   TagsConfig,
 } from '~/types'
 
+//--- Readme Page Config ---
 export const SITE: Site = {
   title: 'Litos',
   description: 'Litos is a blog theme built with Astro.js and Dnzzk2.',
   website: 'https://litos.vercel.app/',
+  lang: 'en',
   base: '/',
   author: 'Dnzzk2',
-  ogImage: '/og-image.jpg',
+  ogImage: '/og-image.webp',
 }
 
 export const HEADER_LINKS: Link[] = [
@@ -64,7 +66,7 @@ export const SOCIAL_LINKS: SocialLink[] = [
     name: 'github',
     url: 'https://github.com/yourname',
     icon: 'icon-[ri--github-fill]',
-    count: 12,
+    count: 11,
   },
   {
     name: 'twitter',
@@ -179,13 +181,14 @@ export const GITHUB_CONFIG: GithubConfig = {
   TOOLTIP_ENABLED: true,
 }
 
+//--- Posts Page Config ---
 export const POSTS_CONFIG: PostConfig = {
   title: 'Posts',
   description: 'Posts by Dnzzk2',
   introduce: 'Here, I will share the usage instructions for this theme to help you quickly use it.',
   author: 'Dnzzk2',
   homePageConfig: {
-    size: 3,
+    size: 5,
     type: 'compact',
   },
   postPageConfig: {
@@ -198,7 +201,7 @@ export const POSTS_CONFIG: PostConfig = {
     type: 'time-line',
   },
   ogImageUseCover: false,
-  postType: 'coverSplit',
+  postType: 'metaOnly',
   imageDarkenInDark: true,
   readMoreText: 'Read more',
   prevPageText: 'Previous',

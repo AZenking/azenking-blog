@@ -29,14 +29,14 @@ const { post }: Props = Astro.props
       }
     </div>
     <a href={`/posts/${post.id}`} class="block">
-      <div class="text-base font-semibold text-foreground group-hover:text-primary transition-colors line-clamp-2">
+      <div class="text-base font-semibold text-foreground leading-tight group-hover:text-primary transition-colors line-clamp-2">
         {post.data.title}
       </div>
-      {post.data.description && <p class="mt-1 text-sm text-muted-foreground/80 leading-5 line-clamp-2">{post.data.description}</p>}
+      {post.data.description && <p class="mt-1 text-sm text-muted-foreground/90 leading-5 line-clamp-2">{post.data.description}</p>}
     </a>
 
     {
-      post.data.tags?.length > 0 && (
+      post.data.tags && post.data.tags.length > 0 && (
         <div class="flex flex-wrap gap-1.5">
           {post.data.tags.slice(0, 5).map((tag) => (
             <Badge type="tag" content={tag} />

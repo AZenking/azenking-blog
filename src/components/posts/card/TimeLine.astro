@@ -62,7 +62,7 @@ const recommendText = POSTS_CONFIG.recommendText
       </a>
 
       {
-        post.data.tags?.length > 0 && (
+        post.data.tags && post.data.tags.length > 0 && (
           <div class="mt-2.5 flex flex-wrap gap-1.5">
             {post.data.recommend && <Badge type="recommend" content={recommendText} />}
             {post.data.tags.map((tag) => (

@@ -1,9 +1,7 @@
 ---
 import type { GetStaticPaths, Page } from 'astro'
 import type { CollectionEntry } from 'astro:content'
-import { getCollection } from 'astro:content'
 import { POSTS_CONFIG } from '~/config'
-import { postsSort } from '~/lib/utils'
 import Layout from '~/layouts/Layout.astro'
 import Pagination from '~/components/base/Pagination.astro'
 import List from '~/components/posts/card/List.astro'

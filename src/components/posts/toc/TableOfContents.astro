@@ -25,12 +25,13 @@ const filteredHeadings = headings.reduce(
   [] as (MarkdownHeading & { order: number })[]
 )
 
-// 使用 Map 代替对象，提高查找效率
-const indentClass = new Map([
-  [2, ''],
-  [3, 'ml-4'],
-  [4, 'ml-8'],
-])
+// 计算相对缩进 - 基于实际存在的最小层级
+const minDepth = filteredHeadings.length > 0 ? Math.min(...filteredHeadings.map((h) => h.depth)) : 2
+const getRelativeIndentClass = (depth: number) => {
+  const relativeDepth = depth - minDepth
+  const indentMap = ['ml-0', 'ml-4', 'ml-8', 'ml-12'] // 最多支持4级相对缩进
+  return indentMap[relativeDepth] || 'ml-12'
+}
 ---
 
 <div class={cn('hidden xl:block fixed top-30 right-[calc(50%-384px)] translate-x-full w-[clamp(12rem,18vw,18rem)]', className)}>
@@ -50,12 +51,12 @@ const indentClass = new Map([
             const depthClass = heading.depth === 1 ? 'font-medium text-foreground' : 'text-foreground/60 hover:text-foreground/90'
 
             return (
-              <li class={cn(depthClass, indentClass.get(heading.depth) || '')}>
+              <li class={cn(depthClass, getRelativeIndentClass(heading.depth) || '')}>
                 <a
                   href={`#${heading.slug}`}
                   data-desktop-heading-link
                   class={cn(
-                    'group flex text-sm min-h-[1.75rem] w-full overflow-hidden relative',
+                    'group flex items-center text-sm min-h-[1.75rem] w-full overflow-hidden relative',
                     'hover:bg-gradient-to-r hover:from-primary/10 dark:hover:from-primary/25 hover:to-transparent',
                     'data-[active]:bg-gradient-to-r data-[active]:from-primary/10 dark:data-[active]:from-primary/25 data-[active]:to-transparent '
                   )}

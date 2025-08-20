@@ -12,6 +12,7 @@ export type Site = {
   title: string
   base: string
   description: string
+  lang: string
   author: string
   website: string
   ogImage: string

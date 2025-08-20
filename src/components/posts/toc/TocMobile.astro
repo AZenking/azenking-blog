@@ -22,12 +22,13 @@ const filteredHeadings = headings
     order: index + 1,
   }))
 
-// 使用 Map 代替对象，提高查找效率
-const indentClass = new Map([
-  [2, ''],
-  [3, 'ml-3'],
-  [4, 'ml-6'],
-])
+// 计算相对缩进 - 基于实际存在的最小层级
+const minDepth = filteredHeadings.length > 0 ? Math.min(...filteredHeadings.map((h) => h.depth)) : 2
+const getRelativeIndentClass = (depth: number) => {
+  const relativeDepth = depth - minDepth
+  const indentMap = ['ml-0', 'ml-4', 'ml-8', 'ml-12'] // 最多支持4级相对缩进
+  return indentMap[relativeDepth] || 'ml-12'
+}
 ---
 
 {
@@ -68,7 +69,7 @@ const indentClass = new Map([
                 {filteredHeadings.map((heading) => {
                   const depthClass = heading.depth === 1 ? 'font-medium text-foreground' : 'text-foreground/60 hover:text-foreground/90'
                   return (
-                    <li class={cn('flex items-start gap-2 min-w-0', depthClass, indentClass.get(heading.depth) || '')}>
+                    <li class={cn('flex items-start gap-2 min-w-0', depthClass, getRelativeIndentClass(heading.depth) || '')}>
                       <span
                         class="text-primary/40 font-mono text-xs mt-1 min-w-[1.5rem] transition-colors duration-200 flex-shrink-0 mobile-toc-number"
                         data-order={heading.order}

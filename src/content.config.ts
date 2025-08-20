@@ -14,7 +14,7 @@ const posts = defineCollection({
         title: z.string(),
         description: z.string(),
         pubDate: z.date(),
-        tags: z.array(z.string()),
+        tags: z.array(z.string()).optional(),
         updatedDate: z.date().optional(),
         author: z.string().default(POSTS_CONFIG.author),
         cover: image().optional(),
