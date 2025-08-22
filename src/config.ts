@@ -14,7 +14,8 @@ import type {
 //--- Readme Page Config ---
 export const SITE: Site = {
   title: 'Litos',
-  description: 'Litos is a blog theme built with Astro.js and Dnzzk2.',
+  description:
+    'Litos is a modern blogging theme built on Astro.js, designed for developers. It supports multiple post layouts, photo displays, project displays, and more, providing an elegant user experience and powerful customization capabilities.',
   website: 'https://litos.vercel.app/',
   lang: 'en',
   base: '/',
