@@ -15,7 +15,6 @@ const ogImage = new URL(image || SITE.ogImage, Astro.url)
 ---
 
 <script is:inline src="/js/theme.js"></script>
-<link rel="stylesheet" href="/fonts/ShangguSansSC-VF/result.css" />
 
 <!-- 页面内SEO  On-Page SEO -->
 <meta charset="UTF-8" />
@@ -44,6 +43,8 @@ const ogImage = new URL(image || SITE.ogImage, Astro.url)
 <link rel="dns-prefetch" href="https://cdn.jsdelivr.net" />
 
 <!-- 预加载 -->
+<!-- 中文字体启用 -->
+<!-- <link rel="stylesheet" href="/fonts/ShangguSansSC-VF/result.css" /> -->
 <link rel="preload" href="/fonts/GeistVF.woff2" as="font" type="font/woff2" crossorigin="anonymous" />
 <link rel="preload" href="/fonts/Lexend-VariableFont_wght.woff2" as="font" type="font/woff2" crossorigin="anonymous" />
 <link rel="preload" href="/fonts/ZhudouSansVF-subset.woff2" as="font" type="font/woff2" crossorigin="anonymous" />
