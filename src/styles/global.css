@@ -59,8 +59,7 @@
   /* 等宽字体 */
   @font-face {
     font-family: 'GeistMono';
-    src: url('/fonts/GeistMono[wght].woff2') format('woff2');
-    font-weight: 400;
+    src: url('/fonts/GeistMono.woff2') format('woff2');
     font-display: swap;
   }
 }
