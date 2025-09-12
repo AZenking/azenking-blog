@@ -2,8 +2,8 @@
 import { formatDate } from '~/lib/utils'
 import { POSTS_CONFIG } from '~/config'
 import Prose from '~/components/posts/base/Prose.astro'
-import ZoomImage from '~/components/base/ZoomImage.astro'
 import Badge from '~/components/posts/base/Badge.astro'
+import LqipImage from '~/components/base/LqipImage.astro'
 
 interface Props {
   frontmatter: any
@@ -14,72 +14,78 @@ const { frontmatter, minutesRead } = Astro.props
 const recommendText = POSTS_CONFIG.recommendText
 ---
 
-<article class="relative fade-up">
-  {
-    frontmatter.cover && (
-      <div class="w-full">
-        <div class="max-w-5xl mx-auto px-0">
-          <div class="aspect-[1200/630] w-full overflow-hidden">
-            <ZoomImage
-              src={frontmatter.cover}
-              alt={frontmatter.title}
-              class="w-full h-full object-cover"
-              sizes="(max-width: 768px) 100vw, 960px"
-            />
+<article class="relative">
+  <div class="fade-up animation-delay-100">
+    {
+      frontmatter.cover && (
+        <div class="w-full">
+          <div class="max-w-5xl mx-auto px-0">
+            <div class="aspect-[1200/630] w-full overflow-hidden">
+              <LqipImage
+                src={frontmatter.cover}
+                alt=""
+                width={1200}
+                height={630}
+                loading="lazy"
+                decoding="async"
+                format="webp"
+                class="w-full h-full object-cover"
+              />
+            </div>
           </div>
         </div>
-      </div>
-    )
-  }
+      )
+    }
 
-  <header class="px-6 sm:px-8 py-6">
-    <div class="max-w-3xl mx-auto">
-      {frontmatter.description && <p class="text-sm text-muted-foreground/90 leading-relaxed mb-4">{frontmatter.description}</p>}
+    <header class="px-6 sm:px-8 py-6">
+      <div class="max-w-3xl mx-auto">
+        {frontmatter.description && <p class="text-sm text-muted-foreground/90 leading-relaxed mb-4">{frontmatter.description}</p>}
 
-      <div class="space-y-3 sm:space-y-4">
-        <div
-          data-pagefind-body
-          class="text-2xl lg:text-3xl font-semibold leading-tight tracking-wide bg-gradient-to-r from-foreground/90 to-foreground/70 bg-clip-text text-transparent"
-        >
-          {frontmatter.title}
+        <div class="space-y-3 sm:space-y-4">
+          <div
+            data-pagefind-body
+            class="text-2xl lg:text-3xl font-semibold leading-tight tracking-wide bg-gradient-to-r from-foreground/90 to-foreground/70 bg-clip-text text-transparent"
+          >
+            {frontmatter.title}
+          </div>
         </div>
-      </div>
 
-      <div class="flex flex-wrap items-center gap-3 sm:gap-4 text-sm text-muted-foreground/85 mt-4">
-        <div class="flex items-center gap-1.5">
-          <span class="icon-[ph--calendar-blank] w-4 h-4 opacity-85"></span>
-          <time datetime={frontmatter.pubDate.toISOString()}>
-            {formatDate(frontmatter.pubDate)}
-          </time>
+        <div class="flex flex-wrap items-center gap-3 sm:gap-4 text-sm text-muted-foreground/85 mt-4">
+          <div class="flex items-center gap-1.5">
+            <span class="icon-[ph--calendar-blank] w-4 h-4 opacity-85"></span>
+            <time datetime={frontmatter.pubDate.toISOString()}>
+              {formatDate(frontmatter.pubDate)}
+            </time>
+          </div>
+          {
+            frontmatter.updatedDate && (
+              <div class="flex items-center gap-1.5">
+                <span class="icon-[ph--clock-clockwise] w-4 h-4 opacity-85" />
+                <time datetime={frontmatter.updatedDate.toISOString()}>{formatDate(frontmatter.updatedDate)}</time>
+              </div>
+            )
+          }
+          {
+            minutesRead && (
+              <div class="flex items-center gap-1.5">
+                <span class="icon-[ph--book-open-text] w-4 h-4 opacity-85" />
+                <span>{minutesRead} mins</span>
+              </div>
+            )
+          }
         </div>
-        {
-          frontmatter.updatedDate && (
-            <div class="flex items-center gap-1.5">
-              <span class="icon-[ph--clock-clockwise] w-4 h-4 opacity-85" />
-              <time datetime={frontmatter.updatedDate.toISOString()}>{formatDate(frontmatter.updatedDate)}</time>
-            </div>
-          )
-        }
-        {
-          minutesRead && (
-            <div class="flex items-center gap-1.5">
-              <span class="icon-[ph--book-open-text] w-4 h-4 opacity-85" />
-              <span>{minutesRead} mins</span>
-            </div>
-          )
-        }
+
+        <div class="flex gap-2 sm:gap-2.5 lg:gap-3 flex-wrap pt-4">
+          {frontmatter.recommend && <Badge type="recommend" content={recommendText} />}
+          {frontmatter.tags?.map((tag: string) => <Badge type="tag" content={tag} size="sm" />)}
+        </div>
+
+        <div class="border-b border-border/60 mt-6 sm:mt-8 mb-6 sm:mb-8"></div>
       </div>
+    </header>
+  </div>
 
-      <div class="flex gap-2 sm:gap-2.5 lg:gap-3 flex-wrap pt-4">
-        {frontmatter.recommend && <Badge type="recommend" content={recommendText} />}
-        {frontmatter.tags?.map((tag: string) => <Badge type="tag" content={tag} size="sm" />)}
-      </div>
-
-      <div class="border-b border-border/60 mt-6 sm:mt-8 mb-6 sm:mb-8"></div>
-    </div>
-  </header>
-
-  <main class="px-6 sm:px-8 pb-10 max-w-3xl mx-auto">
+  <main class="px-6 sm:px-8 pb-10 max-w-3xl mx-auto fade-up animation-delay-150">
     <Prose>
       <slot />
     </Prose>

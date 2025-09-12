@@ -2,8 +2,8 @@
 import { formatDate } from '~/lib/utils'
 import { POSTS_CONFIG } from '~/config'
 import Prose from '~/components/posts/base/Prose.astro'
-import ZoomImage from '~/components/base/ZoomImage.astro'
 import Badge from '~/components/posts/base/Badge.astro'
+import LqipImage from '~/components/base/LqipImage.astro'
 
 interface Props {
   frontmatter: any
@@ -14,8 +14,8 @@ const { frontmatter, minutesRead } = Astro.props
 const recommendText = POSTS_CONFIG.recommendText
 ---
 
-<article class="relative fade-up">
-  <header class="bg-accent/15 backdrop-blur-sm px-6 sm:px-8 py-8 sm:py-10 border-b border-border/50">
+<article class="relative">
+  <header class="bg-accent/15 backdrop-blur-sm px-6 sm:px-8 py-8 sm:py-10 border-b border-border/50 fade-up animation-delay-100">
     <div class="max-w-4xl mx-auto">
       <div class="flex flex-wrap items-center gap-3 text-sm text-muted-foreground/85 mb-4 sm:mb-2">
         <div class="flex items-center gap-1.5">
@@ -59,11 +59,15 @@ const recommendText = POSTS_CONFIG.recommendText
         </div>
         <div class="md:w-2/5">
           <div class="aspect-[1200/630] w-full overflow-hidden border border-border/50 bg-muted/30">
-            <ZoomImage
+            <LqipImage
               src={frontmatter.cover}
-              alt={frontmatter.title}
+              alt=""
+              width={1200}
+              height={630}
+              loading="lazy"
+              decoding="async"
+              format="webp"
               class="w-full h-full object-cover"
-              sizes="(max-width: 768px) 100vw, 45vw"
             />
           </div>
         </div>
@@ -71,7 +75,7 @@ const recommendText = POSTS_CONFIG.recommendText
     </div>
   </header>
 
-  <main class="px-6 sm:px-8 py-10 max-w-4xl mx-auto">
+  <main class="px-6 sm:px-8 py-10 max-w-4xl mx-auto fade-up animation-delay-150">
     <Prose>
       <slot />
     </Prose>
