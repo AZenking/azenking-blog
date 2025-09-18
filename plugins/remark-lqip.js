@@ -1,116 +1,180 @@
 import { visit } from 'unist-util-visit'
 import path from 'node:path'
-import { existsSync } from 'node:fs'
+import { existsSync, readdirSync } from 'node:fs'
 import sharp from 'sharp'
-import { getPixels } from 'ndarray-pixels'
-import quantize from '@lokesh.dhakar/quantize'
+
+function packColor11bit(c) {
+  const r = Math.round((c.r / 0xff) * 0b1111)
+  const g = Math.round((c.g / 0xff) * 0b1111)
+  const b = Math.round((c.b / 0xff) * 0b111)
+  return (r << 7) | (g << 3) | b
+}
+
+function packColor10bit(c) {
+  const r = Math.round((c.r / 0xff) * 0b111)
+  const g = Math.round((c.g / 0xff) * 0b1111)
+  const b = Math.round((c.b / 0xff) * 0b111)
+  return (r << 7) | (g << 3) | b
+}
 
 /**
- * Convert RGB color to OKLab color space
- * https://github.com/Kalabasa/leanrada.com/blob/7b6739c7c30c66c771fcbc9e1dc8942e628c5024/main/scripts/update/lib/color/convert.mjs
+ * 基于纯CSS的LQIP实现
+ * 参考: https://frzi.medium.com/lqip-css-73dc6dda2529
+ * 将3个颜色打包到单个RGBA hex值中，在CSS中解包生成网格渐变
  */
 
 /**
- * RGB到Oklab颜色空间转换
+ * 使用Sharp从图像中提取3个特定位置的颜色
  */
-function rgbToOkLab(rgb) {
-  const r = gammaInv(rgb.r / 255)
-  const g = gammaInv(rgb.g / 255)
-  const b = gammaInv(rgb.b / 255)
+async function extractColors(imagePath) {
+  try {
+    // 使用sharp将图像缩放到3x3并获取原始像素数据
+    const { data, info } = await sharp(imagePath)
+      .resize(3, 3, {
+        fit: 'fill',
+        kernel: 'lanczos3', // 高质量缩放
+      })
+      .raw()
+      .toBuffer({ resolveWithObject: true })
 
-  const l = Math.cbrt(0.4122214708 * r + 0.5363325363 * g + 0.0514459929 * b)
-  const m = Math.cbrt(0.2119034982 * r + 0.6806995451 * g + 0.1073969566 * b)
-  const s = Math.cbrt(0.0883024619 * r + 0.2817188376 * g + 0.6299787005 * b)
+    const pixels = []
 
-  return {
-    L: l * +0.2104542553 + m * +0.793617785 + s * -0.0040720468,
-    a: l * +1.9779984951 + m * -2.428592205 + s * +0.4505937099,
-    b: l * +0.0259040371 + m * +0.7827717662 + s * -0.808675766,
+    // 从原始像素数据中提取RGB值
+    for (let a = 0; a < data.length; a += info.channels) {
+      pixels.push({
+        r: data[a],
+        g: data[a + 1],
+        b: data[a + 2],
+      })
+    }
+
+    // 选择3个特定位置的颜色：左上角(0)、中心偏右(4)、右下角(8)
+    // 3x3网格的索引布局：
+    // 0 1 2
+    // 3 4 5
+    // 6 7 8
+    const [c0, c1, c2] = [pixels[0], pixels[4], pixels[8]]
+
+    return [c0, c1, c2]
+  } catch (error) {
+    console.warn(`颜色提取失败: ${imagePath}`, error.message)
+    return null
   }
 }
 
-function gammaInv(x) {
-  return x >= 0.04045 ? Math.pow((x + 0.055) / 1.055, 2.4) : x / 12.92
+/**
+ * 将3个颜色打包到单个RGBA hex值中
+ * 使用color.ts中的位打包方法：
+ * - 第1个颜色：使用packColor11bit (R:4位, G:4位, B:3位)
+ * - 第2个颜色：使用packColor11bit (R:4位, G:4位, B:3位)
+ * - 第3个颜色：使用packColor10bit (R:3位, G:4位, B:3位)
+ * 总共32位 = RGBA
+ */
+function packColorsToHex(colors) {
+  const [c0, c1, c2] = colors
+
+  // 使用color.ts中的位打包函数
+  const pc0 = packColor11bit(c0) // 11位
+  const pc1 = packColor11bit(c1) // 11位
+  const pc2 = packColor10bit(c2) // 10位
+
+  // 打包到32位：11 + 11 + 10 = 32位
+  const combined = (BigInt(pc0) << 21n) | (BigInt(pc1) << 10n) | BigInt(pc2)
+
+  // 转换为8位hex字符串
+  const hex = '#' + combined.toString(16).padStart(8, '0')
+  return hex
 }
 
 /**
- * Extract dominant colors from images
- * https://github.com/Kalabasa/leanrada.com/blob/7b6739c7c30c66c771fcbc9e1dc8942e628c5024/main/scripts/update/lib/color/thief.mjs
+ * 分析图像并生成LQIP hex值
  */
+async function analyzeImageForLQIP(imagePath) {
+  try {
+    const metadata = await sharp(imagePath).metadata()
+    const { width, height } = metadata
+
+    // 检查图像是否不透明
+    const stats = await sharp(imagePath).stats()
+    if (!stats.isOpaque) {
+      return null // 跳过透明图像
+    }
+
+    // 提取3个主要颜色
+    const colors = await extractColors(imagePath)
+    if (!colors) {
+      return null
+    }
+
+    // 打包颜色为hex值
+    const lqipHex = packColorsToHex(colors)
+
+    return {
+      width,
+      height,
+      lqipHex,
+      colors, // 用于调试
+    }
+  } catch (error) {
+    console.warn(`LQIP分析失败: ${imagePath}`, error.message)
+    return null
+  }
+}
+
 /**
- * 创建像素数组用于颜色量化
+ * 解析图像路径
  */
-function createPixelArray(pixels, pixelCount, quality) {
-  const pixelArray = []
-
-  for (let i = 0, offset, r, g, b; i < pixelCount; i += quality) {
-    offset = i * 4
-    r = pixels[offset]
-    g = pixels[offset + 1]
-    b = pixels[offset + 2]
-
-    pixelArray.push([r, g, b])
+function resolveImagePath(imageUrl, filePath) {
+  if (path.isAbsolute(imageUrl)) {
+    return imageUrl
   }
 
-  return pixelArray
-}
-
-/**
- * 验证调色板选项
- */
-function validateOptions(options) {
-  let { colorCount, quality } = options
-
-  if (typeof colorCount === 'undefined' || !Number.isInteger(colorCount)) {
-    colorCount = 10
-  } else if (colorCount === 1) {
-    throw new Error('colorCount应该在2-20之间')
-  } else {
-    colorCount = Math.max(colorCount, 2)
-    colorCount = Math.min(colorCount, 20)
+  // 处理 Astro 的 ~ 路径别名
+  if (imageUrl.startsWith('~/')) {
+    const contentDir = path.dirname(filePath)
+    const srcDir = path.dirname(path.dirname(contentDir))
+    return path.resolve(srcDir, imageUrl.slice(2))
   }
 
-  if (typeof quality === 'undefined' || !Number.isInteger(quality) || quality < 1) {
-    quality = 10
+  const fileDir = path.dirname(filePath || '')
+  return path.resolve(fileDir, imageUrl)
+}
+
+/**
+ * 处理单个图像节点
+ */
+async function processImageNode(node, filePath) {
+  const imagePath = resolveImagePath(node.url, filePath)
+
+  if (!existsSync(imagePath)) {
+    return
   }
 
-  return { colorCount, quality }
+  const lqipData = await analyzeImageForLQIP(imagePath)
+  if (!lqipData) {
+    return
+  }
+
+  // 添加data属性用于CSS处理
+  node.data = node.data || {}
+  node.data.hProperties = node.data.hProperties || {}
+
+  // 设置尺寸属性
+  if (lqipData.width && lqipData.height) {
+    node.data.hProperties.width = lqipData.width
+    node.data.hProperties.height = lqipData.height
+  }
+
+  // 设置LQIP样式变量
+  const style = node.data.hProperties.style || ''
+  const lqipStyle = `--lqip:${lqipData.lqipHex}`
+
+  node.data.hProperties.style = style ? `${style};${lqipStyle}` : lqipStyle
 }
 
 /**
- * 加载图像数据
+ * Remark插件主函数
  */
-async function loadImg(img) {
-  return new Promise((resolve, reject) => {
-    sharp(img)
-      .toBuffer()
-      .then((buffer) =>
-        sharp(buffer)
-          .metadata()
-          .then((metadata) => ({ buffer, format: metadata.format }))
-      )
-      .then(({ buffer, format }) => getPixels(buffer, format))
-      .then(resolve)
-      .catch(reject)
-  })
-}
-
-/**
- * 获取调色板
- */
-async function getPalette(img, colorCount = 10, quality = 10) {
-  const options = validateOptions({ colorCount, quality })
-
-  const imgData = await loadImg(img)
-  const pixelCount = imgData.shape[0] * imgData.shape[1]
-  const pixelArray = createPixelArray(imgData.data, pixelCount, options.quality)
-
-  const cmap = quantize(pixelArray, options.colorCount)
-  const palette = cmap ? cmap.palette() : null
-
-  return palette
-}
-
 function remarkLQIP() {
   return async (tree, file) => {
     const imagesToProcess = []
@@ -135,207 +199,107 @@ function remarkLQIP() {
   }
 }
 
-/**
- * 处理单个图像节点
- */
-async function processImageNode(node, filePath) {
-  const imagePath = resolveImagePath(node.url, filePath)
-
-  if (!existsSync(imagePath)) {
-    return
-  }
-
-  const lqipData = await analyzeImage(imagePath)
-
-  if (!lqipData.opaque) {
-    return // 跳过透明图像
-  }
-
-  // 编码LQIP数据
-  const lqipValue = encodeLQIP(lqipData)
-
-  // 添加data属性用于CSS处理
-  node.data = node.data || {}
-  node.data.hProperties = node.data.hProperties || {}
-
-  // 设置尺寸属性
-  if (lqipData.width && lqipData.height) {
-    node.data.hProperties.width = lqipData.width
-    node.data.hProperties.height = lqipData.height
-  }
-
-  // 设置LQIP样式
-  const style = node.data.hProperties.style || ''
-  const lqipStyle = `--lqip:${lqipValue}`
-
-  node.data.hProperties.style = style ? `${style};${lqipStyle}` : lqipStyle
-}
-
-/**
- * 分析图像并提取LQIP数据
- */
-async function analyzeImage(imagePath) {
-  const theSharp = sharp(imagePath)
-  const [metadata, stats] = await Promise.all([theSharp.metadata(), theSharp.stats()])
-
-  const { width, height } = getNormalSize(metadata)
-
-  if (!stats.isOpaque) {
-    return { width, height, opaque: false }
-  }
-
-  // 并行处理：生成3x2预览图 & 提取主色调
-  const [previewBuffer, dominantColor] = await Promise.all([
-    theSharp.resize(3, 2, { fit: 'fill' }).sharpen({ sigma: 1 }).removeAlpha().toFormat('raw', { bitdepth: 8 }).toBuffer(),
-    getPalette(imagePath, 4, 10).then((palette) => palette[0]),
-  ])
-
-  // 转换主色调到Oklab空间
-  const baseColor = rgbToOkLab({
-    r: dominantColor[0],
-    g: dominantColor[1],
-    b: dominantColor[2],
-  })
-
-  // 量化基础颜色
-  const { ll, aaa, bbb } = findOklabBits(baseColor.L, baseColor.a, baseColor.b)
-  const { L: baseL } = bitsToLab(ll, aaa, bbb)
-
-  // 提取6个网格单元的亮度值
-  const values = Array.from({ length: 6 }, (_, i) => {
-    const offset = i * 3
-    const r = previewBuffer.readUint8(offset)
-    const g = previewBuffer.readUint8(offset + 1)
-    const b = previewBuffer.readUint8(offset + 2)
-    const { L } = rgbToOkLab({ r, g, b })
-    return clamp(0.5 + L - baseL, 0, 1)
-  })
-
-  return {
-    width,
-    height,
-    opaque: true,
-    ll,
-    aaa,
-    bbb,
-    values,
-  }
-}
-
-/**
- * 编码LQIP数据为单个整数
- * 使用20位编码：6个亮度分量(12位) + 基础颜色(8位)
- */
-function encodeLQIP({ ll, aaa, bbb, values }) {
-  const ca = Math.round(values[0] * 0b11)
-  const cb = Math.round(values[1] * 0b11)
-  const cc = Math.round(values[2] * 0b11)
-  const cd = Math.round(values[3] * 0b11)
-  const ce = Math.round(values[4] * 0b11)
-  const cf = Math.round(values[5] * 0b11)
-
-  const lqip =
-    -(2 ** 19) +
-    ((ca & 0b11) << 18) +
-    ((cb & 0b11) << 16) +
-    ((cc & 0b11) << 14) +
-    ((cd & 0b11) << 12) +
-    ((ce & 0b11) << 10) +
-    ((cf & 0b11) << 8) +
-    ((ll & 0b11) << 6) +
-    ((aaa & 0b111) << 3) +
-    (bbb & 0b111)
-
-  // CSS整数范围检查
-  if (lqip < -999_999 || lqip > 999_999) {
-    throw new Error(`LQIP值超出CSS范围: ${lqip}`)
-  }
-
-  return lqip
-}
-
-/**
- * 寻找最佳的Oklab位配置
- */
-function findOklabBits(targetL, targetA, targetB) {
-  const targetChroma = Math.hypot(targetA, targetB)
-  const scaledTargetA = scaleComponentForDiff(targetA, targetChroma)
-  const scaledTargetB = scaleComponentForDiff(targetB, targetChroma)
-
-  let bestBits = [0, 0, 0]
-  let bestDifference = Infinity
-
-  for (let lli = 0; lli <= 0b11; lli++) {
-    for (let aaai = 0; aaai <= 0b111; aaai++) {
-      for (let bbbi = 0; bbbi <= 0b111; bbbi++) {
-        const { L, a, b } = bitsToLab(lli, aaai, bbbi)
-        const chroma = Math.hypot(a, b)
-        const scaledA = scaleComponentForDiff(a, chroma)
-        const scaledB = scaleComponentForDiff(b, chroma)
-
-        const difference = Math.hypot(L - targetL, scaledA - scaledTargetA, scaledB - scaledTargetB)
-
-        if (difference < bestDifference) {
-          bestDifference = difference
-          bestBits = [lli, aaai, bbbi]
-        }
-      }
-    }
-  }
-
-  return { ll: bestBits[0], aaa: bestBits[1], bbb: bestBits[2] }
-}
-
-/**
- * 将位数转换回Lab颜色
- */
-function bitsToLab(ll, aaa, bbb) {
-  return {
-    L: (ll / 0b11) * 0.6 + 0.2,
-    a: (aaa / 0b1000) * 0.7 - 0.35,
-    b: ((bbb + 1) / 0b1000) * 0.7 - 0.35,
-  }
-}
-
-/**
- * 缩放色度分量以避免欧几里得距离偏向中心
- */
-function scaleComponentForDiff(component, chroma) {
-  return component / (1e-6 + Math.pow(chroma, 0.5))
-}
-
-/**
- * 获取正确的图像尺寸（考虑EXIF方向）
- */
-function getNormalSize({ width, height, orientation }) {
-  return (orientation || 0) >= 5 ? { width: height, height: width } : { width, height }
-}
-
-/**
- * 解析图像路径
- */
-function resolveImagePath(imageUrl, filePath) {
-  if (path.isAbsolute(imageUrl)) {
-    return imageUrl
-  }
-
-  // 处理 Astro 的 ~ 路径别名
-  if (imageUrl.startsWith('~/')) {
-    // 从 content/posts 目录向上找到 src 目录
-    const contentDir = path.dirname(filePath) // .../src/content/posts
-    const srcDir = path.dirname(path.dirname(contentDir)) // .../src
-    return path.resolve(srcDir, imageUrl.slice(2)) // 去掉 ~/
-  }
-
-  const fileDir = path.dirname(filePath || '')
-  return path.resolve(fileDir, imageUrl)
-}
-
-/**
- * 数值约束函数
- */
-function clamp(value, min, max) {
-  return Math.min(max, Math.max(min, value))
-}
-
 export default remarkLQIP
+
+// 在构建环境中，我们可以通过堆栈跟踪获取调用上下文
+function getCallerContext() {
+  const stack = new Error().stack
+  if (!stack) return null
+
+  // 查找包含 /content/ 的文件路径（Windows和Linux兼容）
+  const contentMatch = stack.match(/([^:\s]+[\/\\]content[\/\\][^:\s)]+)/i)
+  if (contentMatch) {
+    return contentMatch[1].replace(/\\/g, '/')
+  }
+
+  return null
+}
+
+export async function generateLQIPFromPath(src) {
+  try {
+    let imagePath
+
+    if (typeof src === 'string') {
+      imagePath = resolveImagePath(src, '')
+    } else if (src && typeof src === 'object') {
+      // 处理Astro ImageMetadata对象
+
+      // 尝试多种方式获取原始文件路径
+      if (src.fsPath) {
+        imagePath = src.fsPath
+      } else if (src.pathname) {
+        imagePath = src.pathname
+      } else if (src.src) {
+        let cleanSrc = src.src
+
+        // 移除Astro的特殊前缀和查询参数
+        if (cleanSrc.includes('/@fs/')) {
+          // 提取真实文件路径：/@fs/D:/Code/dnzzk2.icu/src/content/...
+          cleanSrc = cleanSrc.split('/@fs/')[1]
+          if (cleanSrc) {
+            // 移除查询参数并规范化路径分隔符
+            imagePath = cleanSrc.split('?')[0].replace(/\\/g, '/')
+          }
+        } else if (cleanSrc.startsWith('/_astro/')) {
+          // 对于/_astro/路径，这是Astro优化后的路径
+          // 尝试从调用上下文推断原始路径
+          const callerContext = getCallerContext()
+
+          if (callerContext) {
+            // 从调用文件的目录中查找可能的图片文件
+            const contextDir = path.dirname(callerContext)
+            const assetsDir = path.join(contextDir, 'assets')
+
+            // 尝试匹配文件扩展名
+            const srcFileName = path.basename(cleanSrc)
+            const fileExtension = path.extname(srcFileName)
+
+            if (existsSync(assetsDir)) {
+              // 在assets目录中查找同类型的文件
+              const files = readdirSync(assetsDir)
+              const matchingFile = files.find(
+                (file) => path.extname(file) === fileExtension || file.includes(path.parse(srcFileName).name.split('.')[0])
+              )
+
+              if (matchingFile) {
+                imagePath = path.join(assetsDir, matchingFile)
+              }
+            }
+          }
+
+          if (!imagePath) {
+            console.log('无法推断原始路径，跳过LQIP生成:', cleanSrc)
+            return null
+          }
+        } else {
+          // 处理普通路径
+          imagePath = resolveImagePath(cleanSrc.split('?')[0], '')
+        }
+      } else {
+        console.warn('ImageMetadata对象缺少可用的路径属性:', Object.keys(src))
+        return null
+      }
+    } else {
+      console.warn('无效的图像源:', src)
+      return null
+    }
+
+    if (!imagePath) {
+      console.warn('无法解析图像路径:', src)
+      return null
+    }
+
+    // 检查文件是否存在
+    if (!existsSync(imagePath)) {
+      console.warn(`图像文件不存在: ${imagePath}`)
+      return null
+    }
+
+    // 分析图像并生成LQIP
+    const result = await analyzeImageForLQIP(imagePath)
+    return result ? result.lqipHex : null
+  } catch (error) {
+    console.warn('LQIP生成失败:', error.message)
+    return null
+  }
+}
