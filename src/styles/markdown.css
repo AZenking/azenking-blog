@@ -57,7 +57,7 @@
 
   /* 现代文本换行 */
   & :is(p, li, blockquote) {
-    text-wrap: pretty;
+    text-wrap: wrap;
   }
 
   /* 移除默认边距 */
