@@ -2,7 +2,7 @@
 import { FRIEND_LINKS, FRIENDS_CONFIG } from '~/config'
 import Layout from '~/layouts/Layout.astro'
 import PageTitle from '~/components/base/PageTitle.astro'
-import Noise from '~/components/reactbits/Noise'
+import Galaxy from '~/components/reactbits/Galaxy'
 
 const { title, description, introduce } = FRIENDS_CONFIG
 ---
@@ -10,8 +10,16 @@ const { title, description, introduce } = FRIENDS_CONFIG
 <Layout {title} {description}>
   <div class="relative z-[1] px-6 py-8 pb-10 sm:px-8">
     <div class="pointer-events-none absolute inset-y-0 left-1/2 -z-10 w-screen -translate-x-1/2 overflow-hidden">
-      <div class="absolute inset-0 opacity-[0.16]">
-        <Noise patternSize={768} patternRefreshInterval={5} patternAlpha={16} client:load />
+      <div class="absolute inset-0 opacity-[0.72]">
+        <Galaxy
+          mouseRepulsion={false}
+          density={1.2}
+          glowIntensity={0.22}
+          saturation={0.3}
+          hueShift={210}
+          twinkleIntensity={0.25}
+          client:load
+        />
       </div>
       <div class="absolute inset-0 bg-[radial-gradient(circle_at_50%_0%,rgba(120,120,255,0.2),transparent_42%),linear-gradient(to_bottom,rgba(0,0,0,0),hsl(var(--background)/0.58))]"></div>
     </div>

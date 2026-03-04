@@ -70,11 +70,27 @@ const quickNavItems = [
 <Layout title="Readme" description={SITE.description}>
   <div class="relative z-[1] px-6 py-8 sm:px-8 sm:py-10 font-mono text-[15px] leading-7">
     <div class="pointer-events-none absolute inset-y-0 left-1/2 -z-10 w-screen -translate-x-1/2 overflow-hidden">
-      <div class="absolute inset-0 opacity-[0.65]">
+      <div class="absolute inset-0 opacity-[0.5] dark:hidden">
         <LightPillar
-          topColor="#6f6cff"
-          bottomColor="#ffe7ff"
-          intensity={0.9}
+          topColor="#94a3b8"
+          bottomColor="#e2e8f0"
+          intensity={0.65}
+          rotationSpeed={0.22}
+          interactive={false}
+          glowAmount={0.004}
+          pillarWidth={3.1}
+          pillarHeight={0.4}
+          noiseIntensity={0.2}
+          quality="medium"
+          className="opacity-80"
+          client:load
+        />
+      </div>
+      <div class="absolute inset-0 hidden opacity-[0.68] dark:block">
+        <LightPillar
+          topColor="#818cf8"
+          bottomColor="#e9d5ff"
+          intensity={0.88}
           rotationSpeed={0.28}
           interactive={false}
           glowAmount={0.006}

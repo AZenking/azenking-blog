@@ -14,8 +14,8 @@ const projects = await getAllProjects()
 ---
 
 <Layout {title} {description}>
-  <div class="relative z-[1] py-8 pb-10">
-    <div class="pointer-events-none absolute inset-y-0 left-1/2 -z-10 w-screen -translate-x-1/2 overflow-hidden">
+  <div class="relative z-[1] min-h-screen py-8 pb-10">
+    <div class="pointer-events-none absolute inset-0 left-1/2 -z-10 w-screen -translate-x-1/2 overflow-hidden">
       <div class="absolute inset-0 opacity-35">
         <Squares direction="diagonal" speed={0.35} borderColor="#4b4b65" hoverFillColor="#1f1f35" squareSize={44} client:load />
       </div>
