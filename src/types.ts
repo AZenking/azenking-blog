@@ -225,6 +225,20 @@ export interface PhotosConfig {
   introduce: string
 }
 
+export interface FriendsConfig {
+  title: string
+  description: string
+  introduce: string
+}
+
+export interface FriendLinkItem {
+  name: string
+  url: string
+  description: string
+  avatar?: string
+  tags?: string[]
+}
+
 export type TimelineIconType = 'emoji' | 'icon' | 'color' | 'number' | 'image'
 
 export interface PhotoData {

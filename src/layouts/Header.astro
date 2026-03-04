@@ -1,51 +1,52 @@
 ---
 import { HEADER_LINKS } from '~/config'
+import { SITE } from '~/config'
+import { SOCIAL_LINKS } from '~/config'
 import ThemeToggle from '~/components/theme/ThemeToggle'
-import HeaderGradient from '~/components/theme/HeaderGradient.astro'
-import SectionDivider from '~/components/base/SectionDivider.astro'
-import HeaderLink from '~/components/base/HeaderLink.astro'
 import SearchSwitch from '~/components/base/SearchSwitch.astro'
-import { Image } from 'astro:assets'
-import favicon from '../../public/favicon.svg'
+
+const githubLink = SOCIAL_LINKS.find((item) => item.name.toLowerCase() === 'github')?.url
 ---
 
-<HeaderGradient />
-<header>
-  <div class="mx-auto global-layout-width flex justify-between px-6 sm:px-8 py-4 lg:px-8">
-    <div class="flex gap-3 sm:gap-6 items-center flex-shrink-0">
-      <a href="/" class="pointer-events-auto select-none" transition:persist>
-        <Image src={favicon} width={1000} height={1000} alt="Logo" class="w-8 h-8" densities={[1, 2]} loading="eager" />
+<header class="border-b border-border/70">
+  <div class="mx-auto global-layout-width flex flex-wrap items-center justify-between gap-y-3 px-6 py-4 sm:px-8">
+    <div class="flex grow items-center gap-7 font-sans text-[0.95rem] font-semibold uppercase tracking-[0.03em]">
+      <a href="/" class="pointer-events-auto select-none text-foreground tracking-[0.04em]" transition:persist>
+        {SITE.title}
       </a>
-      <div class="flex gap-1">
+      <nav class="ml-auto flex flex-wrap items-center justify-end gap-4 text-muted-foreground">
         {
           HEADER_LINKS.map((link) => (
-            <HeaderLink href={link.url} background>
+            <a
+              href={link.url}
+              class:list={[
+                'hover:text-foreground transition-colors',
+                Astro.url.pathname.startsWith(link.url) && 'text-foreground',
+              ]}
+            >
               {link.name}
-            </HeaderLink>
+            </a>
           ))
         }
-      </div>
+        {githubLink && (
+          <a href={githubLink} target="_blank" rel="noreferrer" class="hover:text-foreground transition-colors">
+            GitHub
+          </a>
+        )}
+      </nav>
     </div>
-    <div class="flex gap-2 items-center" transition:persist="header-theme-toggle">
+    <div class="flex items-center gap-3 text-muted-foreground uppercase tracking-[0.04em] text-sm font-semibold" transition:persist="header-theme-toggle">
       <SearchSwitch />
       <a
         href="/atom.xml"
         target="_blank"
-        class="inline-flex items-center hover:scale-105 size-5 origin-center"
+        class="inline-flex items-center hover:text-foreground transition-colors"
         aria-label="RSS Feed"
         title="RSS Feed"
       >
-        <span class="icon-[material-symbols--rss-feed] size-5"></span>
+        RSS
       </a>
       <ThemeToggle client:load />
     </div>
   </div>
-  <div class="relative global-layout-width mx-auto pointer-events-none">
-    <div aria-hidden="true" class="absolute inset-x-0 -top-14 bottom-0 mx-auto global-layout-width">
-      <div class="to-(--color-border)/50 absolute bottom-0 left-0 top-0 w-px bg-gradient-to-b from-transparent to-75%"></div>
-      <div class="to-(--color-border)/50 absolute bottom-0 right-0 top-0 w-px bg-gradient-to-b from-transparent to-75%"></div>
-    </div>
-  </div>
 </header>
-
-<SectionDivider className="border-t-border dark:border-t-border/50" />

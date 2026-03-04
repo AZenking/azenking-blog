@@ -1,6 +1,8 @@
 import type {
   AnalyticsConfig,
   CommentConfig,
+  FriendLinkItem,
+  FriendsConfig,
   GithubConfig,
   Link,
   PhotosConfig,
@@ -14,13 +16,13 @@ import type {
 
 //--- Readme Page Config ---
 export const SITE: Site = {
-  title: 'Litos',
+  title: 'Ethan Yang',
   description:
-    'Litos is a modern blogging theme built on Astro.js, designed for developers. It supports multiple post layouts, photo displays, project displays, and more, providing an elegant user experience and powerful customization capabilities.',
+    '👋 大家好，我是 Ethan Young，一名常驻南京的程序员，也是一位在生活中持续迭代的普通人',
   website: 'https://litos.vercel.app/',
   lang: 'en',
   base: '/',
-  author: 'Dnzzk2',
+  author: 'Ethan',
   ogImage: '/og-image.webp',
   transition: false,
 }
@@ -37,6 +39,10 @@ export const HEADER_LINKS: Link[] = [
   {
     name: 'Photos',
     url: '/photos',
+  },
+  {
+    name: 'Friends',
+    url: '/friends',
   },
 ]
 
@@ -60,6 +66,10 @@ export const FOOTER_LINKS: Link[] = [
   {
     name: 'Photos',
     url: '/photos',
+  },
+  {
+    name: 'Friends',
+    url: '/friends',
   },
 ]
 
@@ -286,6 +296,36 @@ export const PHOTOS_CONFIG: PhotosConfig = {
   description: 'Here I will record some photos taken in daily life.',
   introduce: 'Here I will record some photos taken in daily life.',
 }
+
+export const FRIENDS_CONFIG: FriendsConfig = {
+  title: 'Friends',
+  description: 'A curated list of friends and blogs I follow.',
+  introduce: '一些我常逛并且推荐的朋友站点。如果你想交换友链，欢迎联系我。',
+}
+
+export const FRIEND_LINKS: FriendLinkItem[] = [
+  {
+    name: 'Astro',
+    url: 'https://astro.build',
+    description: 'The web framework for content-driven websites.',
+    avatar: 'https://astro.build/favicon.svg',
+    tags: ['Framework', 'Docs'],
+  },
+  {
+    name: 'Vercel',
+    url: 'https://vercel.com',
+    description: 'Frontend cloud platform for fast deploy and preview.',
+    avatar: 'https://vercel.com/favicon.ico',
+    tags: ['Platform'],
+  },
+  {
+    name: 'MDN Web Docs',
+    url: 'https://developer.mozilla.org',
+    description: 'Reference and learning resources for modern web APIs.',
+    avatar: 'https://developer.mozilla.org/favicon-48x48.cbbd161b.png',
+    tags: ['Reference'],
+  },
+]
 
 export const ANALYTICS_CONFIG: AnalyticsConfig = {
   vercount: {

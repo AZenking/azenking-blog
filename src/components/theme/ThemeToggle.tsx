@@ -48,9 +48,12 @@ const ThemeToggle = () => {
 
   const applyTheme = (newTheme: string) => {
     const root = document.documentElement
+    const isViewTransitionSwitch = (window as Window & { __theme_view_transition__?: boolean }).__theme_view_transition__ === true
 
-    // 添加过渡类
-    root.classList.add('disable-transition')
+    // 非 View Transition 切换时，禁用常规过渡防闪烁
+    if (!isViewTransitionSwitch) {
+      root.classList.add('disable-transition')
+    }
 
     const isDark = newTheme === 'dark' || (newTheme === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches)
     root.classList.toggle('dark', isDark)
@@ -60,19 +63,71 @@ const ThemeToggle = () => {
       metaThemeColor.setAttribute('content', isDark ? '#09090b' : '#FFFFFF')
     }
 
-    // 移除过渡类
-    setTimeout(() => {
-      root.classList.remove('disable-transition')
-    }, 300)
+    if (!isViewTransitionSwitch) {
+      setTimeout(() => {
+        root.classList.remove('disable-transition')
+      }, 300)
+    }
   }
 
-  const handleClick = () => {
-    const themeMap = {
-      light: 'dark',
-      dark: 'system',
-      system: 'light',
+  const resolveIsDark = (targetTheme: 'light' | 'dark' | 'system') => {
+    if (targetTheme === 'dark') return true
+    if (targetTheme === 'light') return false
+    return window.matchMedia('(prefers-color-scheme: dark)').matches
+  }
+
+  const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+    const doc = document as Document & {
+      startViewTransition?: (callback: () => void | Promise<void>) => { ready: Promise<void> }
     }
-    themeStore.set(themeMap[theme] as 'light' | 'dark' | 'system')
+    const isCurrentDark = document.documentElement.classList.contains('dark')
+    const nextTheme: 'light' | 'dark' = isCurrentDark ? 'light' : 'dark'
+
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    if (!doc.startViewTransition || prefersReducedMotion) {
+      themeStore.set(nextTheme)
+      return
+    }
+
+    const x = event.clientX || window.innerWidth / 2
+    const y = event.clientY || window.innerHeight / 2
+    const radius = Math.hypot(Math.max(x, window.innerWidth - x), Math.max(y, window.innerHeight - y))
+
+    const isNextDark = resolveIsDark(nextTheme)
+
+    try {
+      const transition = doc.startViewTransition(async () => {
+        ;(window as Window & { __theme_view_transition__?: boolean }).__theme_view_transition__ = true
+        themeStore.set(nextTheme)
+        applyTheme(nextTheme)
+        await new Promise<void>((resolve) => {
+          requestAnimationFrame(() => resolve())
+        })
+      })
+
+      transition.ready
+        .then(() => {
+          const clipPath = [`circle(0px at ${x}px ${y}px)`, `circle(${radius}px at ${x}px ${y}px)`]
+
+          document.documentElement.animate(
+            { clipPath: isNextDark ? [...clipPath].reverse() : clipPath },
+            {
+              duration: 400,
+              easing: 'ease-out',
+              pseudoElement: isNextDark ? '::view-transition-old(root)' : '::view-transition-new(root)',
+            }
+          )
+        })
+        .catch(() => {
+          themeStore.set(nextTheme)
+        })
+        .finally(() => {
+          ;(window as Window & { __theme_view_transition__?: boolean }).__theme_view_transition__ = false
+        })
+    } catch {
+      ;(window as Window & { __theme_view_transition__?: boolean }).__theme_view_transition__ = false
+      themeStore.set(nextTheme)
+    }
   }
 
   return (
