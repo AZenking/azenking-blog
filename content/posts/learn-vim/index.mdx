@@ -1,0 +1,35 @@
+---
+title: '学习 Vim 的过程'
+description: '学习 Vim 的过程，从入门到熟悉的过程。'
+pubDate: 2025-07-29
+tags: ['vim', '编辑器', '学习笔记']
+draft: false
+---
+
+> 学习 vim 时，其实就是尽量减少手指离开键盘的频率
+
+## 过程
+
+其实入门简单，我是直接在控制台上面输入`vimtutor`，然后跟着教程一步步来。各个操作都可以在教程中找到。
+
+问题点在于，实际使用中，总有些快捷键不记得。需要不断的进行去查找。
+
+后来看到一款编辑器，叫 neovim，基于 vim 的改进版，支持插件系统，社区活跃。
+
+试着去配置时，有种写代码感觉，本身配置语言就是 Lua，配置文件也可以像代码一样进行组织
+
+但还是感觉很麻烦，看了一圈配置，最终还是选择 lazvim 进行一站式配置。
+
+目前使用的 lazyvim 配置， 逐步熟悉 vim 操作，关键在于大量的练习，改变过去基于 vscode 按键肌肉记忆，有点难度。
+
+## 问题
+
+- 习惯了 vscode 的快捷键，切换到 vim 时，按键会有些不适应， 目前 vscode 借助的 neovim 插件，总感觉体验有点割裂
+- 由于项目使用 vue2+pug，这样在编辑器环境中，这些语法高亮和代码提示都不太好，目前只能使用 webstorm 进行编辑，
+  但 webstorm 的快捷键又和 vim 不对，使用了 ideaVim 插件，配置部分 [mikeslattery/.idea-lazy.vim](https://gist.github.com/mikeslattery/d2f2562e5bbaa7ef036cf9f5a13deff5)
+  感觉还行，95% 的快捷键都能使用。
+- 同时切换到 vim 时，git GUI 使用了 lazygit 和 webstorm 相互配置工作。 webstorm git 解决冲突， lazygit 进行提交和查看日志。
+
+## finally
+
+- 希望自己能坚持吧～

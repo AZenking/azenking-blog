@@ -1,17 +1,17 @@
 ---
-import { SITE, SKILLSSHOWCASE_CONFIG, SOCIAL_LINKS } from '~/config.ts'
-import { GITHUB_CONFIG, POSTS_CONFIG } from '~/config.ts'
+import { POSTS_CONFIG, SITE, SOCIAL_LINKS } from '~/config.ts'
 import Layout from '~/layouts/Layout.astro'
-import SectionDivider from '~/components/base/SectionDivider.astro'
-import GithubContributions from '~/components/base/GithubContributions.tsx'
 import SocialLink from '~/components/base/SocialLink.astro'
-import List from '~/components/posts/card/List.astro'
-import SkillsShowcase from '~/components/base/SkillsShowcase.astro'
 import { getNumPosts, getPinnedPosts } from '~/lib/data'
+import { formatDate } from '~/lib/utils'
+import { PhotosList } from '~/lib/photos'
+import HomePhotoPreviewGrid from '~/components/photos/HomePhotoPreviewGrid'
+import BlurText from '~/components/reactbits/BlurText'
+import ArchiveGroupsList from '~/components/home/ArchiveGroupsList'
+import PillNav from '~/components/reactbits/PillNav'
+import LightPillar from '~/components/reactbits/LightPillar'
 
-const { ENABLED, GITHUB_USERNAME, TOOLTIP_ENABLED } = GITHUB_CONFIG
-const { size, type } = POSTS_CONFIG.homePageConfig
-const { SKILLS_ENABLED, SKILLS_DATA } = SKILLSSHOWCASE_CONFIG
+const { size } = POSTS_CONFIG.homePageConfig
 
 let showPosts = []
 const pinnedPosts = await getPinnedPosts()
@@ -21,73 +21,139 @@ if (hasPinnedPosts) {
 } else {
   showPosts = await getNumPosts(size)
 }
+
+const sortedPosts = showPosts.slice().sort((a, b) => {
+  const dateA = a.data.updatedDate ?? a.data.pubDate
+  const dateB = b.data.updatedDate ?? b.data.pubDate
+  return dateB.getTime() - dateA.getTime()
+})
+
+const archiveMap = new Map<number, typeof sortedPosts>()
+for (const post of sortedPosts) {
+  const date = post.data.updatedDate ?? post.data.pubDate
+  const year = date.getFullYear()
+  const group = archiveMap.get(year)
+  if (group) {
+    group.push(post)
+  } else {
+    archiveMap.set(year, [post])
+  }
+}
+const archiveGroups = Array.from(archiveMap.entries()).sort((a, b) => b[0] - a[0])
+const archiveGroupsForUI = archiveGroups.map(([year, posts]) => ({
+  year,
+  posts: posts.map((post) => {
+    const date = post.data.updatedDate ?? post.data.pubDate
+    return {
+      date: formatDate(date, 'iso'),
+      title: post.data.title,
+      url: `/posts/${post.id}`,
+    }
+  }),
+}))
+
+const photoPreviewList = PhotosList.flatMap((album) =>
+  album.photos.map((photo) => ({
+    ...photo,
+    date: album.date,
+    albumTitle: album.title,
+  }))
+)
+  .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+  .slice(0, 10)
+const quickNavItems = [
+  { label: 'View Blog', href: '/posts', ariaLabel: 'View all blog posts' },
+  { label: 'View Photos', href: '/photos', ariaLabel: 'View all photos' },
+]
 ---
 
 <Layout title="Readme" description={SITE.description}>
-  <div class="relative z-[1]">
-    <div class="py-8 pb-10 px-6 sm:px-8">
-      <h1 class="flex flex-col gap-2">
-        <span class="text-4xl sm:text-5xl tracking-tight"> Litos </span>
-        <span class="text-muted-foreground font-light text-xl sm:text-2xl block tracking-wide text-balance">
-          A Simple & Modern Blog Theme for Astro
-        </span>
-      </h1>
-      <div class="pro text-muted-foreground text-pretty">
-        <p>
-          Litos is a clean and modern Astro blog theme focused on content presentation and reading experience. More than just a blog, it's a
-          personal space to showcase your skills, projects, and life.
-        </p>
-        <p>
-          Built with Tailwind CSS for elegant responsive design and React components for smooth interactions. Features light/dark theme
-          switching, multiple article layouts, GitHub contribution charts, and more. Inspired by
-          <a href="https://github.com/needim" target="_blank" rel="nofollow noreferrer">@needim</a>, redesigned by
-          <a href="https://github.com/Dnzzk2" target="_blank" rel="nofollow noreferrer">@Dnzzk2</a> based on Astro.
-        </p>
+  <div class="relative z-[1] px-6 py-8 sm:px-8 sm:py-10 font-mono text-[15px] leading-7">
+    <div class="pointer-events-none absolute inset-y-0 left-1/2 -z-10 w-screen -translate-x-1/2 overflow-hidden">
+      <div class="absolute inset-0 opacity-[0.5] dark:hidden">
+        <LightPillar
+          topColor="#94a3b8"
+          bottomColor="#e2e8f0"
+          intensity={0.65}
+          rotationSpeed={0.22}
+          interactive={false}
+          glowAmount={0.004}
+          pillarWidth={3.1}
+          pillarHeight={0.4}
+          noiseIntensity={0.2}
+          quality="medium"
+          className="opacity-80"
+          client:load
+        />
       </div>
-      <div class="mt-6 flex gap-6">
-        {
-          SOCIAL_LINKS.map((item) => {
-            return <SocialLink href={item.url} icon={item.icon} aria-label={`Link of ${item.name}`} count={item.count} label="followers" />
-          })
-        }
+      <div class="absolute inset-0 hidden opacity-[0.68] dark:block">
+        <LightPillar
+          topColor="#818cf8"
+          bottomColor="#e9d5ff"
+          intensity={0.88}
+          rotationSpeed={0.28}
+          interactive={false}
+          glowAmount={0.006}
+          pillarWidth={3.4}
+          pillarHeight={0.42}
+          noiseIntensity={0.3}
+          quality="medium"
+          className="opacity-85"
+          client:load
+        />
       </div>
+      <div class="absolute inset-0 bg-[radial-gradient(circle_at_50%_8%,rgba(255,255,255,0.08),transparent_52%)]"></div>
     </div>
-    {
-      ENABLED && (
-        <>
-          <SectionDivider />
-          <div class="py-8 pb-10 px-6 max-md:px-6">
-            <div class="px-2 max-md:px-0">
-              <h2 class="text-2xl sm:text-3xl">Spotlight</h2>
-              <p class="text-muted-foreground mb-6 mt-1">GitHub contributions in the past year:</p>
-            </div>
-            <GithubContributions username={GITHUB_USERNAME} tooltipEnabled={TOOLTIP_ENABLED} client:load transition:animate="none" />
+
+    <section class="min-h-[72svh] sm:min-h-[78svh] flex flex-col justify-between gap-10 pb-4">
+      <BlurText
+        text={SITE.title}
+        animateBy="letters"
+        direction="top"
+        delay={50}
+        className="font-sans text-[clamp(3.2rem,14vw,10rem)] leading-none tracking-[-0.05em] font-bold uppercase text-foreground"
+        client:load
+      />
+
+      <div class="grid gap-6 sm:gap-8 md:grid-cols-3 items-end">
+        <div>
+          <p class="text-xl sm:text-2xl font-sans font-semibold tracking-tight text-foreground">Programmer & Writer</p>
+          <div class="mt-3 flex flex-wrap gap-4">
+            {
+              SOCIAL_LINKS.map((item) => {
+                return <SocialLink href={item.url} icon={item.icon} aria-label={`Link of ${item.name}`} count={item.count} label="followers" />
+              })
+            }
           </div>
-        </>
-      )
-    }
-    {
-      SKILLS_ENABLED && SKILLS_DATA.length > 0 && (
-        <>
-          <SectionDivider />
-          <div class="py-8 pb-10 px-6 max-md:px-6">
-            <div class="px-2 max-md:px-0">
-              <h2 class="text-2xl sm:text-3xl tracking-tight">Skills</h2>
-              <p class="text-muted-foreground mb-6 mt-1">It's not just skills, but also tools:</p>
-            </div>
-            <SkillsShowcase skillsData={SKILLS_DATA} />
-          </div>
-        </>
-      )
-    }
-    <SectionDivider />
-    <div class="py-8 pb-10 px-6 sm:px-8">
-      <h2 class="text-2xl sm:text-3xl tracking-tight">Posts</h2>
-      <p class="text-muted-foreground mb-6 mt-1">
-        {hasPinnedPosts ? `Pinned` : 'Recent'}
-        {showPosts.length} posts, worth a look.
-      </p>
-      <List posts={showPosts} {type} coverLayout={POSTS_CONFIG.homePageConfig?.coverLayout} />
-    </div>
+        </div>
+        <div>
+          <p class="text-muted-foreground max-w-xl">{SITE.description}</p>
+          <p class="mt-1.5 text-muted-foreground">Nanjing, China</p>
+        </div>
+        <div class="md:justify-end flex">
+          <PillNav items={quickNavItems} className="w-full md:w-auto" client:load />
+        </div>
+      </div>
+    </section>
+
+    <section class="mt-10 border-t border-border/70 pt-8">
+      <h2 class="text-xl font-medium text-foreground">{hasPinnedPosts ? 'Pinned Archive' : 'Recent Archive'}</h2>
+      <p class="text-muted-foreground mt-1">Grouped by year, inspired by dasein style.</p>
+
+      <ArchiveGroupsList groups={archiveGroupsForUI} client:visible />
+    </section>
+
+    <section class="mt-10 border-t border-border/70 pt-8">
+      <div class="flex items-baseline justify-between gap-3">
+        <div>
+          <h2 class="text-xl font-medium text-foreground">Photo Preview</h2>
+          <p class="text-muted-foreground mt-1">Latest 10 shots from life notes.</p>
+        </div>
+        <a href="/photos" class="text-sm text-muted-foreground hover:text-foreground hover:underline decoration-dashed underline-offset-4">
+          View all
+        </a>
+      </div>
+      <HomePhotoPreviewGrid photos={photoPreviewList} title="Photo Preview" description="Latest 10 shots from life notes." client:load />
+    </section>
   </div>
 </Layout>

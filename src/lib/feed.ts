@@ -264,7 +264,7 @@ export async function generateAtom10(): Promise<string> {
     <name>${escapeXml(author)}</name>
     <uri>${siteUrl}</uri>
   </author>
-  <generator uri="https://github.com/Dnzzk2/Litos" version="5.0">Astro Litos Theme</generator>
+  <generator uri="https://github.com/Ethan Yang/Litos" version="5.0">Astro Litos Theme</generator>
   <rights>Copyright © ${new Date().getFullYear()} ${escapeXml(author)}</rights>
   ${processedPosts
     .map(

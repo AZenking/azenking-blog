@@ -1,0 +1,57 @@
+---
+import type { GetStaticPaths, Page } from 'astro'
+import type { CollectionEntry } from 'astro:content'
+import { getAllNotes } from '~/lib/data'
+import Layout from '~/layouts/Layout.astro'
+import Pagination from '~/components/base/Pagination.astro'
+import PageTitle from '~/components/base/PageTitle.astro'
+import Noise from '~/components/reactbits/Noise'
+import PostKindTabs from '~/components/posts/base/PostKindTabs.astro'
+
+export const getStaticPaths: GetStaticPaths = async ({ paginate }) => {
+  const sortedNotes = await getAllNotes()
+
+  return paginate(sortedNotes, {
+    pageSize: 10,
+  })
+}
+
+interface Props {
+  page: Page<CollectionEntry<'notes'>>
+}
+
+const { page } = Astro.props
+---
+
+<Layout title="Notes" description="Short notes and logs">
+  <div class="relative z-[1] py-8 pb-10 px-6 sm:px-8">
+    <div class="pointer-events-none absolute inset-y-0 left-1/2 -z-10 w-screen -translate-x-1/2 overflow-hidden">
+      <div class="absolute inset-0 opacity-[0.14]">
+        <Noise patternSize={768} patternRefreshInterval={5} patternAlpha={14} client:load />
+      </div>
+      <div class="absolute inset-0 bg-[radial-gradient(circle_at_50%_0%,rgba(130,180,255,0.14),transparent_40%),linear-gradient(to_bottom,rgba(0,0,0,0),hsl(var(--background)/0.42))]" />
+    </div>
+
+    <PageTitle title="Notes" introduce="Short notes, ideas and work logs." />
+    <PostKindTabs active="notes" />
+
+    <ul class="mt-8 divide-y divide-border/50 border-y border-border/50 bg-background/35 backdrop-blur-sm fade-up">
+      {
+        page.data.map((note) => (
+          <li>
+            <a href={`/notes/${note.id}`} class="block px-4 sm:px-6 py-4 sm:py-5 hover:bg-muted/35 transition-colors">
+              <div class="flex flex-wrap items-center gap-3 text-xs text-muted-foreground/80">
+                <time datetime={note.data.pubDate.toISOString()}>{note.data.pubDate.toLocaleDateString('en-US')}</time>
+                {note.data.tags?.length ? <span>#{note.data.tags.join(' #')}</span> : null}
+              </div>
+              <h2 class="mt-2 text-base sm:text-lg font-semibold text-foreground/95">{note.data.title}</h2>
+              <p class="mt-1 text-sm text-muted-foreground line-clamp-2">{note.data.description}</p>
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+
+    <Pagination {page} baseUrl="/notes" />
+  </div>
+</Layout>

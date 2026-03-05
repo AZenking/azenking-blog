@@ -23,10 +23,12 @@
     "medium-zoom": "^1.1.0",
     "motion": "^12.34.1",
     "nanostores": "^0.11.4",
+    "ogl": "^1.0.11",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "sanitize-html": "^2.17.0",
-    "tailwind-merge": "^3.0.2"
+    "tailwind-merge": "^3.0.2",
+    "three": "^0.167.1"
   },
   "devDependencies": {
     "@astrojs/check": "^0.9.4",
@@ -45,6 +47,7 @@
     "@types/react": "^19.0.10",
     "@types/react-dom": "^19.0.4",
     "@types/sanitize-html": "^2.16.0",
+    "@types/three": "^0.183.1",
     "astro-expressive-code": "^0.41.1",
     "astro-robots-txt": "^1.0.0",
     "katex": "^0.16.22",
@@ -64,6 +67,7 @@
     "remark-imgattr": "^1.0.5",
     "remark-math": "^6.0.0",
     "remark-smartypants": "^3.0.2",
+    "shadcn": "^3.8.5",
     "sharp": "^0.34.1",
     "shiki": "^3.2.2",
     "tailwindcss": "^4.0.12",

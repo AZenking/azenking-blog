@@ -4,12 +4,29 @@ import Layout from '~/layouts/Layout.astro'
 import PhotoTimeline from '~/components/photos/PhotoTimeline.astro'
 import PageTitle from '~/components/base/PageTitle.astro'
 import { PhotosList } from '~/lib/photos'
+import LiquidEther from '~/components/reactbits/LiquidEther'
 
 const { title, description, introduce } = PHOTOS_CONFIG
 ---
 
 <Layout {title} {description}>
   <div class="relative z-[1] py-8 pb-10 px-6 sm:px-8">
+    <div class="pointer-events-none absolute inset-y-0 left-1/2 -z-10 w-screen -translate-x-1/2 overflow-hidden">
+      <div class="absolute inset-0 opacity-65">
+        <LiquidEther
+          colors={['#4f46e5', '#8b5cf6', '#ec4899']}
+          autoDemo
+          autoSpeed={0.62}
+          autoIntensity={2.1}
+          resolution={0.45}
+          cursorSize={96}
+          mouseForce={18}
+          client:load
+        />
+      </div>
+      <div class="absolute inset-0 bg-gradient-to-b from-background/20 via-transparent to-background/45"></div>
+    </div>
+
     <PageTitle {title} {introduce} />
     <div class="mt-12">
       {
