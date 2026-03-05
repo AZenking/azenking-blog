@@ -143,8 +143,8 @@ export const GITHUB_CONFIG: GithubConfig = {
 //--- Posts Page Config ---
 export const POSTS_CONFIG: PostConfig = {
   title: 'Posts',
-  description: 'Posts by Ethan Yang',
-  introduce: 'Here, I will share the usage instructions posts .',
+  description: 'Ethan Yang',
+  introduce: '在这里，我分享了我在编程、技术和生活方面的见解和经验。希望你能在这里找到有价值的内容，并与我一起成长！',
   author: 'Ethan',
   homePageConfig: {
     size: 2,
@@ -162,13 +162,13 @@ export const POSTS_CONFIG: PostConfig = {
   ogImageUseCover: false,
   postType: 'metaOnly',
   imageDarkenInDark: true,
-  readMoreText: 'Read more',
-  prevPageText: 'Previous',
-  nextPageText: 'Next',
-  tocText: 'On this page',
-  backToPostsText: 'Back to Posts',
-  nextPostText: 'Next Post',
-  prevPostText: 'Previous Post',
+  readMoreText: 'vi .',
+  prevPageText: '<--',
+  nextPageText: '-->',
+  tocText: '目录',
+  backToPostsText: 'cd ..',
+  nextPostText: '上一篇',
+  prevPostText: '下一篇',
   recommendText: 'REC',
   wordCountView: true,
 }
@@ -179,7 +179,7 @@ export const COMMENT_CONFIG: CommentConfig = {
   gitalk: {
     clientID: import.meta.env.PUBLIC_GITHUB_CLIENT_ID,
     clientSecret: import.meta.env.PUBLIC_GITHUB_CLIENT_SECRET,
-    repo: 'yy921010/Sandy',
+    repo: 'Sandy',
     owner: 'yy921010',
     admin: ['yy921010'],
     language: 'en-US',
@@ -199,19 +199,19 @@ export const TAGS_CONFIG: TagsConfig = {
 
 export const PROJECTS_CONFIG: ProjectConfig = {
   title: 'Projects',
-  description: 'The examples of my projects.',
-  introduce: 'The examples of my projects.',
+  description: '这里展示了我的一些项目示例。',
+  introduce: '这里展示了我的一些项目示例。',
 }
 
 export const PHOTOS_CONFIG: PhotosConfig = {
   title: 'Photos',
-  description: 'Here I will record some photos taken in daily life.',
-  introduce: 'Here I will record some photos taken in daily life.',
+  description: '这里记录了我在日常生活中拍摄的一些照片。',
+  introduce: '这里记录了我在日常生活中拍摄的一些照片。',
 }
 
 export const FRIENDS_CONFIG: FriendsConfig = {
   title: 'Friends',
-  description: 'A curated list of friends and blogs I follow.',
+  description: '这里展示了一些我关注的朋友和博客。',
   introduce: '一些我常逛并且推荐的朋友站点。如果你想交换友链，欢迎联系我。',
 }
 

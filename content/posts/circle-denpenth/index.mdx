@@ -1,9 +1,8 @@
 ---
 title: '记录一次引入循环，导致undefined'
-description: '循环依赖引发的undefined问题，以及解决方法'
+description: '记录在项目中引入循环依赖导致 undefined 错误的过程，分析问题原因并分享解决方案。'
 pubDate: 2025-06-04
-tags: ['javascript', 'debugging', '循环依赖']
-draft: false
+tags: ['javascript', 'debug', '循环依赖']
 ---
 
 # 是什么
@@ -11,6 +10,7 @@ draft: false
 循环依赖(Circular dependency)是指在模块系统中，两个或多个模块形成相互引用的依赖关系。这种情况会导致模块加载和初始化过程变得复杂且难以预测。
 
 ### 循环依赖示例
+
 如下图所示，循环依赖可以是直接的相互引用，也可以是间接的依赖环：
 
 ```mermaid
@@ -76,11 +76,11 @@ flowchart TD
 
 # 如何解决？
 
-| 方法 | 示例 | 说明 |
-| --- | --- | --- |
-| ✅ 延迟加载 | `require()` 写到函数内部 | 避免初始化阶段访问未定义 |
-| ✅ 提取公共模块 | 建立 shared.js | A 和 B 不直接依赖彼此 |
-| ✅ 重构依赖方向 | 抽象高层逻辑模块 | 减少相互耦合 |
+| 方法            | 示例                     | 说明                     |
+| --------------- | ------------------------ | ------------------------ |
+| ✅ 延迟加载     | `require()` 写到函数内部 | 避免初始化阶段访问未定义 |
+| ✅ 提取公共模块 | 建立 shared.js           | A 和 B 不直接依赖彼此    |
+| ✅ 重构依赖方向 | 抽象高层逻辑模块         | 减少相互耦合             |
 
 # 实际案例分析
 
@@ -119,13 +119,17 @@ s2.f6yc.comnull/:1
 相关代码：
 
 ```jsx
-import {
-  SinopecCompService
-} from '@/pages/cashRegister/ThirdPlatformService/SinopecCompService'
+import { SinopecCompService } from '@/pages/cashRegister/ThirdPlatformService/SinopecCompService'
 import { ChinaSinopecCashPayService } from '@/pages/cashRegister/ThirdPlatformService/ChinaSinopecCashPayService'
 import { ChinaSinopecService } from '@/pages/cashRegister/ThirdPlatformService/ChinaSinopecService'
 
-const serviceList = [new SinopecService(), new MasterTooService(), new SinopecCompService(), new ChinaSinopecCashPayService(), new ChinaSinopecService()]
+const serviceList = [
+  new SinopecService(),
+  new MasterTooService(),
+  new SinopecCompService(),
+  new ChinaSinopecCashPayService(),
+  new ChinaSinopecService(),
+]
 ```
 
 报错原因是SinopecCompService不是一个构造函数。我们尝试打印SinopecCompService：
