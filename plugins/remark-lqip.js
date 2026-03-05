@@ -234,7 +234,7 @@ export async function generateLQIPFromPath(src) {
 
         // 移除Astro的特殊前缀和查询参数
         if (cleanSrc.includes('/@fs/')) {
-          // 提取真实文件路径：/@fs/D:/Code/dnzzk2.icu/src/content/...
+          // 提取真实文件路径：/@fs/D:/Code/Ethan Yang.icu/src/content/...
           cleanSrc = cleanSrc.split('/@fs/')[1]
           if (cleanSrc) {
             // 移除查询参数并规范化路径分隔符

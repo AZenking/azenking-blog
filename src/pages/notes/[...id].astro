@@ -1,0 +1,42 @@
+---
+import Layout from '~/layouts/Layout.astro'
+import Prose from '~/components/posts/base/Prose.astro'
+import { SITE } from '~/config'
+import { render } from 'astro:content'
+import { getAllNotes } from '~/lib/data'
+import PostKindTabs from '~/components/posts/base/PostKindTabs.astro'
+
+export async function getStaticPaths() {
+  const sortedNotes = await getAllNotes()
+  return sortedNotes.map((note) => ({
+    params: { id: note.id },
+    props: { note },
+  }))
+}
+
+const { note } = Astro.props
+const { data: frontmatter } = note
+const { Content } = await render(note)
+---
+
+<Layout
+  title={frontmatter.title}
+  description={frontmatter.description || frontmatter.title}
+  image={frontmatter.ogImage?.src ? `${SITE.website}${frontmatter.ogImage.src}` : SITE.ogImage}
+>
+  <article class="px-6 sm:px-8 py-8 sm:py-10">
+    <div class="global-layout-width mx-auto">
+      <PostKindTabs active="notes" />
+
+      <header class="mt-6 border-b border-border/60 pb-6">
+        <p class="text-sm text-muted-foreground/85">{frontmatter.pubDate.toLocaleDateString('en-US')}</p>
+        <h1 class="mt-2 text-2xl sm:text-3xl font-semibold leading-tight">{frontmatter.title}</h1>
+        {frontmatter.description && <p class="mt-3 text-muted-foreground">{frontmatter.description}</p>}
+      </header>
+
+      <Prose class="mt-8">
+        <Content />
+      </Prose>
+    </div>
+  </article>
+</Layout>

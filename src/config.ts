@@ -19,7 +19,7 @@ export const SITE: Site = {
   title: 'Ethan Yang',
   description:
     '👋 大家好，我是 Ethan Young，一名常驻南京的程序员，也是一位在生活中持续迭代的普通人',
-  website: 'https://litos.vercel.app/',
+  website: 'https://ethyoung.me/',
   lang: 'en',
   base: '/',
   author: 'Ethan',
@@ -52,14 +52,6 @@ export const FOOTER_LINKS: Link[] = [
     url: '/',
   },
   {
-    name: 'Posts',
-    url: '/posts',
-  },
-  {
-    name: 'Projects',
-    url: '/projects',
-  },
-  {
     name: 'Tags',
     url: '/tags',
   },
@@ -77,20 +69,10 @@ export const FOOTER_LINKS: Link[] = [
 export const SOCIAL_LINKS: SocialLink[] = [
   {
     name: 'github',
-    url: 'https://github.com/Dnzzk2',
+    url: 'https://github.com/Ethan Yang',
     icon: 'icon-[ri--github-fill]',
     count: 20,
-  },
-  {
-    name: 'twitter',
-    url: 'https://x.com/yourname',
-    icon: 'icon-[ri--twitter-x-fill]',
-  },
-  {
-    name: 'bilibili',
-    url: 'https://space.bilibili.com/yourSpaceId',
-    icon: 'icon-[ri--bilibili-fill]',
-  },
+  }
 ]
 
 /**
@@ -141,76 +123,6 @@ export const SKILLSSHOWCASE_CONFIG: SkillsShowcaseConfig = {
         },
       ],
     },
-    {
-      direction: 'right',
-      skills: [
-        {
-          name: 'Astro',
-          icon: 'icon-[skill-icons--astro]',
-          url: 'https://astro.build/',
-        },
-        {
-          name: 'Node.js',
-          icon: 'icon-[skill-icons--nodejs-dark]',
-          url: 'https://nodejs.org/',
-        },
-        {
-          name: 'React',
-          icon: 'icon-[skill-icons--react-dark]',
-          url: 'https://react.dev/',
-        },
-        {
-          name: 'Next.js',
-          icon: 'icon-[skill-icons--nextjs-dark]',
-          url: 'https://nextjs.org/',
-        },
-        {
-          name: 'Tailwind CSS',
-          icon: 'icon-[skill-icons--tailwindcss-dark]',
-          url: 'https://tailwindcss.com/',
-        },
-        {
-          name: 'Vite',
-          icon: 'icon-[skill-icons--vite-dark]',
-          url: 'https://vitejs.dev/',
-        },
-      ],
-    },
-    {
-      direction: 'left',
-      skills: [
-        {
-          name: 'Ubuntu',
-          icon: 'icon-[skill-icons--ubuntu-dark]',
-          url: 'https://ubuntu.com/',
-        },
-        {
-          name: 'Git',
-          icon: 'icon-[skill-icons--git]',
-          url: 'https://git-scm.com/',
-        },
-        {
-          name: 'MongoDB',
-          icon: 'icon-[skill-icons--mongodb]',
-          url: 'https://www.mongodb.com/',
-        },
-        {
-          name: 'Vercel',
-          icon: 'icon-[skill-icons--vercel-dark]',
-          url: 'https://vercel.com/',
-        },
-        {
-          name: 'VS Code',
-          icon: 'icon-[skill-icons--vscode-dark]',
-          url: 'https://code.visualstudio.com/',
-        },
-        {
-          name: 'Obsidian',
-          icon: 'icon-[skill-icons--obsidian-dark]',
-          url: 'https://obsidian.md/',
-        },
-      ],
-    },
   ],
 }
 
@@ -224,16 +136,16 @@ export const SKILLSSHOWCASE_CONFIG: SkillsShowcaseConfig = {
 
 export const GITHUB_CONFIG: GithubConfig = {
   ENABLED: true,
-  GITHUB_USERNAME: 'Dnzzk2',
+  GITHUB_USERNAME: 'yy921010',
   TOOLTIP_ENABLED: true,
 }
 
 //--- Posts Page Config ---
 export const POSTS_CONFIG: PostConfig = {
   title: 'Posts',
-  description: 'Posts by Dnzzk2',
-  introduce: 'Here, I will share the usage instructions for this theme to help you quickly use it.',
-  author: 'Dnzzk2',
+  description: 'Posts by Ethan Yang',
+  introduce: 'Here, I will share the usage instructions posts .',
+  author: 'Ethan',
   homePageConfig: {
     size: 2,
     type: 'compact',
@@ -267,9 +179,9 @@ export const COMMENT_CONFIG: CommentConfig = {
   gitalk: {
     clientID: import.meta.env.PUBLIC_GITHUB_CLIENT_ID,
     clientSecret: import.meta.env.PUBLIC_GITHUB_CLIENT_SECRET,
-    repo: 'gitalk-comment',
-    owner: 'Dnzzk2',
-    admin: ['Dnzzk2'],
+    repo: 'yy921010/Sandy',
+    owner: 'yy921010',
+    admin: ['yy921010'],
     language: 'en-US',
     perPage: 5,
     pagerDirection: 'last',
@@ -305,25 +217,46 @@ export const FRIENDS_CONFIG: FriendsConfig = {
 
 export const FRIEND_LINKS: FriendLinkItem[] = [
   {
-    name: 'Astro',
-    url: 'https://astro.build',
-    description: 'The web framework for content-driven websites.',
-    avatar: 'https://astro.build/favicon.svg',
-    tags: ['Framework', 'Docs'],
+    name: '花墨',
+    url: 'https://flowersink.com',
+    description: '一个喜欢写作、分享生活的已婚前端的个人网站',
+    avatar: 'https://api.flowersink.com/img/logo.png',
+    tags: ['Blog', 'Frontend'],
   },
   {
-    name: 'Vercel',
-    url: 'https://vercel.com',
-    description: 'Frontend cloud platform for fast deploy and preview.',
-    avatar: 'https://vercel.com/favicon.ico',
-    tags: ['Platform'],
+    name: '我要去巴萨',
+    url: 'https://www.coyoteoutdoor.space:8095/',
+    description: '技术分享博客',
+    avatar: '',
+    tags: ['Blog', 'Tech'],
   },
   {
-    name: 'MDN Web Docs',
-    url: 'https://developer.mozilla.org',
-    description: 'Reference and learning resources for modern web APIs.',
-    avatar: 'https://developer.mozilla.org/favicon-48x48.cbbd161b.png',
-    tags: ['Reference'],
+    name: '敖武的博客',
+    url: 'https://z.wiki',
+    description: '啦啦啦',
+    avatar: '',
+    tags: ['Blog'],
+  },
+  {
+    name: '张洪Heo',
+    url: 'https://blog.zhheo.com/',
+    description: '分享设计与科技生活',
+    avatar: 'https://bu.dusays.com/2022/12/28/63ac2812183aa.png',
+    tags: ['Blog', 'Design'],
+  },
+  {
+    name: '凌飞阁',
+    url: 'https://llingfei.com',
+    description: '烂柯山与浮云齐，突星骑石凌飞鸟。',
+    avatar: 'https://llingfei.com/tx.jpg',
+    tags: ['Blog'],
+  },
+  {
+    name: 'xiaoming728',
+    url: 'https://xiaoming728.com',
+    description: '',
+    avatar: 'https://xiaoming728.com/upload/logo.jpg',
+    tags: ['Blog'],
   },
 ]
 

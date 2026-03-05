@@ -1,91 +1,67 @@
-import { useEffect, useState } from 'react'
-import { motion, useAnimation } from 'motion/react'
-import { useStore } from '@nanostores/react'
-import { themeStore } from '~/stores/theme'
+import { useEffect, useRef, useState } from 'react'
 
-const iconVariants = {
-  visible: {
-    rotate: 0,
-    scale: 1,
-    opacity: 1,
-  },
-  hidden: {
-    scale: 0,
-    opacity: 0,
-    rotate: 180,
-  },
+type FillMode = 'none' | 'forwards' | 'backwards' | 'both' | 'auto'
+
+const chooseFill = (): FillMode => {
+  const uach = (navigator as Navigator & { userAgentData?: { brands?: { brand: string; version: string }[] } }).userAgentData
+  if (uach?.brands?.length) {
+    const isChromiumBrand = uach.brands.some((b) => /Chrom(e|ium)/i.test(b.brand))
+    return isChromiumBrand ? 'both' : 'none'
+  }
+  return 'none'
 }
+
+const viewTransitionFill = chooseFill()
 
 const ThemeToggle = () => {
   const [mounted, setMounted] = useState(false)
-  const theme = useStore(themeStore)
-  const controlsSun = useAnimation()
-  const controlsMoon = useAnimation()
-  const controlsSystem = useAnimation()
+  const [isDark, setIsDark] = useState(false)
+  const isTransitioningRef = useRef(false)
 
-  useEffect(() => {
-    setMounted(true)
-    const savedTheme = localStorage.getItem('theme') as 'light' | 'dark' | 'system'
-    themeStore.set(savedTheme || 'system')
-  }, [])
-
-  useEffect(() => {
-    if (!mounted) return
-
-    if (theme === 'system') {
-      controlsSun.start('hidden')
-      controlsSystem.start('visible')
-      controlsMoon.start('hidden')
-    } else {
-      controlsSun.start(theme === 'light' ? 'visible' : 'hidden')
-      controlsMoon.start(theme === 'dark' ? 'visible' : 'hidden')
-      controlsSystem.start('hidden')
-    }
-
-    localStorage.setItem('theme', theme)
-    applyTheme(theme)
-  }, [theme, mounted, controlsSun, controlsMoon, controlsSystem])
-
-  const applyTheme = (newTheme: string) => {
+  const setTheme = (dark: boolean) => {
     const root = document.documentElement
-    const isViewTransitionSwitch = (window as Window & { __theme_view_transition__?: boolean }).__theme_view_transition__ === true
-
-    // 非 View Transition 切换时，禁用常规过渡防闪烁
-    if (!isViewTransitionSwitch) {
-      root.classList.add('disable-transition')
-    }
-
-    const isDark = newTheme === 'dark' || (newTheme === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches)
-    root.classList.toggle('dark', isDark)
+    root.classList.toggle('dark', dark)
+    localStorage.setItem('theme', dark ? 'dark' : 'light')
 
     const metaThemeColor = document.querySelector('meta[name="theme-color"]')
     if (metaThemeColor) {
-      metaThemeColor.setAttribute('content', isDark ? '#09090b' : '#FFFFFF')
+      metaThemeColor.setAttribute('content', dark ? '#09090b' : '#FFFFFF')
     }
 
-    if (!isViewTransitionSwitch) {
-      setTimeout(() => {
-        root.classList.remove('disable-transition')
-      }, 300)
-    }
+    setIsDark(dark)
   }
 
-  const resolveIsDark = (targetTheme: 'light' | 'dark' | 'system') => {
-    if (targetTheme === 'dark') return true
-    if (targetTheme === 'light') return false
-    return window.matchMedia('(prefers-color-scheme: dark)').matches
-  }
+  useEffect(() => {
+    setMounted(true)
+
+    const savedTheme = localStorage.getItem('theme') as 'light' | 'dark' | 'system' | null
+    const initialDark = savedTheme === 'dark' || (savedTheme !== 'light' && window.matchMedia('(prefers-color-scheme: dark)').matches)
+    setTheme(initialDark)
+
+    const media = window.matchMedia('(prefers-color-scheme: dark)')
+    const onSystemChange = (event: MediaQueryListEvent) => {
+      if (localStorage.getItem('theme') === 'system') {
+        setTheme(event.matches)
+      }
+    }
+
+    media.addEventListener('change', onSystemChange)
+    return () => media.removeEventListener('change', onSystemChange)
+  }, [])
 
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+    if (!mounted || isTransitioningRef.current) return
+
     const doc = document as Document & {
-      startViewTransition?: (callback: () => void | Promise<void>) => { ready: Promise<void> }
+      startViewTransition?: (callback: () => void) => { ready: Promise<void>; finished: Promise<void> }
     }
-    const isCurrentDark = document.documentElement.classList.contains('dark')
-    const nextTheme: 'light' | 'dark' = isCurrentDark ? 'light' : 'dark'
+
+    const nextDark = !document.documentElement.classList.contains('dark')
+    const toggle = () => setTheme(nextDark)
 
     const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
     if (!doc.startViewTransition || prefersReducedMotion) {
-      themeStore.set(nextTheme)
+      toggle()
       return
     }
 
@@ -93,74 +69,49 @@ const ThemeToggle = () => {
     const y = event.clientY || window.innerHeight / 2
     const radius = Math.hypot(Math.max(x, window.innerWidth - x), Math.max(y, window.innerHeight - y))
 
-    const isNextDark = resolveIsDark(nextTheme)
+    isTransitioningRef.current = true
 
     try {
-      const transition = doc.startViewTransition(async () => {
-        ;(window as Window & { __theme_view_transition__?: boolean }).__theme_view_transition__ = true
-        themeStore.set(nextTheme)
-        applyTheme(nextTheme)
-        await new Promise<void>((resolve) => {
-          requestAnimationFrame(() => resolve())
-        })
+      const transition = doc.startViewTransition(() => {
+        toggle()
       })
 
       transition.ready
         .then(() => {
           const clipPath = [`circle(0px at ${x}px ${y}px)`, `circle(${radius}px at ${x}px ${y}px)`]
-
           document.documentElement.animate(
-            { clipPath: isNextDark ? [...clipPath].reverse() : clipPath },
+            { clipPath: nextDark ? [...clipPath].reverse() : clipPath },
             {
-              duration: 400,
-              easing: 'ease-out',
-              pseudoElement: isNextDark ? '::view-transition-old(root)' : '::view-transition-new(root)',
+              duration: 480,
+              easing: 'cubic-bezier(0.22, 1, 0.36, 1)',
+              fill: viewTransitionFill,
+              pseudoElement: nextDark ? '::view-transition-old(root)' : '::view-transition-new(root)',
             }
           )
         })
         .catch(() => {
-          themeStore.set(nextTheme)
+          toggle()
         })
-        .finally(() => {
-          ;(window as Window & { __theme_view_transition__?: boolean }).__theme_view_transition__ = false
-        })
+
+      transition.finished.finally(() => {
+        isTransitioningRef.current = false
+      })
     } catch {
-      ;(window as Window & { __theme_view_transition__?: boolean }).__theme_view_transition__ = false
-      themeStore.set(nextTheme)
+      isTransitioningRef.current = false
+      toggle()
     }
   }
 
   return (
-    <button onClick={handleClick} className="relative size-5 flex items-center justify-center cursor-pointer" aria-label="切换主题">
-      <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.9 }} className="relative size-5 flex items-center justify-center">
-        <motion.div
-          className="absolute inset-0"
-          variants={iconVariants}
-          initial="hidden"
-          animate={controlsSun}
-          transition={{ duration: 0.2, ease: 'easeInOut' }}
-        >
-          <span className="icon-[tabler--sun-filled] size-5"></span>
-        </motion.div>
-        <motion.div
-          className="absolute inset-0"
-          variants={iconVariants}
-          initial="hidden"
-          animate={controlsSystem}
-          transition={{ duration: 0.2, ease: 'easeInOut' }}
-        >
-          <span className="icon-[tabler--device-desktop-question] size-5"></span>
-        </motion.div>
-        <motion.div
-          className="absolute inset-0"
-          variants={iconVariants}
-          initial="hidden"
-          animate={controlsMoon}
-          transition={{ duration: 0.2, ease: 'easeInOut' }}
-        >
-          <span className="icon-[tabler--moon-filled] size-5"></span>
-        </motion.div>
-      </motion.div>
+    <button
+      onClick={handleClick}
+      className="relative inline-flex size-6 items-center justify-center text-muted-foreground hover:text-foreground transition-colors"
+      aria-label="Toggle theme"
+      role="switch"
+      aria-checked={isDark}
+      title="Toggle theme"
+    >
+      <span className={isDark ? 'icon-[tabler--moon-filled] size-5' : 'icon-[tabler--sun-filled] size-5'}></span>
     </button>
   )
 }

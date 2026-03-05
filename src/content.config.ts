@@ -6,7 +6,36 @@ import type { CoverLayout, PostType } from '~/types'
 const posts = defineCollection({
   loader: glob({
     pattern: '**/*.{md,mdx}',
-    base: './src/content/posts',
+    base: './content/posts',
+  }),
+  schema: ({ image }) =>
+    z
+      .object({
+        title: z.string(),
+        description: z.string(),
+        pubDate: z.date(),
+        tags: z.array(z.string()).optional(),
+        updatedDate: z.date().optional(),
+        author: z.string().default(POSTS_CONFIG.author),
+        cover: image().optional(),
+        ogImage: image().optional(),
+        recommend: z.boolean().default(false),
+        postType: z.custom<PostType>().optional(),
+        coverLayout: z.custom<CoverLayout>().optional(),
+        pinned: z.boolean().default(false),
+        draft: z.boolean().default(false),
+        license: z.string().optional(),
+      })
+      .transform((data) => ({
+        ...data,
+        ogImage: POSTS_CONFIG.ogImageUseCover && data.cover ? data.cover : data.ogImage,
+      })),
+})
+
+const notes = defineCollection({
+  loader: glob({
+    pattern: '**/*.{md,mdx}',
+    base: './content/notes',
   }),
   schema: ({ image }) =>
     z
@@ -35,7 +64,7 @@ const posts = defineCollection({
 const projects = defineCollection({
   loader: glob({
     pattern: '**/*.{md,mdx}',
-    base: './src/content/projects',
+    base: './content/projects',
   }),
   schema: ({ image }) =>
     z.object({
@@ -52,4 +81,4 @@ const projects = defineCollection({
     }),
 })
 
-export const collections = { posts, projects }
+export const collections = { posts, notes, projects }

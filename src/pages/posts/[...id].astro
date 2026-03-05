@@ -42,7 +42,7 @@ const layoutMap: Record<LayoutKey, any> = {
 }
 
 const layoutKey: LayoutKey = (frontmatter.postType as LayoutKey) || (POSTS_CONFIG.postType as LayoutKey)
-const PostLayout = layoutMap[layoutKey]
+const PostLayout = layoutMap[layoutKey] ?? MetaOnly
 ---
 
 <Layout

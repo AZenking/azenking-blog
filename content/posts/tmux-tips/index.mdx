@@ -1,0 +1,225 @@
+---
+title: 'tmux 使用技巧与配置'
+description: 'tmux 终端复用器的实用技巧、完整配置方案及智能命令集合'
+pubDate: 2025-11-13
+tags: ['tmux', '终端', '配置', '效率工具']
+cover: 'assets/cover.jpg'
+draft: false
+---
+
+### 快捷键使用说明
+
+一个常见的误区：`Ctrl+b d` 分离会话时需要**先按 `Ctrl+b` 并松开**，然后再按 `d`，而不是同时按下所有键。
+
+## 完整配置方案
+
+### 一、安装依赖
+
+```bash
+# 安装 fzf (模糊查找工具)
+brew install fzf
+$(brew --prefix)/opt/fzf/install
+
+# 安装 tmux
+brew install tmux
+
+# 安装 Oh My Zsh (可选，用于 shell 增强)
+sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+
+# 安装 TPM (tmux 插件管理器)
+git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
+```
+
+### 二、tmux 配置 (~/.tmux.conf)
+
+#### 基础设置
+
+```tmux
+# 启用鼠标支持
+set -g mouse on
+
+# 历史记录行数
+set -g history-limit 10000
+
+# 窗口和面板索引从 1 开始
+set -g base-index 1
+setw -g pane-base-index 1
+
+# 减少按键延迟
+set -s escape-time 0
+
+# 终端颜色支持
+set-option -g default-terminal "screen-256color"
+```
+
+#### 状态栏美化
+
+```tmux
+# 状态栏样式
+set -g status-style bg=black,fg=white
+set -g status-left-length 30
+set -g status-right-length 150
+
+# 左侧显示：会话名称
+set -g status-left "#[fg=green]#S #[fg=yellow]|#[default]"
+
+# 右侧显示：日期时间
+set -g status-right "#[fg=cyan]%Y-%m-%d %H:%M:%S#[default]"
+```
+
+#### 插件管理
+
+```tmux
+# TPM 插件列表
+set -g @plugin 'tmux-plugins/tpm'
+set -g @plugin 'tmux-plugins/tmux-sensible'
+set -g @plugin 'tmux-plugins/tmux-resurrect'    # 会话保存/恢复
+set -g @plugin 'tmux-plugins/tmux-continuum'    # 自动保存会话
+
+# 自动保存/恢复配置
+set -g @continuum-restore 'on'              # 启动时自动恢复
+set -g @continuum-save-interval '5'         # 每 5 分钟自动保存
+```
+
+#### 自定义快捷键
+
+```tmux
+# 修改前缀键为 Ctrl+a
+unbind C-b
+set-option -g prefix C-a
+bind-key C-a send-prefix
+
+# 分割窗口快捷键
+bind | split-window -h    # 垂直分割
+bind - split-window -v    # 水平分割
+
+# 重载配置文件
+bind r source-file ~/.tmux.conf \; display-message "Config reloaded!"
+```
+
+#### 初始化 TPM
+
+```tmux
+# 必须放在配置文件末尾
+run '~/.tmux/plugins/tpm/tpm'
+```
+
+> **提示**：首次使用时，进入 tmux 后按 `Ctrl+a` + `I` (大写) 安装所有插件。
+
+### 三、智能命令别名 (~/.zshrc)
+
+#### 基础命令别名
+
+```bash
+# 常用命令简化
+alias t='tmux'                    # 启动 tmux
+alias tn='tmux new -s'            # 创建新会话
+alias ta='tmux attach -t'         # 附加到会话
+alias tls='tmux ls'               # 列出会话
+alias tk='tmux kill-session -t'   # 删除会话
+alias tka='tmux kill-server'      # 关闭所有会话
+alias tr='tmux rename-session -t' # 重命名会话
+alias tw='tmux new-window -n'     # 创建新窗口
+alias tl='tmux list-windows'      # 列出窗口
+alias td='tmux detach'            # 分离会话
+```
+
+#### 智能会话管理 (集成 fzf)
+
+```bash
+# 智能附加/创建会话
+tma() {
+    # 检查是否在交互式终端中
+    if [ ! -t 1 ]; then
+        echo "❌ 当前环境不是交互式终端，无法使用 fzf 选择"
+        echo "请在终端中运行 tma 命令"
+        return 1
+    fi
+
+    # 无参数时使用 fzf 选择会话
+    if [ -z "$1" ]; then
+        local session
+        session=$(tmux ls 2>/dev/null | awk -F: '{print $1}' | fzf --height 40% --reverse --border)
+        if [ -n "$session" ]; then
+            tmux attach -t "$session"
+        else
+            echo "未选择任何 tmux 会话"
+        fi
+    else
+        # 有参数时尝试附加，失败则创建新会话
+        tmux attach -t "$1" 2>/dev/null || tmux new -s "$1"
+    fi
+}
+```
+
+#### 快速切换窗口
+
+```bash
+# 使用 fzf 快速切换窗口
+tmw() {
+    # 检查是否在交互式终端中
+    if [ ! -t 1 ]; then
+        echo "❌ 当前环境不是交互式终端，无法使用 fzf 选择窗口"
+        echo "请在终端中运行 tmw 命令"
+        return 1
+    fi
+
+    # 确认是否在 tmux 会话中
+    if [ -z "$TMUX" ]; then
+        echo "⚠️ 当前不在 tmux 会话中，请先进入 tmux 再使用 tmw"
+        return 1
+    fi
+
+    # 获取窗口列表并使用 fzf 选择
+    local target
+    target=$(tmux list-windows -F '#I: #W' | fzf --height 40% --reverse --border)
+
+    if [ -n "$target" ]; then
+        local win_id
+        win_id=$(echo "$target" | cut -d: -f1 | tr -d ' ')
+        tmux select-window -t "$win_id"
+    else
+        echo "未选择任何窗口"
+    fi
+}
+```
+
+#### 会话保存与恢复
+
+```bash
+# 手动保存/恢复会话
+alias tsave='tmux run-shell ~/.tmux/plugins/tmux-resurrect/scripts/save.sh'
+alias trestore='tmux run-shell ~/.tmux/plugins/tmux-resurrect/scripts/restore.sh'
+```
+
+#### 常用会话快捷方式
+
+```bash
+# 快速进入预定义会话
+alias tdev='tmux attach -t dev || tmux new -s dev'
+alias twork='tmux attach -t work || tmux new -s work'
+alias tplay='tmux attach -t play || tmux new -s play'
+```
+
+#### FZF 增强配置
+
+```bash
+# FZF 默认选项
+export FZF_DEFAULT_OPTS='--height 40% --reverse --border --preview-window=down:3:hidden:wrap'
+
+# FZF 文件搜索命令 (需要安装 fd)
+export FZF_CTRL_T_COMMAND='fd --type f --hidden --follow --exclude .git'
+```
+
+## 使用示例
+
+```bash
+# 创建或附加到名为 "work" 的会话
+tma work
+
+# 不带参数时弹出 fzf 选择器
+tma
+
+# 在 tmux 会话中使用 fzf 快速切换窗口
+tmw
+```

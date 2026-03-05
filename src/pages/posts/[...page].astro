@@ -8,6 +8,7 @@ import Pagination from '~/components/base/Pagination.astro'
 import List from '~/components/posts/card/List.astro'
 import PageTitle from '~/components/base/PageTitle.astro'
 import Noise from '~/components/reactbits/Noise'
+import PostKindTabs from '~/components/posts/base/PostKindTabs.astro'
 
 export const getStaticPaths: GetStaticPaths = async ({ paginate }) => {
   const sortedPosts = await getAllPosts()
@@ -36,6 +37,7 @@ const { title, description, introduce } = POSTS_CONFIG
     </div>
 
     <PageTitle {title} {introduce} />
+    <PostKindTabs active="posts" />
     <div class="mt-12 fade-up">
       <List posts={page.data} type={POSTS_CONFIG.postPageConfig.type} coverLayout={POSTS_CONFIG.postPageConfig?.coverLayout} />
     </div>

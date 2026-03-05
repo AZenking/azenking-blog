@@ -9,10 +9,23 @@ export function postsSort(posts: CollectionEntry<'posts'>[]) {
   })
 }
 
+export function notesSort(notes: CollectionEntry<'notes'>[]) {
+  return notes.slice().sort((a, b) => {
+    const dateA = a.data.updatedDate ?? a.data.pubDate
+    const dateB = b.data.updatedDate ?? b.data.pubDate
+    return new Date(dateB).getTime() - new Date(dateA).getTime()
+  })
+}
+
 // 获取所有非草稿文章，按时间排序
 export async function getAllPosts(): Promise<CollectionEntry<'posts'>[]> {
   const allPosts = await getCollection('posts')
   return postsSort(allPosts.filter((post) => !post.data.draft))
+}
+
+export async function getAllNotes(): Promise<CollectionEntry<'notes'>[]> {
+  const allNotes = await getCollection('notes')
+  return notesSort(allNotes.filter((note) => !note.data.draft))
 }
 
 // 获取所有置顶文章
