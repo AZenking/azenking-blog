@@ -17,8 +17,7 @@ import type {
 //--- Readme Page Config ---
 export const SITE: Site = {
   title: 'Ethan Yang',
-  description:
-    '👋 大家好，我是 Ethan Young，一名常驻南京的程序员，也是一位在生活中持续迭代的普通人',
+  description: '👋 大家好，我是 Ethan Young，一名常驻南京的程序员，也是一位在生活中持续迭代的普通人',
   website: 'https://ethyoung.me/',
   lang: 'en',
   base: '/',
@@ -72,7 +71,7 @@ export const SOCIAL_LINKS: SocialLink[] = [
     url: 'https://github.com/yy921010',
     icon: 'icon-[ri--github-fill]',
     count: 20,
-  }
+  },
 ]
 
 /**
@@ -148,7 +147,7 @@ export const POSTS_CONFIG: PostConfig = {
   author: 'Ethan',
   homePageConfig: {
     size: 2,
-    type: 'compact',
+    type: 'minimal',
   },
   postPageConfig: {
     size: 10,

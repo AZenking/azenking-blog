@@ -27,7 +27,7 @@ const githubUser = isGithub ? href.split('/').filter(Boolean).pop() : undefined
     target="_blank"
   >
     <span
-      class={cn('h-6 w-6 text-muted-foreground transition-all duration-300 ease-out', 'group-hover:text-primary group-hover:rotate-6', icon)}
+      class={cn('h-6 w-6 flex-shrink-0 text-muted-foreground transition-all duration-300 ease-out', 'group-hover:text-primary group-hover:rotate-6', icon)}
     ></span>
     {
       count !== undefined && (

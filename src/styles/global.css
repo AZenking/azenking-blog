@@ -207,6 +207,26 @@
   .animation-delay-200 {
     animation-delay: 200ms;
   }
+  .animation-delay-300 {
+    animation-delay: 300ms;
+  }
+  .animation-delay-400 {
+    animation-delay: 400ms;
+  }
+
+  /* Subtle pulse animation for status indicator */
+  @keyframes subtle-pulse {
+    0%, 100% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0.6;
+    }
+  }
+
+  .animate-subtle-pulse {
+    animation: subtle-pulse 2s ease-in-out infinite;
+  }
 
   /* 主题切换动画 */
   html.disable-transition,
