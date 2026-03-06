@@ -9,7 +9,6 @@ import HomePhotoPreviewGrid from '~/components/photos/HomePhotoPreviewGrid'
 import BlurText from '~/components/reactbits/BlurText'
 import ArchiveGroupsList from '~/components/home/ArchiveGroupsList'
 import PillNav from '~/components/reactbits/PillNav'
-import LightPillar from '~/components/reactbits/LightPillar'
 
 const { size } = POSTS_CONFIG.homePageConfig
 
@@ -65,44 +64,24 @@ const quickNavItems = [
   { label: 'View Blog', href: '/posts', ariaLabel: 'View all blog posts' },
   { label: 'View Photos', href: '/photos', ariaLabel: 'View all photos' },
 ]
+const homeSvgBackgrounds = Object.values(
+  import.meta.glob<string>('/src/assets/svg/*.svg', { eager: true, import: 'default', query: '?url' })
+)
+const initialHomeSvgBackground = homeSvgBackgrounds[0] ?? ''
 ---
 
 <Layout title="Readme" description={SITE.description}>
   <div class="relative z-[1] px-6 py-8 sm:px-8 sm:py-10 font-mono text-[15px] leading-7">
     <div class="pointer-events-none absolute inset-y-0 left-1/2 -z-10 w-screen -translate-x-1/2 overflow-hidden">
-      <div class="absolute inset-0 opacity-[0.5] dark:hidden">
-        <LightPillar
-          topColor="#94a3b8"
-          bottomColor="#e2e8f0"
-          intensity={0.65}
-          rotationSpeed={0.22}
-          interactive={false}
-          glowAmount={0.004}
-          pillarWidth={3.1}
-          pillarHeight={0.4}
-          noiseIntensity={0.2}
-          quality="medium"
-          className="opacity-80"
-          client:load
-        />
-      </div>
-      <div class="absolute inset-0 hidden opacity-[0.68] dark:block">
-        <LightPillar
-          topColor="#818cf8"
-          bottomColor="#e9d5ff"
-          intensity={0.88}
-          rotationSpeed={0.28}
-          interactive={false}
-          glowAmount={0.006}
-          pillarWidth={3.4}
-          pillarHeight={0.42}
-          noiseIntensity={0.3}
-          quality="medium"
-          className="opacity-85"
-          client:load
-        />
-      </div>
-      <div class="absolute inset-0 bg-[radial-gradient(circle_at_50%_8%,rgba(255,255,255,0.08),transparent_52%)]"></div>
+      <div
+        id="home-random-svg-bg"
+        class="absolute inset-0 bg-right bg-contain bg-no-repeat"
+        data-svg-list={JSON.stringify(homeSvgBackgrounds)}
+        style={`background-image: url('${initialHomeSvgBackground}');`}
+      ></div>
+      <div class="absolute inset-0 dark:hidden bg-[linear-gradient(to_bottom,rgba(255,255,255,0.4),rgba(255,255,255,0.78))]"></div>
+      <div class="absolute inset-0 hidden dark:block bg-[linear-gradient(to_bottom,rgba(2,6,23,0.5),rgba(2,6,23,0.82))]"></div>
+      <div class="absolute inset-0 bg-[radial-gradient(circle_at_50%_8%,rgba(255,255,255,0.12),transparent_52%)] dark:bg-[radial-gradient(circle_at_50%_8%,rgba(148,163,184,0.12),transparent_52%)]"></div>
     </div>
 
     <section class="min-h-[72svh] sm:min-h-[78svh] flex flex-col justify-between gap-10 pb-4">
@@ -121,7 +100,9 @@ const quickNavItems = [
           <div class="mt-3 flex flex-wrap gap-4">
             {
               SOCIAL_LINKS.map((item) => {
-                return <SocialLink href={item.url} icon={item.icon} aria-label={`Link of ${item.name}`} count={item.count} label="followers" />
+                return (
+                  <SocialLink href={item.url} icon={item.icon} aria-label={`Link of ${item.name}`} count={item.count} label="followers" />
+                )
               })
             }
           </div>
@@ -157,3 +138,32 @@ const quickNavItems = [
     </section>
   </div>
 </Layout>
+
+<script is:inline>
+  const homeBgEl = document.getElementById('home-random-svg-bg')
+  const homeSvgListRaw = homeBgEl?.getAttribute('data-svg-list') ?? '[]'
+  let homeSvgList = []
+  try {
+    const parsedSvgList = JSON.parse(homeSvgListRaw)
+    if (Array.isArray(parsedSvgList)) {
+      homeSvgList = parsedSvgList.filter((item) => typeof item === 'string')
+    }
+  } catch {
+    homeSvgList = []
+  }
+
+  if (homeBgEl && homeSvgList.length > 0) {
+    let randomIndex = Math.floor(Math.random() * homeSvgList.length)
+    try {
+      const cacheKey = 'home-random-svg-index'
+      const previousIndex = Number(window.sessionStorage.getItem(cacheKey))
+      if (Number.isInteger(previousIndex) && homeSvgList.length > 1 && previousIndex === randomIndex) {
+        randomIndex = (randomIndex + 1) % homeSvgList.length
+      }
+      window.sessionStorage.setItem(cacheKey, String(randomIndex))
+    } catch {
+      // Ignore sessionStorage errors in restricted contexts.
+    }
+    homeBgEl.style.backgroundImage = `url("${homeSvgList[randomIndex]}")`
+  }
+</script>
