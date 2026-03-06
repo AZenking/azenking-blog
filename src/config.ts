@@ -69,7 +69,7 @@ export const FOOTER_LINKS: Link[] = [
 export const SOCIAL_LINKS: SocialLink[] = [
   {
     name: 'github',
-    url: 'https://github.com/Ethan Yang',
+    url: 'https://github.com/yy921010',
     icon: 'icon-[ri--github-fill]',
     count: 20,
   }
