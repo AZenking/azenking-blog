@@ -1,0 +1,187 @@
+---
+title: '我的dot file 文件分享'
+description: '分享我的dot file配置文件'
+pubDate: 2026-03-06
+updatedDate: 2026-03-06
+tags: ['Tech']
+recommend: false
+pinned: false
+# Optional:
+# cover: assets/cover.png
+# ogImage: assets/og-image.png
+# postType: metaOnly
+# coverLayout: left
+---
+
+## 我的dot file文件分享
+
+### zsh
+
+```zsh title="~/.zshrc"
+
+# Path # 1. Powerlevel10k 即时提示 (必须在最顶部)
+typeset -g POWERLEVEL9K_INSTANT_PROMPT=quiet
+if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
+  source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
+fi
+
+# 2. 基础路径与环境变量
+export ZSH="$HOME/.oh-my-zsh"
+export LANG=en_US.UTF-8
+export LC_ALL=en_US.UTF-8
+export BUN_INSTALL="$HOME/.bun"
+export PATH="$HOME/bin:$BUN_INSTALL/bin:/Users/charles/.antigravity/antigravity/bin:$PATH"
+export N_PREFIX="$HOME/n"; [[ :$PATH: == *":$N_PREFIX/bin:"* ]] || PATH+=":$N_PREFIX/bin"
+export FNM_VERSION_FILE_STRATEGY="local"
+# 配置yazi 默认编辑器为nvim
+export EDITOR=nvim
+# 3. 插件与主题
+ZSH_THEME="powerlevel10k/powerlevel10k"
+plugins=(git npm autojump macos zsh-autosuggestions zsh-syntax-highlighting)
+
+source $ZSH/oh-my-zsh.sh
+
+# 4. 初始化工具（增加重定向处理，防止报错）
+if command -v fnm >/dev/null 2>&1; then
+  eval "$(fnm env --use-on-cd --shell zsh)" > /dev/null 2>&1
+fi
+
+if command -v thefuck >/dev/null 2>&1; then
+  eval "$(thefuck --alias)" > /dev/null 2>&1
+fi
+
+[ -f /opt/homebrew/etc/profile.d/autojump.sh ] && . /opt/homebrew/etc/profile.d/autojump.sh > /dev/null 2>&1
+[ -s "/Users/charles/.bun/_bun" ] && source "/Users/charles/.bun/_bun" > /dev/null 2>&1
+[[ "$TERM_PROGRAM" == "vscode" ]] && . "$(code --locate-shell-integration-path zsh)" > /dev/null 2>&1
+
+# 5. 自定义配置
+[ -f ~/.config/zsh/.alias_cfg ] && source ~/.config/zsh/.alias_cfg
+[ -f ~/.config/zsh/.tmux_cfg ] && source ~/.config/zsh/.tmux_cfg
+
+function yz() {
+	local tmp="$(mktemp -t "yazi-cwd.XXXXXX")" cwd
+	command yazi "$@" --cwd-file="$tmp"
+	IFS= read -r -d '' cwd < "$tmp"
+	[ "$cwd" != "$PWD" ] && [ -d "$cwd" ] && builtin cd -- "$cwd"
+	rm -f -- "$tmp"
+}
+
+# 6. 主题配置加载
+[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
+
+function gsf() {
+  # 1. 获取所有分支（包括远程分支），去掉 'origin/' 前缀
+  # 2. 使用 fzf 进行模糊搜索
+  # 3. --preview 可以在右侧实时显示该分支的提交日志
+  local branch=$(git branch -a --format='%(refname:short)' | \
+    sed 's#^origin/##' | \
+    sort -u | \
+    fzf --height 50% \
+        --layout=reverse \
+        --border \
+        --prompt="Git Switch > " \
+        --preview 'git log --oneline --graph --date=short --color=always --pretty="format:%C(auto)%h %ad %s" {-1} | head -200')
+
+  if [[ -n "$branch" ]]; then
+    git switch "$branch"
+  fi
+}
+
+```
+
+### tmux
+
+```bash title="~/.tmux.conf"
+### 基础设置 ### =============================================
+# --- 基础全局设置 ---
+# =============================================
+set -g default-terminal "tmux-256color"
+set -as terminal-overrides ",*:Tc"
+set -g mouse on               # 开启鼠标支持
+set -s escape-time 0          # 解决 Vim 按 Esc 延迟
+set -g focus-events on
+setw -g mode-keys vi          # 开启 Vi 模式 (Prefix+[ 进入)
+set -g base-index 1           # 窗口编号从 1 开始
+setw -g pane-base-index 1
+# 在 pane 边框顶部显示
+set -g pane-border-status top
+
+# 设置边框显示内容
+set -g pane-border-format "#[fg=cyan]#{pane_index} #[fg=white]#{pane_title}"
+
+# 激活 pane 边框高亮
+set -g pane-active-border-style fg=green
+set -g pane-border-style fg=grey
+
+# 更换前缀键为 Ctrl-a (更适合单手操作)
+unbind C-b
+set -g prefix C-a
+bind C-a send-prefix
+
+# --- 状态栏布局：置顶且背景透明 ---
+set -g status-position bottom
+set -g status-style bg=default
+
+# =============================================
+# --- 快捷键优化 ---
+# =============================================
+# 快速重载配置
+bind r source-file ~/.tmux.conf \; display-message "Config reloaded!"
+bind T command-prompt -p "Pane Title: " "select-pane -T '%%'"
+
+# 直观的分屏快捷键 (并在当前路径打开)
+bind v split-window -h -c "#{pane_current_path}"
+bind s split-window -v -c "#{pane_current_path}"
+bind | split-window -h -c "#{pane_current_path}"
+bind - split-window -v -c "#{pane_current_path}"
+
+# 调整面板大小 (Prefix + H/J/K/L)
+bind -r H resize-pane -L 5
+bind -r J resize-pane -D 5
+bind -r K resize-pane -U 5
+bind -r L resize-pane -R 5
+
+# =============================================
+# --- 插件列表 (使用 TPM 管理) ---
+# =============================================
+set -g @plugin 'tmux-plugins/tpm'
+set -g @plugin 'tmux-plugins/tmux-sensible'
+set -g @plugin 'tmux-plugins/tmux-yank'        # y 键同步到系统剪贴板
+set -g @plugin 'tmux-plugins/tmux-cpu'         # CPU 和 内存监控
+set -g @plugin 'tmux-plugins/tmux-battery'
+set -g @plugin 'omerxx/tmux-sessionx'          # Prefix+o 模糊搜索会话
+set -g @plugin 'omerxx/tmux-floax'             # Prefix+p 悬浮终端
+set -g @plugin 'christoomey/vim-tmux-navigator' # Ctrl+hjkl 顺滑切换 Nvim/Tmux
+set -g @plugin 'tmux-plugins/tmux-resurrect'
+set -g @plugin 'tmux-plugins/tmux-continuum'
+set -g @plugin 'catppuccin/tmux#v2.1.3'
+set -g @plugin 'sainnhe/tmux-fzf'
+# =============================================
+# --- 插件自定义配置 ---
+# =============================================
+# 修复你遇到的“自动弹出旧会话”问题：改为手动恢复
+set -g @continuum-restore 'off'
+
+# 悬浮窗与图片支持
+set -g @floax-bind 'p'
+set -g @sessionx-bind 'o'
+set -g allow-passthrough on   # 允许图片显示
+
+# --- Catppuccin 主题配置 ---
+set -g @catppuccin_flavor "mocha"
+set -g @catppuccin_window_status_style "rounded"
+set -g @catppuccin_window_default_text " #W"
+set -g @catppuccin_window_current_text " #W"
+set -g @catppuccin_date_time_text " %m-%d %H:%M"
+
+# 自定义状态栏内容 (左侧会话，右侧资源)
+set -g status-right-length 200
+set -g status-left "#{E:@catppuccin_status_session} "
+set -g status-right "#{E:@catppuccin_status_application}"
+set -agF status-right "#{E:@catppuccin_status_cpu}"
+set -agF status-right "#{E:@catppuccin_status_date_time}"
+set -agF status-right "#{E:@catppuccin_status_battery}"
+
+# 初始化 TPM (务必放在最后)
+run '~/.tmux/plugins/tpm/tpm'
+```
