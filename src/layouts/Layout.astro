@@ -3,6 +3,7 @@ import '~/styles/global.css'
 import '~/styles/markdown.css'
 import '~/styles/lqip.css'
 import '~/styles/github-card.css'
+import Analytics from '@vercel/analytics/astro'
 import { SITE } from '~/config'
 import Head from '~/components/base/Head.astro'
 import Header from './Header.astro'
@@ -27,6 +28,7 @@ const { title, description, image }: Props = Astro.props
     <div class="grow flex">
       <main class="relative global-layout-width mx-auto grow min-w-0">
         <slot />
+        <Analytics />
       </main>
     </div>
     <Footer />
