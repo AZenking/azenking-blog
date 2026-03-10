@@ -65,114 +65,138 @@ const homeSvgBackgrounds = Object.values(
 const initialHomeSvgBackground = homeSvgBackgrounds[0] ?? ''
 ---
 
-<Layout title="Readme" description={SITE.description}>
+<Layout title="Home" description={SITE.description}>
   <div class="relative z-[1] px-6 py-8 sm:px-8 sm:py-10 font-mono text-[15px] leading-7">
-    <!-- Refined Background with Subtle Noise Overlay -->
     <div class="pointer-events-none absolute inset-y-0 left-1/2 -z-10 w-screen -translate-x-1/2 overflow-hidden">
       <div
         id="home-random-svg-bg"
-        class="absolute inset-0 bg-right bg-contain bg-no-repeat opacity-60"
+        class="absolute inset-0 bg-right bg-contain bg-no-repeat opacity-58"
         data-svg-list={JSON.stringify(homeSvgBackgrounds)}
         style={`background-image: url('${initialHomeSvgBackground}');`}
       ></div>
-      <!-- Enhanced gradient overlays for better contrast -->
-      <div class="absolute inset-0 dark:hidden bg-[linear-gradient(135deg,rgba(255,255,255,0.5)_0%,rgba(255,255,255,0.85)_50%,rgba(255,255,255,0.75)_100%)]"></div>
-      <div class="absolute inset-0 hidden dark:block bg-[linear-gradient(135deg,rgba(2,6,23,0.6)_0%,rgba(2,6,23,0.9)_50%,rgba(2,6,23,0.8)_100%)]"></div>
-      <!-- Subtle radial glow -->
-      <div class="absolute inset-0 bg-[radial-gradient(ellipse_80%_50%_at_50%_-20%,rgba(120,119,198,0.08),transparent_60%)] dark:bg-[radial-gradient(ellipse_80%_50%_at_50%_-20%,rgba(167,139,250,0.1),transparent_60%)]"></div>
-      <!-- Decorative grain texture -->
+      <div class="absolute inset-0 dark:hidden bg-[linear-gradient(145deg,rgba(255,255,255,0.56)_0%,rgba(255,255,255,0.9)_48%,rgba(255,255,255,0.82)_100%)]"></div>
+      <div class="absolute inset-0 hidden dark:block bg-[linear-gradient(145deg,rgba(2,6,23,0.64)_0%,rgba(2,6,23,0.9)_50%,rgba(2,6,23,0.86)_100%)]"></div>
+      <div class="absolute inset-0 bg-[radial-gradient(ellipse_72%_46%_at_68%_0%,rgba(80,80,180,0.12),transparent_72%)] dark:bg-[radial-gradient(ellipse_72%_46%_at_68%_0%,rgba(120,120,255,0.16),transparent_72%)]"></div>
       <div class="absolute inset-0 opacity-[0.03] dark:opacity-[0.04]" style="background-image: url('data:image/svg+xml,%3Csvg viewBox=%220 0 256 256%22 xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cfilter id=%22noise%22%3E%3CfeTurbulence type=%22fractalNoise%22 baseFrequency=%220.9%22 numOctaves=%224%22 stitchTiles=%22stitch%22/%3E%3C/filter%3E%3Crect width=%22100%25%22 height=%22100%25%22 filter=%22url(%23noise)%22/%3E%3C/svg%3E');"></div>
     </div>
 
-    <!-- Main Hero Section -->
-    <section class="min-h-[65svh] sm:min-h-[70svh] flex flex-col justify-center gap-8">
-      <!-- Refined Name Display - Much Smaller -->
-      <BlurText
-        text={SITE.title}
-        animateBy="letters"
-        direction="top"
-        delay={80}
-        className="font-sans text-[clamp(2.5rem,6vw,5rem)] leading-[1.1] tracking-[-0.04em] font-semibold text-foreground uppercase"
-        client:load
-      />
+    <section class="grid min-h-[65svh] items-center gap-8 lg:grid-cols-[1fr_20rem]">
+      <div class="space-y-6">
+        <BlurText
+          text={SITE.title}
+          animateBy="letters"
+          direction="top"
+          delay={80}
+          className="font-sans text-[clamp(2.35rem,6vw,5.2rem)] leading-[1.02] tracking-[-0.045em] font-semibold text-foreground uppercase"
+          client:load
+        />
 
-      <!-- Enhanced subtitle area -->
-      <div class="fade-up animation-delay-200 flex flex-col gap-3">
-        <p class="text-base sm:text-lg font-sans font-normal tracking-tight text-foreground/90">Programmer & Writer</p>
-        <div class="flex items-center gap-4 text-sm text-muted-foreground">
-          <span class="inline-flex items-center gap-1.5">
-            <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
-            Available for work
-          </span>
-          <span>·</span>
-          <span>Nanjing, China</span>
+        <div class="fade-up animation-delay-150 space-y-3">
+          <p class="max-w-[42ch] text-base sm:text-lg font-sans font-normal tracking-tight text-foreground/90">
+            代码、写作与影像并行。这里记录我做过的项目、长期思考和日常观察。
+          </p>
+          <div class="flex flex-wrap items-center gap-3 text-xs sm:text-sm text-muted-foreground">
+            <span class="inline-flex items-center gap-1.5 rounded-full border border-border/70 bg-background/55 px-3 py-1">
+              <span class="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-subtle-pulse"></span>
+              Available for work
+            </span>
+            <span class="inline-flex items-center rounded-full border border-border/70 bg-background/55 px-3 py-1">Nanjing, China</span>
+            <span class="inline-flex items-center rounded-full border border-border/70 bg-background/55 px-3 py-1">UTC+8</span>
+          </div>
+        </div>
+
+        <div class="fade-up animation-delay-300 flex flex-wrap gap-3 pt-1">
+          {
+            SOCIAL_LINKS.map((item) => (
+              <SocialLink href={item.url} icon={item.icon} aria-label={`Link of ${item.name}`} count={item.count} label="followers" />
+            ))
+          }
         </div>
       </div>
 
-      <!-- Social Links with Enhanced Styling -->
-      <div class="fade-up animation-delay-300 flex flex-wrap gap-3 pt-2">
-        {
-          SOCIAL_LINKS.map((item) => {
-            return (
-              <SocialLink href={item.url} icon={item.icon} aria-label={`Link of ${item.name}`} count={item.count} label="followers" />
-            )
-          })
-        }
-      </div>
-
+      <aside class="fade-up animation-delay-400 rounded-2xl border border-border/70 bg-background/55 p-5 backdrop-blur-sm">
+        <p class="text-xs uppercase tracking-[0.16em] text-muted-foreground">Now</p>
+        <p class="mt-3 text-sm text-foreground/90">Building practical web products with strong writing and visual storytelling.</p>
+        <div class="mt-5 space-y-3 text-sm">
+          <a href="/posts" class="group flex items-center justify-between rounded-lg border border-border/60 bg-background/65 px-3 py-2 hover:border-foreground/30 transition-colors">
+            <span>Writing</span>
+            <span class="text-muted-foreground group-hover:translate-x-0.5 transition-transform">→</span>
+          </a>
+          <a href="/projects" class="group flex items-center justify-between rounded-lg border border-border/60 bg-background/65 px-3 py-2 hover:border-foreground/30 transition-colors">
+            <span>Projects</span>
+            <span class="text-muted-foreground group-hover:translate-x-0.5 transition-transform">→</span>
+          </a>
+          <a href="/photos" class="group flex items-center justify-between rounded-lg border border-border/60 bg-background/65 px-3 py-2 hover:border-foreground/30 transition-colors">
+            <span>Photography</span>
+            <span class="text-muted-foreground group-hover:translate-x-0.5 transition-transform">→</span>
+          </a>
+        </div>
+      </aside>
     </section>
 
-    <!-- Divider with decorative element -->
-    <div class="flex items-center gap-4 py-8">
-      <div class="flex-1 h-px bg-border/40"></div>
-      <div class="w-1.5 h-1.5 rounded-full bg-border/60"></div>
-      <div class="flex-1 h-px bg-border/40"></div>
+    <div class="grid gap-4 pb-2 sm:grid-cols-3">
+      <a href="/posts" class="group rounded-xl border border-border/70 bg-background/50 p-4 transition-colors hover:border-foreground/25">
+        <p class="text-xs uppercase tracking-[0.12em] text-muted-foreground">Archive</p>
+        <p class="mt-2 font-sans text-xl font-semibold tracking-tight text-foreground">{sortedPosts.length}</p>
+        <p class="mt-1 text-xs text-muted-foreground">Selected writings</p>
+      </a>
+      <a href="/photos" class="group rounded-xl border border-border/70 bg-background/50 p-4 transition-colors hover:border-foreground/25">
+        <p class="text-xs uppercase tracking-[0.12em] text-muted-foreground">Photo</p>
+        <p class="mt-2 font-sans text-xl font-semibold tracking-tight text-foreground">{photoPreviewList.length}</p>
+        <p class="mt-1 text-xs text-muted-foreground">Recent captures</p>
+      </a>
+      <a href="/projects" class="group rounded-xl border border-border/70 bg-background/50 p-4 transition-colors hover:border-foreground/25">
+        <p class="text-xs uppercase tracking-[0.12em] text-muted-foreground">Build</p>
+        <p class="mt-2 font-sans text-xl font-semibold tracking-tight text-foreground">Open</p>
+        <p class="mt-1 text-xs text-muted-foreground">Things I am making</p>
+      </a>
     </div>
 
-    <!-- Archive Section -->
-    <section class="py-6">
-      <div class="flex items-baseline justify-between gap-4 mb-6">
+    <div class="flex items-center gap-4 py-8">
+      <div class="h-px flex-1 bg-border/40"></div>
+      <div class="h-1.5 w-1.5 rounded-full bg-border/60"></div>
+      <div class="h-px flex-1 bg-border/40"></div>
+    </div>
+
+    <section class="py-2">
+      <div class="mb-6 flex items-baseline justify-between gap-4">
         <div>
-          <div class="flex items-center gap-2 mb-1">
-            <span class="text-xs font-mono text-muted-foreground uppercase tracking-wider">Writing</span>
-            <span class="w-6 h-px bg-border/50"></span>
+          <div class="mb-1 flex items-center gap-2">
+            <span class="text-xs font-mono uppercase tracking-wider text-muted-foreground">Writing</span>
+            <span class="h-px w-6 bg-border/50"></span>
           </div>
           <h2 class="text-2xl font-sans font-medium tracking-tight text-foreground">{hasPinnedPosts ? 'Pinned' : 'Recent'}</h2>
         </div>
-        <a href="/posts" class="group flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors">
+        <a href="/posts" class="group flex items-center gap-1.5 text-sm text-muted-foreground transition-colors hover:text-foreground">
           <span>View all</span>
-          <span class="group-hover:translate-x-0.5 transition-transform">→</span>
+          <span class="transition-transform group-hover:translate-x-0.5">→</span>
         </a>
       </div>
-
       <ArchiveGroupsList groups={archiveGroupsForUI} client:visible />
     </section>
 
-    <!-- Divider -->
     <div class="flex items-center gap-4 py-8">
-      <div class="flex-1 h-px bg-border/40"></div>
-      <div class="w-1.5 h-1.5 rounded-full bg-border/60"></div>
-      <div class="flex-1 h-px bg-border/40"></div>
+      <div class="h-px flex-1 bg-border/40"></div>
+      <div class="h-1.5 w-1.5 rounded-full bg-border/60"></div>
+      <div class="h-px flex-1 bg-border/40"></div>
     </div>
 
-    <!-- Photo Preview Section -->
-    <section class="py-6">
-      <div class="flex items-baseline justify-between gap-4 mb-6">
+    <section class="py-2">
+      <div class="mb-6 flex items-baseline justify-between gap-4">
         <div>
-          <div class="flex items-center gap-2 mb-1">
-            <span class="text-xs font-mono text-muted-foreground uppercase tracking-wider">Photography</span>
-            <span class="w-6 h-px bg-border/50"></span>
+          <div class="mb-1 flex items-center gap-2">
+            <span class="text-xs font-mono uppercase tracking-wider text-muted-foreground">Photography</span>
+            <span class="h-px w-6 bg-border/50"></span>
           </div>
           <h2 class="text-2xl font-sans font-medium tracking-tight text-foreground">Latest Shots</h2>
         </div>
-        <a href="/photos" class="group flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors">
+        <a href="/photos" class="group flex items-center gap-1.5 text-sm text-muted-foreground transition-colors hover:text-foreground">
           <span>View gallery</span>
-          <span class="group-hover:translate-x-0.5 transition-transform">→</span>
+          <span class="transition-transform group-hover:translate-x-0.5">→</span>
         </a>
       </div>
       <HomePhotoPreviewGrid photos={photoPreviewList} title="Latest Shots" description="Recent captures from everyday life." client:load />
     </section>
-
   </div>
 </Layout>
 

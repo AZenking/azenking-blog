@@ -1,18 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
 
-type FillMode = 'none' | 'forwards' | 'backwards' | 'both' | 'auto'
-
-const chooseFill = (): FillMode => {
-  const uach = (navigator as Navigator & { userAgentData?: { brands?: { brand: string; version: string }[] } }).userAgentData
-  if (uach?.brands?.length) {
-    const isChromiumBrand = uach.brands.some((b) => /Chrom(e|ium)/i.test(b.brand))
-    return isChromiumBrand ? 'both' : 'none'
-  }
-  return 'none'
-}
-
-const viewTransitionFill = chooseFill()
-
 const ThemeToggle = () => {
   const [mounted, setMounted] = useState(false)
   const [isDark, setIsDark] = useState(false)
@@ -65,27 +52,54 @@ const ThemeToggle = () => {
       return
     }
 
-    const x = event.clientX || window.innerWidth / 2
-    const y = event.clientY || window.innerHeight / 2
+    const rect = event.currentTarget.getBoundingClientRect()
+    const x = rect.left + rect.width / 2
+    const y = rect.top + rect.height / 2
     const radius = Math.hypot(Math.max(x, window.innerWidth - x), Math.max(y, window.innerHeight - y))
 
     isTransitioningRef.current = true
 
     try {
+      const root = document.documentElement
+      root.style.setProperty('--theme-reveal-x', `${x}px`)
+      root.style.setProperty('--theme-reveal-y', `${y}px`)
+      root.style.setProperty('--theme-reveal-radius', `${radius}px`)
+      root.classList.add('theme-transition-active')
+      root.classList.toggle('theme-transition-to-dark', nextDark)
+      root.classList.toggle('theme-transition-to-light', !nextDark)
+
       const transition = doc.startViewTransition(() => {
         toggle()
       })
 
       transition.ready
         .then(() => {
-          const clipPath = [`circle(0px at ${x}px ${y}px)`, `circle(${radius}px at ${x}px ${y}px)`]
+          if (nextDark) {
+            document.documentElement.animate(
+              {
+                clipPath: [`circle(${radius}px at ${x}px ${y}px)`, `circle(0px at ${x}px ${y}px)`],
+                filter: ['brightness(1)', 'brightness(0.94)'],
+              },
+              {
+                duration: 540,
+                easing: 'cubic-bezier(0.22, 1, 0.36, 1)',
+                fill: 'both',
+                pseudoElement: '::view-transition-old(root)',
+              }
+            )
+            return
+          }
+
           document.documentElement.animate(
-            { clipPath: nextDark ? [...clipPath].reverse() : clipPath },
             {
-              duration: 480,
+              clipPath: [`circle(0px at ${x}px ${y}px)`, `circle(${radius}px at ${x}px ${y}px)`],
+              filter: ['brightness(1.06)', 'brightness(1)'],
+            },
+            {
+              duration: 520,
               easing: 'cubic-bezier(0.22, 1, 0.36, 1)',
-              fill: viewTransitionFill,
-              pseudoElement: nextDark ? '::view-transition-old(root)' : '::view-transition-new(root)',
+              fill: 'both',
+              pseudoElement: '::view-transition-new(root)',
             }
           )
         })
@@ -94,9 +108,12 @@ const ThemeToggle = () => {
         })
 
       transition.finished.finally(() => {
+        root.classList.remove('theme-transition-active')
+        root.classList.remove('theme-transition-to-dark', 'theme-transition-to-light')
         isTransitioningRef.current = false
       })
     } catch {
+      document.documentElement.classList.remove('theme-transition-active', 'theme-transition-to-dark', 'theme-transition-to-light')
       isTransitioningRef.current = false
       toggle()
     }

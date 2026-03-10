@@ -96,6 +96,9 @@
     --layout-width: 60rem;
     --layout-half-width: calc(var(--layout-width) / 2);
     --layout-change-width: 136rem;
+    --theme-reveal-x: 50vw;
+    --theme-reveal-y: 50vh;
+    --theme-reveal-radius: 0px;
   }
 
   @media (min-width: 90rem) {
@@ -216,7 +219,8 @@
 
   /* Subtle pulse animation for status indicator */
   @keyframes subtle-pulse {
-    0%, 100% {
+    0%,
+    100% {
       opacity: 1;
     }
     50% {
@@ -237,7 +241,7 @@
   }
 }
 
-/* 主题切换 View Transition */
+/* View Transition API */
 ::view-transition-old(root),
 ::view-transition-new(root) {
   animation: none;
@@ -246,18 +250,69 @@
 
 ::view-transition-old(root) {
   z-index: 1;
+  opacity: 1;
 }
 
 ::view-transition-new(root) {
   z-index: 9999;
+  clip-path: circle(var(--theme-reveal-radius) at var(--theme-reveal-x) var(--theme-reveal-y));
 }
 
-.dark::view-transition-old(root) {
+.theme-transition-active::view-transition-old(root) {
+  animation: theme-old-fade 520ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.theme-transition-to-light::view-transition-old(root) {
+  z-index: 1;
+}
+
+.theme-transition-to-light::view-transition-new(root) {
   z-index: 9999;
 }
 
-.dark::view-transition-new(root) {
+.theme-transition-to-dark::view-transition-old(root) {
+  z-index: 9999;
+}
+
+.theme-transition-to-dark::view-transition-new(root) {
   z-index: 1;
+  clip-path: none;
+}
+
+@keyframes theme-old-fade {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0.9;
+  }
+}
+
+/* Panel Animation */
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes fade-out {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+.fade-in {
+  animation: fade-in var(--fade-in-duration, 0.3s) forwards;
+}
+
+.fade-out {
+  animation: fade-out var(--fade-out-duration, 0.3s) forwards;
 }
 
 /* ===== 滚动条样式 ===== */

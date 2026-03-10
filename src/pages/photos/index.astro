@@ -4,40 +4,102 @@ import Layout from '~/layouts/Layout.astro'
 import PhotoTimeline from '~/components/photos/PhotoTimeline.astro'
 import PageTitle from '~/components/base/PageTitle.astro'
 import { PhotosList } from '~/lib/photos'
-import LiquidEther from '~/components/reactbits/LiquidEther'
+import Threads from '~/components/reactbits/Threads'
 
 const { title, description, introduce } = PHOTOS_CONFIG
+const totalAlbums = PhotosList.length
+const totalPhotos = PhotosList.reduce((sum, album) => sum + album.photos.length, 0)
+const latestDate = PhotosList.map((album) => album.date).sort((a, b) => b.localeCompare(a))[0] ?? '--'
+const featuredPhotos = PhotosList[0]?.photos.slice(0, 6).map((photo) => ({
+  src: typeof photo.src === 'string' ? photo.src : photo.src.src,
+  alt: photo.alt,
+})) ?? []
 ---
 
 <Layout {title} {description}>
-  <div class="relative z-[1] py-8 pb-10 px-6 sm:px-8">
+  <div class="relative z-[1] px-6 py-8 pb-10 sm:px-8">
     <div class="pointer-events-none absolute inset-y-0 left-1/2 -z-10 w-screen -translate-x-1/2 overflow-hidden">
-      <div class="absolute inset-0 opacity-65">
-        <LiquidEther
-          colors={['#4f46e5', '#8b5cf6', '#ec4899']}
-          autoDemo
-          autoSpeed={0.62}
-          autoIntensity={2.1}
-          resolution={0.45}
-          cursorSize={96}
-          mouseForce={18}
-          client:load
-        />
+      <div class="absolute inset-0 dark:hidden opacity-30">
+        <Threads color={[0.2, 0.24, 0.3]} amplitude={1.2} distance={0.2} client:load />
       </div>
-      <div class="absolute inset-0 bg-gradient-to-b from-background/20 via-transparent to-background/45"></div>
+      <div class="absolute inset-0 hidden dark:block opacity-36">
+        <Threads color={[0.58, 0.66, 0.74]} amplitude={1.28} distance={0.2} client:load />
+      </div>
+      <div class="absolute inset-0 bg-[radial-gradient(circle_at_20%_0%,rgba(94,138,168,0.16),transparent_38%),radial-gradient(circle_at_88%_24%,rgba(150,170,190,0.16),transparent_34%)] dark:bg-[radial-gradient(circle_at_20%_0%,rgba(120,166,196,0.2),transparent_38%),radial-gradient(circle_at_88%_24%,rgba(98,116,136,0.2),transparent_34%)]"></div>
+      <div class="absolute inset-0 bg-gradient-to-b from-background/24 via-background/10 to-background/70"></div>
     </div>
 
     <PageTitle {title} {introduce} />
-    <div class="mt-12">
+
+    <section class="mt-8 overflow-hidden rounded-2xl border border-border/70 bg-background/55 backdrop-blur-sm">
+      <div class="grid gap-0 lg:grid-cols-[1.2fr_0.8fr]">
+        <div class="p-6 sm:p-7">
+          <p class="text-xs uppercase tracking-[0.15em] text-muted-foreground">Photo Journal</p>
+          <h2 class="mt-3 max-w-[20ch] font-sans text-[clamp(1.5rem,3.2vw,2.4rem)] leading-[1.12] tracking-tight text-foreground">
+            在日常细节里，留下可回看、可回忆、可被再次感动的瞬间。
+          </h2>
+          <p class="mt-4 max-w-[48ch] text-sm leading-6 text-muted-foreground">
+            这不是作品集，而是生活痕迹。每一组照片都按时间归档，按情绪呈现。
+          </p>
+        </div>
+
+        <div class="grid grid-cols-3 border-t border-border/60 lg:border-t-0 lg:border-l">
+          <div class="col-span-1 border-b border-r border-border/60 p-4 sm:p-5">
+            <p class="text-xs uppercase tracking-[0.12em] text-muted-foreground">Albums</p>
+            <p class="mt-2 font-sans text-2xl font-semibold tracking-tight">{totalAlbums}</p>
+          </div>
+          <div class="col-span-2 border-b border-border/60 p-4 sm:p-5">
+            <p class="text-xs uppercase tracking-[0.12em] text-muted-foreground">Photos</p>
+            <p class="mt-2 font-sans text-2xl font-semibold tracking-tight">{totalPhotos}</p>
+          </div>
+          <div class="col-span-3 p-4 sm:p-5">
+            <p class="text-xs uppercase tracking-[0.12em] text-muted-foreground">Latest Update</p>
+            <p class="mt-2 text-lg font-medium tracking-tight text-foreground">{latestDate}</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    {featuredPhotos.length > 0 && (
+      <section class="mt-6">
+        <div class="mb-4 flex items-center justify-between">
+          <h3 class="font-sans text-lg font-semibold tracking-tight text-foreground">精选预览</h3>
+          <span class="text-xs uppercase tracking-[0.12em] text-muted-foreground">{featuredPhotos.length} shots</span>
+        </div>
+        <div class="grid grid-cols-2 gap-3 sm:grid-cols-3">
+          {
+            featuredPhotos.map((photo) => (
+              <div class="group relative overflow-hidden rounded-xl border border-border/60 bg-muted/20">
+                <img
+                  src={photo.src}
+                  alt={photo.alt}
+                  loading="lazy"
+                  decoding="async"
+                  class="aspect-[4/3] w-full object-cover transition-transform duration-500 group-hover:scale-[1.04]"
+                />
+              </div>
+            ))
+          }
+        </div>
+      </section>
+    )}
+
+    <section class="mt-10">
+      <div class="mb-6 flex items-end justify-between gap-3">
+        <div>
+          <p class="text-xs uppercase tracking-[0.14em] text-muted-foreground">Timeline</p>
+          <h3 class="mt-1 font-sans text-2xl font-semibold tracking-tight text-foreground">按时间浏览</h3>
+        </div>
+      </div>
       {
         PhotosList.length > 0 ? (
-          <PhotoTimeline photoData={PhotosList} />
+          <PhotoTimeline photoData={PhotosList} class="rounded-2xl border border-border/60 bg-background/45 p-4 sm:p-6" />
         ) : (
-          <div class="text-muted-foreground mb-4">
+          <div class="mb-4 text-muted-foreground">
             <p class="text-sm">No photos yet, wait for me to return, OvO</p>
           </div>
         )
       }
-    </div>
+    </section>
   </div>
 </Layout>
