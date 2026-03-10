@@ -173,15 +173,8 @@ const PhotoGalleryModal: React.FC<Props> = ({ photos, title, description, isOpen
               ))}
             </div>
 
-            <div className="relative overflow-hidden rounded-[1.25rem] border border-white/20 bg-black/45 shadow-[0_40px_120px_rgba(0,0,0,0.68)]" ref={containerRef}>
+            <div className="relative overflow-hidden rounded-[1.25rem] bg-black/45 shadow-[0_40px_120px_rgba(0,0,0,0.68)]" ref={containerRef}>
               <div className="pointer-events-none absolute inset-0 z-[1] bg-[linear-gradient(180deg,rgba(0,0,0,0.08)_0%,rgba(0,0,0,0.2)_100%)]" />
-              <button
-                onClick={onClose}
-                className="absolute right-3 top-3 z-[4] inline-flex size-8 items-center justify-center rounded-full border border-white/25 bg-black/36 text-white/85 backdrop-blur-sm transition-colors hover:bg-black/52"
-                aria-label="关闭画廊"
-              >
-                <span className="icon-[mdi--close] size-4"></span>
-              </button>
 
               <div className="absolute -right-12 top-1/2 z-[4] hidden -translate-y-1/2 flex-col gap-2 sm:flex">
                 <button
