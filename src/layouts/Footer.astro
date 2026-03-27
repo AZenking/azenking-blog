@@ -1,153 +1,27 @@
 ---
-import { FOOTER_LINKS, SITE } from '~/config'
-import ThemeToggle from '~/components/theme/ThemeToggle'
+import { SITE, SOCIAL_LINKS } from '~/config'
 
 const START_YEAR = 2025
 const currentYear = new Date().getFullYear()
 const yearDisplay = currentYear > START_YEAR ? `${START_YEAR}–${currentYear}` : `${START_YEAR}`
 ---
 
-<style>
-  /* Footer link hover animation */
-  .footer-link {
-    position: relative;
-    display: inline-block;
-  }
+<footer class="apple-ui border-t border-border/55 bg-background/76 backdrop-blur supports-[backdrop-filter]:bg-background/62">
+  <div class="global-layout-width mx-auto flex flex-col gap-4 px-4 py-7 text-xs text-muted-foreground sm:flex-row sm:items-center sm:justify-between sm:px-6 sm:py-8">
+    <p class="tracking-[0.015em]">© {yearDisplay} {SITE.author}. All rights reserved.</p>
 
-  .footer-link::after {
-    content: '';
-    position: absolute;
-    bottom: -2px;
-    left: 0;
-    width: 0;
-    height: 1px;
-    background: currentColor;
-    transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  }
-
-  .footer-link:hover::after {
-    width: 100%;
-  }
-
-  /* Subtle fade in animation */
-  .footer-content {
-    animation: footerFadeIn 0.6s ease-out 0.3s both;
-  }
-
-  @keyframes footerFadeIn {
-    from {
-      opacity: 0;
-      transform: translateY(8px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
-</style>
-
-<footer class="border-t border-border/30 bg-muted/30">
-  <div class="footer-content global-layout-width mx-auto px-4 sm:px-6 py-10 sm:py-12">
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 sm:gap-6">
-      <!-- Brand Column -->
-      <div class="sm:col-span-2 lg:col-span-1">
-        <a href="/" class="inline-flex items-center gap-2 mb-3 group">
-          <span class="w-2 h-2 rounded-full bg-foreground/80 group-hover:scale-125 transition-transform"></span>
-          <span class="text-sm font-semibold tracking-tight">{SITE.author}</span>
+    <div class="flex flex-wrap items-center gap-4 sm:gap-5">
+      {SOCIAL_LINKS.map((item) => (
+        <a href={item.url} target="_blank" rel="noreferrer" class="inline-flex items-center gap-1.5 transition-colors hover:text-foreground/90">
+          <span class={item.icon}></span>
+          <span class="capitalize">{item.name}</span>
         </a>
-        <p class="text-sm text-muted-foreground leading-relaxed max-w-[200px]">
-          {SITE.description}
-        </p>
-      </div>
+      ))}
 
-      <!-- Navigation Column -->
-      <div>
-        <h3 class="text-xs font-semibold uppercase tracking-wider text-foreground mb-3">Explore</h3>
-        <ul class="space-y-2">
-          {FOOTER_LINKS.map((link) => (
-            <li>
-              <a
-                href={link.url}
-                class="footer-link text-sm text-muted-foreground hover:text-foreground transition-colors"
-              >
-                {link.name}
-              </a>
-            </li>
-          ))}
-        </ul>
-      </div>
-
-      <!-- Connect Column -->
-      <div>
-        <h3 class="text-xs font-semibold uppercase tracking-wider text-foreground mb-3">Connect</h3>
-        <ul class="space-y-2">
-          <li>
-            <a
-              href="/atom.xml"
-              target="_blank"
-              class="footer-link text-sm text-muted-foreground hover:text-foreground transition-colors flex items-center gap-2"
-            >
-              <span class="icon-[ri--rss-line] text-base"></span>
-              RSS Feed
-            </a>
-          </li>
-          <li>
-            <a
-              href="https://github.com"
-              target="_blank"
-              rel="noreferrer"
-              class="footer-link text-sm text-muted-foreground hover:text-foreground transition-colors flex items-center gap-2"
-            >
-              <span class="icon-[ri--github-line] text-base"></span>
-              GitHub
-            </a>
-          </li>
-          <li>
-            <a
-              href="mailto:hello@example.com"
-              class="footer-link text-sm text-muted-foreground hover:text-foreground transition-colors flex items-center gap-2"
-            >
-              <span class="icon-[ri--mail-line] text-base"></span>
-              Email
-            </a>
-          </li>
-        </ul>
-      </div>
-
-      <!-- Theme Toggle Column (Desktop) -->
-      <div class="hidden lg:block">
-        <h3 class="text-xs font-semibold uppercase tracking-wider text-foreground mb-3">Preferences</h3>
-        <div class="flex items-center gap-2">
-          <span class="text-sm text-muted-foreground">Theme</span>
-          <ThemeToggle client:load transition:persist="footer-theme-toggle" />
-        </div>
-      </div>
-    </div>
-
-    <!-- Bottom Bar -->
-    <div class="mt-10 pt-6 border-t border-border/30 flex flex-col sm:flex-row items-center justify-between gap-4">
-      <p class="text-xs text-muted-foreground font-mono">
-        © {yearDisplay} {SITE.author}. All rights reserved.
-      </p>
-
-      <div class="flex items-center gap-4 text-xs text-muted-foreground">
-        <span class="hidden sm:inline">Made with</span>
-        <a
-          href="https://astro.build"
-          target="_blank"
-          rel="noreferrer"
-          class="hover:text-foreground transition-colors"
-        >
-          <span class="icon-[ri--astro-fill] text-base align-middle"></span>
-          <span class="hidden sm:inline ml-1">Astro</span>
-        </a>
-      </div>
-
-      <!-- Mobile Theme Toggle -->
-      <div class="lg:hidden flex items-center gap-2">
-        <span class="text-xs text-muted-foreground">Theme</span>
-        <ThemeToggle client:load transition:persist="footer-theme-toggle-mobile" />
-      </div>
+      <a href="/atom.xml" target="_blank" rel="noreferrer" class="inline-flex items-center gap-1.5 transition-colors hover:text-foreground/90">
+        <span class="icon-[ri--rss-line] text-[14px]"></span>
+        <span>RSS</span>
+      </a>
     </div>
   </div>
 </footer>

@@ -593,6 +593,18 @@ image-figure-polaroid {
 .expressive-code {
   margin-block: 1em;
 
+  /* Terminal frame: hide empty top bar and restore normal frame corners */
+  & .frame.is-terminal .header {
+    display: none !important;
+  }
+
+  & .frame.is-terminal pre,
+  & .frame.is-terminal code {
+    border-top: var(--ec-brdWd) solid var(--ec-brdCol) !important;
+    border-top-left-radius: calc(var(--ec-brdRad) + var(--ec-brdWd)) !important;
+    border-top-right-radius: calc(var(--ec-brdRad) + var(--ec-brdWd)) !important;
+  }
+
   & .copy button {
     inline-size: 2rem !important;
     block-size: 2rem !important;
@@ -811,8 +823,27 @@ image-figure-polaroid {
 }
 
 /* 如果链接出现在代码块或内联代码里 */
-.markdown pre,
-.markdown code {
+.markdown pre:not(.expressive-code pre),
+.markdown code:not(.expressive-code code) {
   white-space: pre-wrap;
   word-break: break-word;
+}
+
+/* Keep Expressive Code layout stable */
+.markdown .expressive-code pre,
+.markdown .expressive-code code {
+  white-space: pre !important;
+  word-break: normal !important;
+}
+
+/* Fallback selectors for browsers with partial nesting support */
+.markdown .expressive-code .frame.is-terminal .header {
+  display: none !important;
+}
+
+.markdown .expressive-code .frame.is-terminal pre,
+.markdown .expressive-code .frame.is-terminal code {
+  border-top: var(--ec-brdWd) solid var(--ec-brdCol) !important;
+  border-top-left-radius: calc(var(--ec-brdRad) + var(--ec-brdWd)) !important;
+  border-top-right-radius: calc(var(--ec-brdRad) + var(--ec-brdWd)) !important;
 }
