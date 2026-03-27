@@ -1,181 +1,76 @@
 ---
-import { HEADER_LINKS } from '~/config'
 import { SITE } from '~/config'
-import { SOCIAL_LINKS } from '~/config'
 import ThemeToggle from '~/components/theme/ThemeToggle'
 import SearchSwitch from '~/components/base/SearchSwitch.astro'
 
-const githubLink = SOCIAL_LINKS.find((item) => item.name.toLowerCase() === 'github')?.url
+const navLinks = [
+  { name: '首页', url: '/' },
+  { name: '文章', url: '/posts' },
+  { name: '照片', url: '/photos' },
+  { name: '朋友', url: '/friends' },
+  { name: '分类', url: '/tags' },
+  { name: '关于我', url: '/#about' },
+]
 
-const navIconMap: Record<string, string> = {
-  Posts: 'icon-[ri--article-line]',
-  Projects: 'icon-[ri--lightbulb-line]',
-  Photos: 'icon-[ri--camera-3-line]',
-  Friends: 'icon-[ri--heart-line]',
+const isLinkActive = (linkUrl: string, pathname: string) => {
+  if (linkUrl.startsWith('/#')) return false
+  if (linkUrl === '/') return pathname === '/'
+  return pathname.startsWith(linkUrl)
 }
 ---
 
-<style>
-  /* Nav Link Underline Animation */
-  .nav-link {
-    position: relative;
-  }
-
-  .nav-link::after {
-    content: '';
-    position: absolute;
-    bottom: -2px;
-    left: 0;
-    width: 0;
-    height: 1px;
-    background: currentColor;
-    transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  }
-
-  .nav-link:hover::after,
-  .nav-link.active::after {
-    width: 100%;
-  }
-
-  /* Icon Button Hover Effect */
-  .icon-btn {
-    position: relative;
-    overflow: hidden;
-  }
-
-  .icon-btn::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: currentColor;
-    opacity: 0;
-    transition: opacity 0.2s ease;
-    border-radius: inherit;
-  }
-
-  .icon-btn:hover::before {
-    opacity: 0.08;
-  }
-
-  /* Logo Mark */
-  .logo-mark {
-    width: 6px;
-    height: 6px;
-    background: currentColor;
-    border-radius: 50%;
-    animation: logo-pulse 3s ease-in-out infinite;
-  }
-
-  @keyframes logo-pulse {
-    0%, 100% {
-      opacity: 1;
-      transform: scale(1);
-    }
-    50% {
-      opacity: 0.7;
-      transform: scale(0.9);
-    }
-  }
-
-  /* Custom breakpoint at 960px */
-  @media (max-width: 960px) {
-    .show-text {
-      display: none !important;
-    }
-    .show-icon {
-      display: inline-flex !important;
-    }
-  }
-
-  @media (min-width: 961px) {
-    .show-icon {
-      display: none !important;
-    }
-    .show-text {
-      display: inline-flex !important;
-    }
-  }
-</style>
-
-<header class="border-b border-border/40">
-  <div class="flex items-center justify-end h-16 px-4 sm:px-6 gap-3 sm:gap-4">
-    <!-- Logo (Left, minimal) -->
+<header class="apple-ui sticky top-0 z-50 border-b border-border/55 bg-background/78 backdrop-blur-xl supports-[backdrop-filter]:bg-background/62">
+  <div class="global-layout-width mx-auto flex h-16 items-center gap-6 px-4 sm:h-[4.5rem] sm:px-6">
     <a
       href="/"
-      class="mr-auto flex items-center gap-3 text-lg sm:text-xl font-semibold tracking-tight text-foreground transition-opacity hover:opacity-70"
+      class="text-[15px] font-medium tracking-[-0.02em] text-foreground/92 transition-colors hover:text-foreground"
       transition:persist
     >
-      <span class="logo-mark"></span>
-      <span class="font-sans">{SITE.author}</span>
+      {SITE.author}
     </a>
 
-    <!-- Navigation -->
-    <nav class="flex items-center gap-1">
-      {HEADER_LINKS.map((link) => (
+    <nav class="ml-2 hidden items-center gap-0.5 md:flex">
+      {navLinks.map((link) => (
         <a
           href={link.url}
           class:list={[
-            'nav-link px-3 py-1.5 text-sm font-medium text-muted-foreground transition-colors hover:text-foreground',
-            Astro.url.pathname.startsWith(link.url) && 'active text-foreground',
+            'rounded-full px-3 py-1.5 text-sm font-normal transition-colors',
+            isLinkActive(link.url, Astro.url.pathname)
+              ? 'bg-foreground text-background'
+              : 'text-muted-foreground hover:bg-muted/55 hover:text-foreground',
           ]}
-          title={link.name}
+          aria-current={isLinkActive(link.url, Astro.url.pathname) ? 'page' : undefined}
         >
-          <span class="show-text">{link.name}</span>
-          <span class:list={['text-lg show-icon', navIconMap[link.name]]}></span>
+          {link.name}
         </a>
       ))}
-      {githubLink && (
-        <a
-          href={githubLink}
-          target="_blank"
-          rel="noreferrer"
-          class="nav-link px-3 py-1.5 text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
-          title="GitHub"
-        >
-          <span class="show-text">GitHub</span>
-          <span class="icon-[ri--github-line] text-lg show-icon"></span>
-        </a>
-      )}
     </nav>
 
-    <!-- Right Actions -->
-    <div class="flex items-center gap-1" transition:persist="header-theme-toggle">
-      <!-- Search Icon (small screens) -->
-      <button
-        id="search-trigger"
-        aria-label="Search"
-        class="show-icon icon-btn p-2 rounded text-muted-foreground transition-colors hover:text-foreground"
-      >
-        <span class="icon-[ri--search-2-line] text-base"></span>
-      </button>
-
-      <!-- Search Input (large screens) -->
-      <div class="show-text">
+    <div class="ml-auto flex items-center gap-1.5 sm:gap-2" transition:persist="header-theme-toggle">
+      <div class="hidden items-center justify-center rounded-full text-muted-foreground transition-colors hover:text-foreground sm:inline-flex">
         <SearchSwitch />
       </div>
 
-      <!-- RSS -->
-      <a
-        href="/atom.xml"
-        target="_blank"
-        class="icon-btn p-1.5 rounded text-muted-foreground transition-colors hover:text-foreground"
-        aria-label="RSS Feed"
-        title="RSS Feed"
-      >
-        <span class="icon-[ri--rss-line] text-[16px]"></span>
-      </a>
-
-      <!-- Theme Toggle -->
-      <div class="icon-btn p-1.5 rounded">
+      <div class="inline-flex size-8 items-center justify-center rounded-full text-muted-foreground transition-colors hover:bg-muted/55 hover:text-foreground">
         <ThemeToggle client:load />
       </div>
     </div>
   </div>
-</header>
 
-<script>
-  // Mobile search trigger
-  document.getElementById('search-trigger')?.addEventListener('click', () => {
-    document.getElementById('search-input')?.focus()
-  })
-</script>
+  <nav class="global-layout-width mx-auto flex items-center gap-1 overflow-x-auto px-4 pb-2 text-xs md:hidden sm:px-6">
+    {navLinks.map((link) => (
+      <a
+        href={link.url}
+        class:list={[
+          'shrink-0 rounded-full px-3 py-1.5 font-normal transition-colors',
+          isLinkActive(link.url, Astro.url.pathname)
+            ? 'bg-foreground text-background'
+            : 'text-muted-foreground hover:bg-muted/55 hover:text-foreground',
+        ]}
+        aria-current={isLinkActive(link.url, Astro.url.pathname) ? 'page' : undefined}
+      >
+        {link.name}
+      </a>
+    ))}
+  </nav>
+</header>

@@ -1,17 +1,25 @@
 ---
-import Layout from '~/layouts/Layout.astro'
-import MetaOnly from '~/components/posts/layouts/MetaOnly.astro'
-import CoverSplit from '~/components/posts/layouts/CoverSplit.astro'
-import CoverTop from '~/components/posts/layouts/CoverTop.astro'
-import PostNavigation from '~/components/posts/base/PostNavigation.astro'
-import PostFeatures from '~/components/posts/toc/PostFeatures.astro'
-import TocMobile from '~/components/posts/toc/TocMobile.astro'
-import { POSTS_CONFIG, SITE } from '~/config'
+import type { CollectionEntry } from 'astro:content'
 import { render } from 'astro:content'
-import { getAllPosts } from '~/lib/data'
-import SectionDivider from '~/components/base/SectionDivider.astro'
+import Layout from '~/layouts/Layout.astro'
+import Prose from '~/components/posts/base/Prose.astro'
 import Comment from '~/components/posts/base/Comment.astro'
-import License from '~/components/posts/base/License.astro'
+import LqipImage from '~/components/base/LqipImage.astro'
+import { POSTS_CONFIG, SITE } from '~/config'
+import { getAllPosts } from '~/lib/data'
+import { formatDate } from '~/lib/utils'
+
+const LICENSE_LINKS: Record<string, string> = {
+  'CC-BY-4.0': 'https://creativecommons.org/licenses/by/4.0/',
+  'CC-BY-SA-4.0': 'https://creativecommons.org/licenses/by-sa/4.0/',
+  'CC-BY-NC-4.0': 'https://creativecommons.org/licenses/by-nc/4.0/',
+  'CC-BY-NC-SA-4.0': 'https://creativecommons.org/licenses/by-nc-sa/4.0/',
+  'CC-BY-ND-4.0': 'https://creativecommons.org/licenses/by-nd/4.0/',
+  'CC-BY-NC-ND-4.0': 'https://creativecommons.org/licenses/by-nc-nd/4.0/',
+  'MIT': 'https://opensource.org/licenses/MIT',
+  'Apache-2.0': 'https://www.apache.org/licenses/LICENSE-2.0',
+  'GPL-3.0': 'https://www.gnu.org/licenses/gpl-3.0.html',
+}
 
 export async function getStaticPaths() {
   const sortedPosts = await getAllPosts()
@@ -26,23 +34,56 @@ export async function getStaticPaths() {
   }))
 }
 
-const { post, posts, prev, next } = Astro.props
-const { data: frontmatter } = post
-const { Content, headings, remarkPluginFrontmatter } = await render(post)
-
-const filterHeadings = headings.filter((heading: any) => heading.slug !== 'footnote-label')
-
-const hasValidHeadings = filterHeadings.length > 1
-type LayoutKey = 'metaOnly' | 'coverSplit' | 'coverTop'
-
-const layoutMap: Record<LayoutKey, any> = {
-  metaOnly: MetaOnly,
-  coverSplit: CoverSplit,
-  coverTop: CoverTop,
+interface Props {
+  post: CollectionEntry<'posts'>
+  posts: CollectionEntry<'posts'>[]
+  prev: CollectionEntry<'posts'> | null
+  next: CollectionEntry<'posts'> | null
 }
 
-const layoutKey: LayoutKey = (frontmatter.postType as LayoutKey) || (POSTS_CONFIG.postType as LayoutKey)
-const PostLayout = layoutMap[layoutKey] ?? MetaOnly
+const { post, posts, prev, next }: Props = Astro.props
+const { data: frontmatter } = post
+
+const { Content, headings, remarkPluginFrontmatter } = await render(post)
+
+const tocHeadings = headings.filter((heading) => {
+  const isValidDepth = heading.depth >= 2 && heading.depth <= 3
+  const hasText = heading.text.trim().length > 0
+  const isNotFootnote = heading.slug !== 'footnote-label'
+  return isValidDepth && hasText && isNotFootnote
+})
+
+const hasToc = tocHeadings.length > 0
+const tags = frontmatter.tags ?? []
+const primaryTag = tags[0]
+const secondaryTags = tags.slice(1, 4)
+const displayAuthor = frontmatter.author || SITE.author
+const minutesRead = remarkPluginFrontmatter?.minutesRead
+const wordCount = remarkPluginFrontmatter?.wordCount
+const publishedDate = formatDate(frontmatter.pubDate)
+const updatedDate = frontmatter.updatedDate ? formatDate(frontmatter.updatedDate) : null
+const canonicalUrl = new URL(`/posts/${post.id}`, SITE.website).toString()
+const licenseLink = frontmatter.license ? LICENSE_LINKS[frontmatter.license] : undefined
+
+const currentTags = new Set(tags)
+const relatedPosts = posts
+  .filter((candidate) => candidate.id !== post.id)
+  .map((candidate) => {
+    const candidateTags = candidate.data.tags ?? []
+    const overlap = candidateTags.filter((tag) => currentTags.has(tag)).length
+    const referenceDate = candidate.data.updatedDate ?? candidate.data.pubDate
+    return {
+      candidate,
+      overlap,
+      timestamp: referenceDate.getTime(),
+    }
+  })
+  .sort((a, b) => {
+    if (b.overlap !== a.overlap) return b.overlap - a.overlap
+    return b.timestamp - a.timestamp
+  })
+  .slice(0, 3)
+  .map((item) => item.candidate)
 ---
 
 <Layout
@@ -50,30 +91,383 @@ const PostLayout = layoutMap[layoutKey] ?? MetaOnly
   description={frontmatter.description || frontmatter.title}
   image={frontmatter.ogImage?.src ? `${SITE.website}${frontmatter.ogImage.src}` : SITE.ogImage}
 >
-  <div class="relative flex flex-col justify-between h-fit z-[1]">
-    <TocMobile {post} {posts} headings={filterHeadings} />
-    <PostLayout {frontmatter} minutesRead={remarkPluginFrontmatter.minutesRead} wordCount={remarkPluginFrontmatter.wordCount}>
-      <Content />
-      {
-        frontmatter.license && (
-          <>
-            <hr class="pb-6" />
-            <License license={frontmatter.license} title={frontmatter.title} author={frontmatter.author} />
-          </>
-        )
-      }
-    </PostLayout>
-    {
-      posts.length > 1 && (
-        <div class="px-6 sm:px-8 pb-6 sm:pb-8">
-          <PostNavigation {prev} {next} />
-        </div>
-      )
-    }
-    {hasValidHeadings && <PostFeatures {post} {posts} headings={filterHeadings} />}
-    <SectionDivider />
-    <div class="px-6 py-6 sm:px-8 pb-6 sm:pb-8">
-      <Comment id={post.id} title={frontmatter.title} />
-    </div>
+  <div id="reading-progress" class="pointer-events-none fixed inset-x-0 top-0 z-[60] h-px">
+    <div id="reading-progress-bar" class="h-full w-0 bg-foreground/35"></div>
   </div>
+
+  <article class="reading-layout apple-ui relative">
+    <div class="mx-auto w-full max-w-[76rem] px-6 pb-16 pt-10 sm:px-8 sm:pb-24 sm:pt-14">
+      <div class:list={['grid gap-16 xl:grid-cols-[minmax(0,44rem)_15rem] xl:justify-center', !hasToc && 'max-w-[44rem]']}
+      >
+        <div class="min-w-0">
+          <header class="space-y-7">
+            <div class="flex flex-wrap items-center gap-3 text-[0.72rem] font-medium uppercase tracking-[0.12em] text-muted-foreground/80">
+              {primaryTag ? <a href={`/tags/${primaryTag}`} class="transition-colors hover:text-foreground">{primaryTag}</a> : <span>Essay</span>}
+              {frontmatter.recommend && (
+                <span class="inline-flex items-center rounded-full border border-border/55 bg-muted/25 px-2.5 py-1 text-[0.65rem] tracking-[0.1em]">
+                  {POSTS_CONFIG.recommendText}
+                </span>
+              )}
+            </div>
+
+            <div>
+              <h1 data-pagefind-body class="text-[clamp(2rem,5.4vw,4.1rem)] font-semibold leading-[1.03] tracking-[-0.045em] text-foreground">
+                {frontmatter.title}
+              </h1>
+              {frontmatter.description && (
+                <p class="mt-6 max-w-[44ch] text-[clamp(1.04rem,2vw,1.34rem)] leading-[1.78] tracking-[-0.008em] text-foreground/72">
+                  {frontmatter.description}
+                </p>
+              )}
+            </div>
+
+            <div class="flex flex-wrap items-center gap-x-5 gap-y-2 text-sm text-muted-foreground/82">
+              <time datetime={frontmatter.pubDate.toISOString()}>{publishedDate}</time>
+              {updatedDate && <span>Updated {updatedDate}</span>}
+              {minutesRead && <span>{minutesRead} min read</span>}
+              {POSTS_CONFIG.wordCountView && wordCount && <span>{wordCount} words</span>}
+              {displayAuthor && <span>{displayAuthor}</span>}
+            </div>
+
+            {secondaryTags.length > 0 && (
+              <div class="flex flex-wrap gap-2 text-xs text-muted-foreground/75">
+                {secondaryTags.map((tag) => (
+                  <a href={`/tags/${tag}`} class="inline-flex rounded-full border border-border/55 bg-background/78 px-2.5 py-1 transition-colors hover:text-foreground">
+                    {tag}
+                  </a>
+                ))}
+              </div>
+            )}
+          </header>
+
+          {
+            frontmatter.cover && (
+              <figure class="mt-12 overflow-hidden rounded-[1.35rem] border border-border/55 bg-muted/20">
+                <div class="aspect-[1200/630]">
+                  <LqipImage
+                    src={frontmatter.cover}
+                    alt=""
+                    width={1200}
+                    height={630}
+                    loading="eager"
+                    decoding="async"
+                    format="webp"
+                    class="h-full w-full object-cover"
+                  />
+                </div>
+              </figure>
+            )
+          }
+
+          {
+            hasToc && (
+              <details class="mt-10 rounded-[1rem] border border-border/60 bg-background/72 xl:hidden">
+                <summary class="flex cursor-pointer items-center justify-between px-5 py-3 text-sm font-medium text-foreground/88">
+                  <span>Contents</span>
+                  <span class="icon-[ph--caret-down] text-muted-foreground"></span>
+                </summary>
+                <nav class="space-y-1 px-5 pb-4">
+                  {tocHeadings.map((heading) => (
+                    <a
+                      href={`#${heading.slug}`}
+                      data-reading-toc-link
+                      class:list={[
+                        'block py-1 text-sm leading-6 text-muted-foreground/78 transition-colors hover:text-foreground',
+                        heading.depth === 3 && 'pl-4',
+                      ]}
+                    >
+                      {heading.text}
+                    </a>
+                  ))}
+                </nav>
+              </details>
+            )
+          }
+
+          <main id="article-content" class="article-reader mt-14 sm:mt-16">
+            <Prose class="article-prose">
+              <Content />
+            </Prose>
+          </main>
+
+          {
+            frontmatter.license && (
+              <section class="mt-14 border-t border-border/55 pt-8 text-sm text-muted-foreground/82">
+                <p class="leading-7">
+                  Licensed under{' '}
+                  {
+                    licenseLink ? (
+                      <a href={licenseLink} target="_blank" rel="noreferrer" class="underline decoration-border underline-offset-4 hover:text-foreground">
+                        {frontmatter.license}
+                      </a>
+                    ) : (
+                      <span class="text-foreground/86">{frontmatter.license}</span>
+                    )
+                  }.
+                </p>
+                <p class="mt-2 leading-7">
+                  Permalink:{' '}
+                  <a href={canonicalUrl} class="underline decoration-border underline-offset-4 hover:text-foreground">
+                    {canonicalUrl}
+                  </a>
+                </p>
+              </section>
+            )
+          }
+
+          {
+            (prev || next) && (
+              <nav class="mt-16 border-t border-border/55 pt-10" aria-label="Post navigation">
+                <div class="grid gap-4 sm:grid-cols-2">
+                  {next ? (
+                    <a href={`/posts/${next.id}`} class="group rounded-2xl border border-border/55 bg-background/72 px-5 py-4 transition-colors hover:border-border/85">
+                      <p class="text-[0.7rem] uppercase tracking-[0.1em] text-muted-foreground/75">{POSTS_CONFIG.prevPostText}</p>
+                      <p class="mt-2 line-clamp-2 text-base leading-7 text-foreground/88 transition-colors group-hover:text-foreground">{next.data.title}</p>
+                    </a>
+                  ) : (
+                    <div></div>
+                  )}
+
+                  {prev ? (
+                    <a
+                      href={`/posts/${prev.id}`}
+                      class="group rounded-2xl border border-border/55 bg-background/72 px-5 py-4 text-left transition-colors hover:border-border/85 sm:text-right"
+                    >
+                      <p class="text-[0.7rem] uppercase tracking-[0.1em] text-muted-foreground/75">{POSTS_CONFIG.nextPostText}</p>
+                      <p class="mt-2 line-clamp-2 text-base leading-7 text-foreground/88 transition-colors group-hover:text-foreground">{prev.data.title}</p>
+                    </a>
+                  ) : (
+                    <div></div>
+                  )}
+                </div>
+              </nav>
+            )
+          }
+
+          {
+            relatedPosts.length > 0 && (
+              <section class="mt-16 border-t border-border/55 pt-10">
+                <h2 class="text-[0.8rem] font-medium uppercase tracking-[0.14em] text-muted-foreground/82">Related Articles</h2>
+                <div class="mt-5 space-y-4">
+                  {relatedPosts.map((related) => {
+                    const relatedDate = related.data.updatedDate ?? related.data.pubDate
+                    return (
+                      <a href={`/posts/${related.id}`} class="group block rounded-2xl border border-border/55 bg-background/72 px-5 py-4 transition-colors hover:border-border/85">
+                        <p class="text-[0.72rem] text-muted-foreground/75">{formatDate(relatedDate)}</p>
+                        <h3 class="mt-1.5 text-base leading-7 text-foreground/88 transition-colors group-hover:text-foreground">{related.data.title}</h3>
+                        {related.data.description && <p class="mt-1.5 line-clamp-2 text-sm leading-7 text-muted-foreground/78">{related.data.description}</p>}
+                      </a>
+                    )
+                  })}
+                </div>
+              </section>
+            )
+          }
+
+          <section class="mt-16 border-t border-border/55 pt-12">
+            <Comment id={post.id} title={frontmatter.title} />
+          </section>
+        </div>
+
+        {
+          hasToc && (
+            <aside class="hidden xl:block">
+              <div class="sticky top-28 border-l border-border/55 pl-6">
+                <p class="text-[0.7rem] font-medium uppercase tracking-[0.12em] text-muted-foreground/75">On this page</p>
+                <nav class="mt-4 space-y-1">
+                  {tocHeadings.map((heading) => (
+                    <a
+                      href={`#${heading.slug}`}
+                      data-reading-toc-link
+                      class:list={[
+                        'block py-1 text-sm leading-6 text-muted-foreground/74 transition-colors hover:text-foreground',
+                        heading.depth === 3 && 'pl-4',
+                      ]}
+                    >
+                      {heading.text}
+                    </a>
+                  ))}
+                </nav>
+              </div>
+            </aside>
+          )
+        }
+      </div>
+    </div>
+  </article>
+
+  <script is:inline>
+    const initArticleDetailPage = () => {
+      if (window.__articleDetailCleanup) {
+        window.__articleDetailCleanup()
+      }
+
+      const progressBar = document.getElementById('reading-progress-bar')
+      const articleContent = document.getElementById('article-content')
+      const tocLinks = Array.from(document.querySelectorAll('[data-reading-toc-link]'))
+
+      if (!progressBar || !articleContent) return
+
+      const tocPairs = tocLinks
+        .map((link) => {
+          const href = link.getAttribute('href')
+          if (!href || !href.startsWith('#')) return null
+          const heading = document.getElementById(href.slice(1))
+          if (!heading) return null
+          return { link, heading }
+        })
+        .filter(Boolean)
+
+      const updateReadingState = () => {
+        const viewportHeight = window.innerHeight
+        const articleTop = articleContent.getBoundingClientRect().top + window.scrollY
+        const articleHeight = articleContent.offsetHeight
+        const scrollDistance = Math.max(articleHeight - viewportHeight * 0.55, 1)
+        const rawProgress = ((window.scrollY - articleTop + viewportHeight * 0.18) / scrollDistance) * 100
+        const progress = Math.min(100, Math.max(0, rawProgress))
+        progressBar.style.width = `${progress}%`
+
+        if (tocPairs.length === 0) return
+
+        let activeId = ''
+        tocPairs.forEach((pair) => {
+          const rect = pair.heading.getBoundingClientRect()
+          if (rect.top <= viewportHeight * 0.3) {
+            activeId = pair.heading.id
+          }
+        })
+
+        if (!activeId) {
+          activeId = tocPairs[0].heading.id
+        }
+
+        tocPairs.forEach((pair) => {
+          const isActive = pair.heading.id === activeId
+          if (isActive) {
+            pair.link.setAttribute('data-active', '')
+          } else {
+            pair.link.removeAttribute('data-active')
+          }
+        })
+      }
+
+      const onScroll = () => window.requestAnimationFrame(updateReadingState)
+
+      window.addEventListener('scroll', onScroll, { passive: true })
+      window.addEventListener('resize', updateReadingState)
+      updateReadingState()
+
+      window.__articleDetailCleanup = () => {
+        window.removeEventListener('scroll', onScroll)
+        window.removeEventListener('resize', updateReadingState)
+      }
+    }
+
+    document.addEventListener('astro:page-load', initArticleDetailPage)
+    document.addEventListener('astro:before-swap', () => {
+      if (window.__articleDetailCleanup) {
+        window.__articleDetailCleanup()
+        window.__articleDetailCleanup = undefined
+      }
+    })
+  </script>
+
+  <style>
+    :global(.reading-layout details > summary) {
+      list-style: none;
+    }
+
+    :global(.reading-layout details > summary::-webkit-details-marker) {
+      display: none;
+    }
+
+    :global(.reading-layout .article-prose) {
+      color: hsl(var(--foreground) / 0.87);
+      font-size: clamp(1.05rem, 1.2vw, 1.14rem);
+      line-height: 1.95;
+      letter-spacing: 0.002em;
+    }
+
+    :global(.reading-layout .article-prose p) {
+      margin-block: 1.5em;
+      color: hsl(var(--foreground) / 0.8);
+    }
+
+    :global(.reading-layout .article-prose h2) {
+      margin-top: 3.6rem;
+      margin-bottom: 1.15rem;
+      font-size: clamp(1.5rem, 2vw, 1.95rem);
+      line-height: 1.22;
+      letter-spacing: -0.02em;
+    }
+
+    :global(.reading-layout .article-prose h3) {
+      margin-top: 2.8rem;
+      margin-bottom: 0.9rem;
+      font-size: clamp(1.23rem, 1.6vw, 1.48rem);
+      line-height: 1.28;
+      letter-spacing: -0.01em;
+    }
+
+    :global(.reading-layout .article-prose ul),
+    :global(.reading-layout .article-prose ol) {
+      margin-block: 1.5em;
+      padding-left: 0.1rem;
+    }
+
+    :global(.reading-layout .article-prose li) {
+      margin-block: 0.55em;
+      padding-inline-start: 1.35em;
+    }
+
+    :global(.reading-layout .article-prose blockquote) {
+      margin-block: 2rem;
+      border-inline-start: 2px solid hsl(var(--border));
+      color: hsl(var(--foreground) / 0.7);
+      font-style: normal;
+      padding-inline-start: 1.1rem;
+      quotes: none;
+    }
+
+    :global(.reading-layout .article-prose a:not(.card-github)) {
+      border-bottom-color: hsl(var(--border));
+      color: hsl(var(--foreground) / 0.88);
+      transition: color 180ms ease;
+    }
+
+    :global(.reading-layout .article-prose a:not(.card-github):hover) {
+      color: hsl(var(--foreground));
+      border-bottom-color: hsl(var(--foreground) / 0.4);
+    }
+
+    :global(.reading-layout .article-prose pre) {
+      margin-block: 2rem;
+      border: 1px solid hsl(var(--border));
+      border-radius: 0.95rem;
+      background: hsl(var(--muted) / 0.38);
+      padding: 1rem 1.15rem;
+      box-shadow: none;
+    }
+
+    :global(.reading-layout .article-prose img) {
+      margin-block: 2rem;
+      border-radius: 0.95rem;
+      border: 1px solid hsl(var(--border));
+    }
+
+    :global(.reading-layout [data-reading-toc-link][data-active]) {
+      color: hsl(var(--foreground));
+    }
+
+    @media (max-width: 640px) {
+      :global(.reading-layout .article-prose) {
+        font-size: 1.03rem;
+        line-height: 1.9;
+      }
+
+      :global(.reading-layout .article-prose h2) {
+        margin-top: 3rem;
+      }
+    }
+  </style>
 </Layout>

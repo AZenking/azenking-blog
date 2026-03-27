@@ -6,8 +6,6 @@ import { getAllPosts } from '~/lib/data'
 import Layout from '~/layouts/Layout.astro'
 import Pagination from '~/components/base/Pagination.astro'
 import List from '~/components/posts/card/List.astro'
-import PageTitle from '~/components/base/PageTitle.astro'
-import Noise from '~/components/reactbits/Noise'
 import PostKindTabs from '~/components/posts/base/PostKindTabs.astro'
 
 export const getStaticPaths: GetStaticPaths = async ({ paginate }) => {
@@ -28,19 +26,26 @@ const { title, description, introduce } = POSTS_CONFIG
 ---
 
 <Layout {title} {description}>
-  <div class="relative z-[1] py-8 pb-10 px-6 sm:px-8">
-    <div class="pointer-events-none absolute inset-y-0 left-1/2 -z-10 w-screen -translate-x-1/2 overflow-hidden">
-      <div class="absolute inset-0 opacity-[0.14]">
-        <Noise patternSize={768} patternRefreshInterval={5} patternAlpha={14} client:load />
-      </div>
-      <div class="absolute inset-0 bg-[radial-gradient(circle_at_50%_0%,rgba(130,140,255,0.15),transparent_40%),linear-gradient(to_bottom,rgba(0,0,0,0),hsl(var(--background)/0.42))]"></div>
+  <div class="apple-ui relative isolate px-6 py-14 sm:px-8 sm:py-20">
+    <div class="pointer-events-none absolute inset-x-0 top-[-16rem] -z-10 h-[32rem] bg-[radial-gradient(66%_58%_at_50%_65%,rgba(186,192,201,0.26),rgba(255,255,255,0))] dark:bg-[radial-gradient(66%_58%_at_50%_65%,rgba(86,96,114,0.22),rgba(0,0,0,0))]">
     </div>
 
-    <PageTitle {title} {introduce} />
-    <PostKindTabs active="posts" />
-    <div class="mt-12 fade-up">
-      <List posts={page.data} type={POSTS_CONFIG.postPageConfig.type} coverLayout={POSTS_CONFIG.postPageConfig?.coverLayout} />
-    </div>
-    <Pagination {page} baseUrl="/posts" />
+    <section class="mx-auto max-w-3xl">
+      <p class="text-[0.7rem] font-medium uppercase tracking-[0.16em] text-muted-foreground/85">Writing</p>
+      <h1 class="mt-5 text-[clamp(2.2rem,5.4vw,4.2rem)] font-semibold leading-[1.03] tracking-[-0.045em] text-foreground">{title}</h1>
+      <p class="mt-7 max-w-[44ch] text-base leading-8 text-muted-foreground sm:text-lg">{introduce}</p>
+      <PostKindTabs active="posts" class="mt-10" />
+    </section>
+
+    <section class="mx-auto mt-16 max-w-4xl fade-up">
+      <List
+        posts={page.data}
+        type={POSTS_CONFIG.postPageConfig.type}
+        coverLayout={POSTS_CONFIG.postPageConfig?.coverLayout}
+        customSpacing="space-y-16 sm:space-y-20"
+      />
+    </section>
+
+    <Pagination {page} baseUrl="/posts" class="mx-auto mt-16 max-w-4xl" />
   </div>
 </Layout>

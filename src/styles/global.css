@@ -494,3 +494,12 @@ input[type='search']::-moz-search-cancel-button {
 .animate-slide-down {
   animation: slide-down 0.3s ease-out forwards;
 }
+
+/* ===== Apple-like UI Font Stack ===== */
+@layer components {
+  .apple-ui {
+    font-family:
+      -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'SF Pro Display', 'Helvetica Neue', 'Segoe UI', 'PingFang SC',
+      'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+  }
+}
