@@ -156,7 +156,7 @@ export const POSTS_CONFIG: PostConfig = {
   },
   tagsPageConfig: {
     size: 10,
-    type: 'time-line',
+    type: 'image',
   },
   ogImageUseCover: false,
   postType: 'metaOnly',

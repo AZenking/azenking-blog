@@ -30,40 +30,36 @@ interface Props {
 }
 
 const { page, tag } = Astro.props
+const encodedTag = encodeURIComponent(tag)
 const description = `Posts with the tag #${tag}`
 ---
 
 <Layout title={`#${tag}`} {description}>
-  <div class="relative z-[1] py-8 pb-10 px-6 sm:px-8">
-    <div class="mb-12 md:mb-16">
-      <div class="flex flex-col gap-3">
-        <nav class="flex items-center gap-3 text-sm text-muted-foreground/80">
-          <a href="/tags" class="group flex items-center gap-2 hover:text-primary transition-colors">
-            <span class="icon-[ph--tag-simple] w-4 h-4"></span>
-            <span>Tags</span>
-          </a>
-          <span class="text-muted-foreground/30">/</span>
-          <span class="text-foreground/90">#{tag}</span>
-        </nav>
-
-        <div class="flex gap-2 justify-between">
-          <h1 class="text-xl sm:text-3xl font-medium tracking-wide">
-            #{tag}
-          </h1>
-          <div class="flex flex-col items-end justify-center gap-1 text-sm text-muted-foreground/70">
-            <div class="flex items-center gap-2">
-              <span class="icon-[ph--article-medium] w-4 h-4"></span>
-              <span>{page.total} {page.total === 1 ? 'post' : 'posts'}</span>
-            </div>
-          </div>
-        </div>
-      </div>
+  <div class="apple-ui relative isolate px-6 py-14 sm:px-8 sm:py-20">
+    <div class="pointer-events-none absolute inset-x-0 top-[-15rem] -z-10 h-[30rem] bg-[radial-gradient(66%_56%_at_50%_62%,rgba(186,194,204,0.24),rgba(255,255,255,0))] dark:bg-[radial-gradient(66%_56%_at_50%_62%,rgba(86,96,112,0.2),rgba(0,0,0,0))]">
     </div>
 
-    <div class="space-y-8 fade-up">
-      <List posts={page.data} type={POSTS_CONFIG.tagsPageConfig.type} coverLayout={POSTS_CONFIG.tagsPageConfig?.coverLayout} />
-    </div>
+    <section class="mx-auto max-w-3xl">
+      <a href="/tags" class="inline-flex items-center gap-2 text-sm text-muted-foreground transition-colors hover:text-foreground">
+        <span class="icon-[ph--arrow-left] size-4" />
+        <span>Back to tags</span>
+      </a>
+      <p class="mt-7 text-[0.7rem] font-medium uppercase tracking-[0.16em] text-muted-foreground/84">Tag Archive</p>
+      <h1 class="mt-4 text-[clamp(2.05rem,5vw,3.7rem)] font-semibold leading-[1.05] tracking-[-0.04em] text-foreground">#{tag}</h1>
+      <p class="mt-4 text-base leading-8 text-muted-foreground">
+        {page.total} {page.total === 1 ? 'article' : 'articles'} in this topic.
+      </p>
+    </section>
 
-    <Pagination {page} baseUrl={`/tags/${tag}`} class="mt-12" />
+    <section class="mx-auto mt-14 max-w-4xl fade-up">
+      <List
+        posts={page.data}
+        type={POSTS_CONFIG.tagsPageConfig.type}
+        coverLayout={POSTS_CONFIG.tagsPageConfig?.coverLayout}
+        customSpacing="space-y-16 sm:space-y-20"
+      />
+    </section>
+
+    <Pagination {page} baseUrl={`/tags/${encodedTag}`} class="mx-auto mt-16 max-w-4xl" />
   </div>
 </Layout>
