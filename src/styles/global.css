@@ -9,7 +9,7 @@
 /* ===== 主题变量 ===== */
 @theme {
   /* 字体系统 */
-  --font-serif: var(--font-lexend);
+  --font-heading: var(--font-lexend);
   --font-sans: var(--font-sans);
   --font-mono: var(--font-geist-mono);
 
@@ -166,7 +166,7 @@
   h4,
   h5,
   h6 {
-    @apply font-serif font-medium;
+    @apply font-heading font-medium;
   }
 
   /* 链接样式 */
@@ -185,15 +185,15 @@
   /* 淡入上升动画 */
   .fade-up {
     opacity: 0;
-    transform: translateY(2rem);
-    animation: fadeUp 0.6s forwards;
+    transform: translateY(1rem);
+    animation: fadeUp 0.45s forwards;
     will-change: opacity, transform;
   }
 
   @keyframes fadeUp {
     from {
       opacity: 0;
-      transform: translateY(2rem);
+      transform: translateY(1rem);
     }
     to {
       opacity: 1;
@@ -238,6 +238,18 @@
     transition: none !important;
     view-transition-name: none !important;
     --astro-view-transition: none !important;
+  }
+
+  /* 减少动画偏好 */
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
   }
 }
 
@@ -341,7 +353,7 @@
     background: hsl(var(--scrollbar));
   }
   ::-webkit-scrollbar-thumb:hover {
-    background: hsl(var(--scrollbar) / 0.8);
+    background: color-mix(in srgb, hsl(var(--scrollbar)), hsl(var(--foreground)) 20%);
   }
 }
 

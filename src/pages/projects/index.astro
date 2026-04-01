@@ -1,120 +1,106 @@
 ---
-import { cn } from '~/lib/utils'
 import { PROJECTS_CONFIG } from '~/config'
 import Layout from '~/layouts/Layout.astro'
-import SectionDivider from '~/components/base/SectionDivider.astro'
-import NumberTicker from '~/components/base/NumberTicker'
 import { Image } from 'astro:assets'
 import { getAllProjects } from '~/lib/data'
-import PageTitle from '~/components/base/PageTitle.astro'
-import Squares from '~/components/reactbits/Squares'
 
 const { title, description, introduce } = PROJECTS_CONFIG
 const projects = await getAllProjects()
+const totalStars = projects.reduce((sum, project) => sum + (project.data.star ?? 0), 0)
+const totalForks = projects.reduce((sum, project) => sum + (project.data.fork ?? 0), 0)
 ---
 
 <Layout {title} {description}>
-  <div class="relative z-[1] min-h-screen py-8 pb-10">
-    <div class="pointer-events-none absolute inset-0 left-1/2 -z-10 w-screen -translate-x-1/2 overflow-hidden">
-      <div class="absolute inset-0 opacity-35">
-        <Squares direction="diagonal" speed={0.35} borderColor="#4b4b65" hoverFillColor="#1f1f35" squareSize={44} client:load />
-      </div>
-      <div class="absolute inset-0 bg-gradient-to-b from-background/24 via-transparent to-background/46"></div>
+  <div class="apple-ui relative isolate px-6 py-14 sm:px-8 sm:py-20">
+    <div class="pointer-events-none absolute inset-x-0 top-[-15rem] -z-10 h-[30rem] bg-[radial-gradient(66%_56%_at_50%_62%,rgba(188,194,203,0.26),rgba(255,255,255,0))] dark:bg-[radial-gradient(66%_56%_at_50%_62%,rgba(86,96,112,0.2),rgba(0,0,0,0))]">
     </div>
 
-    <div class="px-6 sm:px-8">
-      <PageTitle {title} {introduce} />
-    </div>
-    <div class="grid grid-cols-1 fade-up">
-      {
-        projects.map((project, index) => {
-          let githubRepo = undefined
-          if (project.data.githubUrl) {
-            try {
-              const urlObj = new URL(project.data.githubUrl)
-              if (urlObj.hostname.includes('github.com')) {
-                githubRepo = urlObj.pathname.replace(/^\/|\/$/g, '')
-              }
-            } catch (e) {}
-          }
+    <section class="mx-auto max-w-3xl">
+      <p class="text-[0.7rem] font-medium uppercase tracking-[0.16em] text-muted-foreground/84">Selected Work</p>
+      <h1 class="mt-5 text-[clamp(2.2rem,5.4vw,4.1rem)] font-semibold leading-[1.03] tracking-[-0.045em] text-foreground">{title}</h1>
+      <p class="mt-7 max-w-[44ch] text-base leading-8 text-muted-foreground sm:text-lg">{introduce}</p>
+      <div class="mt-8 grid grid-cols-1 gap-3 text-sm text-muted-foreground sm:grid-cols-3">
+        <div class="rounded-2xl border border-border/55 bg-background/72 px-4 py-3">
+          <p class="text-xs uppercase tracking-[0.12em]">Projects</p>
+          <p class="mt-1 text-xl font-medium tracking-tight text-foreground">{projects.length}</p>
+        </div>
+        <div class="rounded-2xl border border-border/55 bg-background/72 px-4 py-3">
+          <p class="text-xs uppercase tracking-[0.12em]">Stars</p>
+          <p class="mt-1 text-xl font-medium tracking-tight text-foreground">{totalStars}</p>
+        </div>
+        <div class="rounded-2xl border border-border/55 bg-background/72 px-4 py-3">
+          <p class="text-xs uppercase tracking-[0.12em]">Forks</p>
+          <p class="mt-1 text-xl font-medium tracking-tight text-foreground">{totalForks}</p>
+        </div>
+      </div>
+    </section>
+
+    {projects.length > 0 ? (
+      <section class="mx-auto mt-14 max-w-4xl space-y-5 sm:space-y-6">
+        {projects.map((project) => {
+          const iconClass = typeof project.data.icon === 'string' ? project.data.icon : undefined
 
           return (
-            <div>
-              <div class="group relative hover:bg-muted/30 dark:hover:bg-muted/30 transition-colors duration-300 px-6 sm:px-8 py-4 ">
-                <div class="absolute right-8 top-4 hidden sm:block">
-                  {project.data.type == 'icon' && <span class={cn('size-10', project.data.icon)} />}
-                  {project.data.type == 'image' && project.data?.icon && (
-                    <Image
-                      src={project.data?.icon}
-                      alt="icon"
-                      width={40}
-                      height={40}
-                      class={cn(project.data.imageClass)}
-                      densities={[1, 2]}
-                      loading="lazy"
-                    />
-                  )}
+            <article class="group rounded-3xl border border-border/55 bg-background/72 p-6 transition-all duration-300 hover:-translate-y-0.5 hover:border-border/90 hover:bg-background/92 sm:p-7">
+              <div class="flex items-start gap-4">
+                <div class="inline-flex size-12 shrink-0 items-center justify-center overflow-hidden rounded-2xl border border-border/55 bg-muted/25 text-muted-foreground">
+                  {project.data.type === 'icon' && iconClass && <span class={iconClass} />}
+                  {project.data.type === 'image' && project.data.icon && (
+                  <Image
+                    src={project.data.icon}
+                    alt={project.data.name}
+                    width={44}
+                    height={44}
+                    class={project.data.imageClass ?? 'size-11'}
+                    densities={[1, 2]}
+                    loading="lazy"
+                  />
+                )}
                 </div>
-                <a
-                  href={project.data.website}
-                  target="_blank"
-                  class="inline-flex items-center justify-between font-semibold text-lg/relaxed "
-                >
-                  {project.data.name}
-                </a>
-                <p class="pr-0 sm:pr-14 text-muted-foreground mb-3">{project.data.description}</p>
-                <div class="flex flex-col sm:flex-row gap-4 sm:gap-0 items-start sm:items-center justify-between sm:h-14">
-                  <div class="flex gap-4 ">
-                    <div class="flex items-center py-1.5 gap-3">
-                      {project.data.star != null && (
-                        <>
-                          <span class="text-xs uppercase tracking-wide font-medium text-muted-foreground">Stars</span>
-                          <span class="font-semibold text-lg tracking-wider">
-                            <NumberTicker play value={project.data.star} client:load githubRepo={githubRepo} githubType="stars" />
-                          </span>
-                        </>
-                      )}
-                    </div>
-                    <div class="flex items-center py-1.5 gap-3">
-                      {project.data.fork != null && (
-                        <>
-                          <span class="text-xs uppercase tracking-wide font-medium text-muted-foreground">Forks</span>
-                          <span class="font-semibold text-lg tracking-wider">
-                            <NumberTicker play value={project.data.fork} client:load githubRepo={githubRepo} githubType="forks" />
-                          </span>
-                        </>
-                      )}
-                    </div>
-                  </div>
-                  <div class="flex items-center gap-5 text-zinc-500 text-sm z-10 ">
-                    {project.data.website && (
-                      <a
-                        href={project.data.website}
-                        target="_blank"
-                        class="hover:text-zinc-600 dark:hover:text-zinc-100 flex items-center gap-1"
-                      >
-                        <span class="icon-[mdi--web] size-4" />
-                        <span>Website</span>
-                      </a>
-                    )}
-                    {project.data.githubUrl && (
-                      <a
-                        href={project.data.githubUrl}
-                        target="_blank"
-                        class="hover:text-zinc-600 dark:hover:text-zinc-100 flex items-center gap-1"
-                      >
-                        <span class="icon-[mdi--github] size-4" />
-                        <span>GitHub</span>
-                      </a>
-                    )}
-                  </div>
+
+                <div class="min-w-0 flex-1">
+                  <h2 class="text-2xl font-medium tracking-tight text-foreground">{project.data.name}</h2>
+                  <p class="mt-3 max-w-[52ch] text-sm leading-7 text-muted-foreground sm:text-base">{project.data.description}</p>
                 </div>
               </div>
-              <SectionDivider className={index == projects.length - 1 ? 'hidden' : ''} />
-            </div>
+
+              <div class="mt-6 flex flex-wrap items-center gap-2.5 text-xs tracking-[0.1em] text-muted-foreground">
+                <span class="rounded-full border border-border/55 px-3 py-1 uppercase">Stars {project.data.star}</span>
+                <span class="rounded-full border border-border/55 px-3 py-1 uppercase">Forks {project.data.fork}</span>
+              </div>
+
+              <div class="mt-6 flex flex-wrap items-center gap-4 text-sm">
+                {project.data.website && (
+                  <a
+                    href={project.data.website}
+                    target="_blank"
+                    rel="noreferrer"
+                    class="inline-flex items-center gap-1.5 text-muted-foreground transition-colors hover:text-foreground"
+                  >
+                    <span class="icon-[mdi--web] size-4" />
+                    <span>Website</span>
+                  </a>
+                )}
+                {project.data.githubUrl && (
+                  <a
+                    href={project.data.githubUrl}
+                    target="_blank"
+                    rel="noreferrer"
+                    class="inline-flex items-center gap-1.5 text-muted-foreground transition-colors hover:text-foreground"
+                  >
+                    <span class="icon-[mdi--github] size-4" />
+                    <span>GitHub</span>
+                  </a>
+                )}
+              </div>
+            </article>
           )
-        })
-      }
-    </div>
+        })}
+      </section>
+    ) : (
+      <section class="mx-auto mt-14 max-w-3xl rounded-3xl border border-border/55 bg-background/72 px-6 py-14 text-center sm:px-8">
+        <p class="text-sm text-muted-foreground">No projects available yet.</p>
+      </section>
+    )}
   </div>
 </Layout>

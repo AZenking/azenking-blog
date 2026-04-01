@@ -313,11 +313,11 @@
   & img {
     margin-block: var(--space-xl);
     margin-inline: auto;
-    will-change: transform, filter;
     transition: filter var(--transition-fast);
 
     /* Medium Zoom 图片过渡 */
     &.medium-zoom-image {
+      will-change: transform, filter;
       transition:
         filter var(--transition-fast),
         transform var(--transition-fast) !important;

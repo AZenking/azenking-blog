@@ -4,8 +4,6 @@ import type { CollectionEntry } from 'astro:content'
 import { getAllNotes } from '~/lib/data'
 import Layout from '~/layouts/Layout.astro'
 import Pagination from '~/components/base/Pagination.astro'
-import PageTitle from '~/components/base/PageTitle.astro'
-import Noise from '~/components/reactbits/Noise'
 import PostKindTabs from '~/components/posts/base/PostKindTabs.astro'
 
 export const getStaticPaths: GetStaticPaths = async ({ paginate }) => {
@@ -21,37 +19,58 @@ interface Props {
 }
 
 const { page } = Astro.props
+const totalTagMentions = page.data.reduce((sum, note) => sum + (note.data.tags?.length ?? 0), 0)
 ---
 
 <Layout title="Notes" description="Short notes and logs">
-  <div class="relative z-[1] py-8 pb-10 px-6 sm:px-8">
-    <div class="pointer-events-none absolute inset-y-0 left-1/2 -z-10 w-screen -translate-x-1/2 overflow-hidden">
-      <div class="absolute inset-0 opacity-[0.14]">
-        <Noise patternSize={768} patternRefreshInterval={5} patternAlpha={14} client:load />
-      </div>
-      <div class="absolute inset-0 bg-[radial-gradient(circle_at_50%_0%,rgba(130,180,255,0.14),transparent_40%),linear-gradient(to_bottom,rgba(0,0,0,0),hsl(var(--background)/0.42))]" />
+  <div class="apple-ui relative isolate px-6 py-14 sm:px-8 sm:py-20">
+    <div
+      class="pointer-events-none absolute inset-x-0 top-[-16rem] -z-10 h-[30rem] bg-[radial-gradient(66%_56%_at_50%_62%,rgba(186,194,204,0.24),rgba(255,255,255,0))] dark:bg-[radial-gradient(66%_56%_at_50%_62%,rgba(86,96,112,0.2),rgba(0,0,0,0))]"
+    >
     </div>
 
-    <PageTitle title="Notes" introduce="Short notes, ideas and work logs." />
-    <PostKindTabs active="notes" />
+    <section class="mx-auto max-w-3xl">
+      <p class="text-[0.7rem] font-medium uppercase tracking-[0.16em] text-muted-foreground/84">Quick Notes</p>
+      <h1 class="mt-5 text-[clamp(2.2rem,5.4vw,4.1rem)] font-semibold leading-[1.03] tracking-[-0.045em] text-foreground">Notes</h1>
+      <p class="mt-7 max-w-[44ch] text-base leading-8 text-muted-foreground sm:text-lg">Short notes, ideas and work logs.</p>
+      <div class="mt-8 grid grid-cols-1 gap-3 text-sm text-muted-foreground sm:grid-cols-3">
+        <div class="rounded-2xl border border-border/55 bg-background/72 px-4 py-3">
+          <p class="text-xs uppercase tracking-[0.12em]">All Notes</p>
+          <p class="mt-1 text-xl font-medium tracking-tight text-foreground">{page.total}</p>
+        </div>
+        <div class="rounded-2xl border border-border/55 bg-background/72 px-4 py-3">
+          <p class="text-xs uppercase tracking-[0.12em]">This Page</p>
+          <p class="mt-1 text-xl font-medium tracking-tight text-foreground">{page.data.length}</p>
+        </div>
+        <div class="rounded-2xl border border-border/55 bg-background/72 px-4 py-3">
+          <p class="text-xs uppercase tracking-[0.12em]">Tags</p>
+          <p class="mt-1 text-xl font-medium tracking-tight text-foreground">{totalTagMentions}</p>
+        </div>
+      </div>
+      <PostKindTabs active="notes" class="mt-10" />
+    </section>
 
-    <ul class="mt-8 divide-y divide-border/50 border-y border-border/50 bg-background/35 backdrop-blur-sm fade-up">
-      {
-        page.data.map((note) => (
-          <li>
-            <a href={`/notes/${note.id}`} class="block px-4 sm:px-6 py-4 sm:py-5 hover:bg-muted/35 transition-colors">
-              <div class="flex flex-wrap items-center gap-3 text-xs text-muted-foreground/80">
-                <time datetime={note.data.pubDate.toISOString()}>{note.data.pubDate.toLocaleDateString('en-US')}</time>
-                {note.data.tags?.length ? <span>#{note.data.tags.join(' #')}</span> : null}
-              </div>
-              <h2 class="mt-2 text-base sm:text-lg font-semibold text-foreground/95">{note.data.title}</h2>
-              <p class="mt-1 text-sm text-muted-foreground line-clamp-2">{note.data.description}</p>
-            </a>
-          </li>
-        ))
-      }
-    </ul>
+    <section class="mx-auto mt-14 max-w-4xl">
+      <ul class="divide-y divide-border/55 rounded-3xl border border-border/55 bg-background/72 fade-up">
+        {
+          page.data.map((note) => (
+            <li>
+              <a href={`/notes/${note.id}`} class="block px-5 py-5 transition-colors hover:bg-muted/28 sm:px-7 sm:py-6">
+                <div class="flex flex-wrap items-center gap-2 text-[0.72rem] uppercase tracking-[0.1em] text-muted-foreground/82">
+                  <time datetime={note.data.pubDate.toISOString()}>{note.data.pubDate.toLocaleDateString('en-US')}</time>
+                  {note.data.tags?.slice(0, 3).map((tag) => (
+                    <span class="rounded-full border border-border/55 px-2.5 py-0.5 normal-case tracking-normal text-[0.72rem]">{tag}</span>
+                  ))}
+                </div>
+                <h2 class="mt-3 text-[clamp(1.12rem,2vw,1.34rem)] font-medium tracking-tight text-foreground">{note.data.title}</h2>
+                <p class="mt-2 max-w-[54ch] text-sm leading-7 text-muted-foreground sm:text-base">{note.data.description}</p>
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </section>
 
-    <Pagination {page} baseUrl="/notes" />
+    <Pagination {page} baseUrl="/notes" class="mx-auto mt-16 max-w-4xl" />
   </div>
 </Layout>

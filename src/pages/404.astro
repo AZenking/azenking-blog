@@ -3,79 +3,30 @@ import Layout from '~/layouts/Layout.astro'
 ---
 
 <Layout title="Page Not Found" description="404 Page">
-  <div class="not-found flex-1 flex justify-center font-mono">
-    <div class="relative z-[1] w-full global-layout-width py-12 px-8 text-sm">
-      <div class="flex items-center text-muted-foreground mb-2 animate-fade-in">
-        <span class="text-green-500 mr-2 w-4 text-center">$</span>
-        <span class="animate-typing" style="animation-delay: 0s;">Nice to meet you！</span>
-      </div>
-      <div class="flex items-center text-muted-foreground mb-2 animate-fade-in" style="animation-delay: 0.3s">
-        <span class="text-green-500 mr-2 w-4 text-center">$</span>
-        <span class="animate-typing" style="animation-delay: 0.3s">cd /home</span>
-      </div>
-      <div class="flex items-center text-muted-foreground mb-2 animate-fade-in" style="animation-delay: 0.5s">
-        <span class="text-red-500 mr-2 w-4 text-center">✗</span>
-        <span class="animate-typing" style="animation-delay: 0.5s">Error: Directory not found！</span>
-      </div>
-      <div class="flex items-center text-muted-foreground mb-2 animate-fade-in" style="animation-delay: 0.7s">
-        <span class="text-green-500 mr-2 w-4 text-center">$</span>
-        <span class="animate-typing text-muted-foreground/50" style="animation-delay: 0.7s">Available commands:</span>
-      </div>
-      <div class="flex items-center text-muted-foreground mb-2 ml-5 animate-fade-in" style="animation-delay: 0.9s">
-        <span class="text-blue-500 mr-2 w-4 text-center">›</span>
-        <span class="animate-typing cursor-pointer hover:text-foreground" style="animation-delay: 0.9s" onclick="history.back()">cd ..</span
-        >
-      </div>
-      <div class="flex items-center text-muted-foreground mb-2 ml-5 animate-fade-in" style="animation-delay: 1.1s">
-        <span class="text-blue-500 mr-2 w-4 text-center">›</span>
-        <span class="animate-typing cursor-pointer hover:text-foreground" style="animation-delay: 1.1s" onclick="window.location.href='/'"
-          >cd /</span
-        >
-      </div>
+  <div class="apple-ui relative isolate flex min-h-[calc(100svh-10rem)] items-center px-6 py-16 sm:px-8 sm:py-20">
+    <div class="pointer-events-none absolute inset-x-0 top-[-14rem] -z-10 h-[30rem] bg-[radial-gradient(64%_56%_at_50%_62%,rgba(186,194,204,0.24),rgba(255,255,255,0))] dark:bg-[radial-gradient(64%_56%_at_50%_62%,rgba(86,96,112,0.2),rgba(0,0,0,0))]">
     </div>
+
+    <section class="mx-auto w-full max-w-3xl text-center">
+      <p class="text-[0.72rem] font-medium uppercase tracking-[0.16em] text-muted-foreground/82">404</p>
+      <h1 class="mt-4 text-[clamp(2.15rem,5vw,4rem)] font-semibold leading-[1.05] tracking-[-0.04em] text-foreground">Page not found</h1>
+      <p class="mx-auto mt-6 max-w-[34ch] text-base leading-8 text-muted-foreground sm:text-lg">The page you requested may have been moved or removed.</p>
+
+      <div class="mt-9 flex flex-wrap items-center justify-center gap-3">
+        <a
+          href="/"
+          class="inline-flex items-center rounded-full border border-border/60 bg-foreground px-5 py-2.5 text-sm font-medium text-background transition-colors hover:bg-foreground/88"
+        >
+          Go home
+        </a>
+        <button
+          type="button"
+          onclick="history.back()"
+          class="inline-flex items-center rounded-full border border-border/60 bg-background/75 px-5 py-2.5 text-sm font-medium text-foreground/84 transition-colors hover:bg-muted/55"
+        >
+          Go back
+        </button>
+      </div>
+    </section>
   </div>
 </Layout>
-
-<style>
-  .animate-typing {
-    animation: typing 0.4s cubic-bezier(0.4, 0, 0.2, 1) forwards;
-    overflow: hidden;
-    white-space: nowrap;
-    display: inline-block;
-  }
-
-  @keyframes typing {
-    from {
-      width: 0ch;
-    }
-    to {
-      width: var(--typing-width, 20ch);
-    }
-  }
-
-  @keyframes fadeIn {
-    0% {
-      opacity: 0;
-      transform: translateY(-4px);
-    }
-    100% {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
-
-  .animate-fade-in {
-    animation: fadeIn 0.4s cubic-bezier(0.4, 0, 0.2, 1) forwards;
-    opacity: 0;
-    will-change: transform;
-  }
-</style>
-
-<script>
-  document.addEventListener('DOMContentLoaded', () => {
-    document.querySelectorAll('.animate-typing').forEach((el) => {
-      const text = el.textContent || ''
-      ;(el as HTMLElement).style.setProperty('--typing-width', `${text.length}ch`)
-    })
-  })
-</script>

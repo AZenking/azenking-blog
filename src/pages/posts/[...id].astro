@@ -102,7 +102,7 @@ const relatedPosts = posts
         <div class="min-w-0">
           <header class="space-y-7">
             <div class="flex flex-wrap items-center gap-3 text-[0.72rem] font-medium uppercase tracking-[0.12em] text-muted-foreground/80">
-              {primaryTag ? <a href={`/tags/${primaryTag}`} class="transition-colors hover:text-foreground">{primaryTag}</a> : <span>Essay</span>}
+              {primaryTag ? <a href={`/tags/${encodeURIComponent(primaryTag)}`} class="transition-colors hover:text-foreground">{primaryTag}</a> : <span>Essay</span>}
               {frontmatter.recommend && (
                 <span class="inline-flex items-center rounded-full border border-border/55 bg-muted/25 px-2.5 py-1 text-[0.65rem] tracking-[0.1em]">
                   {POSTS_CONFIG.recommendText}
@@ -132,7 +132,7 @@ const relatedPosts = posts
             {secondaryTags.length > 0 && (
               <div class="flex flex-wrap gap-2 text-xs text-muted-foreground/75">
                 {secondaryTags.map((tag) => (
-                  <a href={`/tags/${tag}`} class="inline-flex rounded-full border border-border/55 bg-background/78 px-2.5 py-1 transition-colors hover:text-foreground">
+                  <a href={`/tags/${encodeURIComponent(tag)}`} class="inline-flex rounded-full border border-border/55 bg-background/78 px-2.5 py-1 transition-colors hover:text-foreground">
                     {tag}
                   </a>
                 ))}

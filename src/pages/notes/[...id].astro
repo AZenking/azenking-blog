@@ -5,6 +5,7 @@ import { SITE } from '~/config'
 import { render } from 'astro:content'
 import { getAllNotes } from '~/lib/data'
 import PostKindTabs from '~/components/posts/base/PostKindTabs.astro'
+import { formatDate } from '~/lib/utils'
 
 export async function getStaticPaths() {
   const sortedNotes = await getAllNotes()
@@ -17,6 +18,9 @@ export async function getStaticPaths() {
 const { note } = Astro.props
 const { data: frontmatter } = note
 const { Content } = await render(note)
+const tags = frontmatter.tags ?? []
+const publishedDate = formatDate(frontmatter.pubDate)
+const updatedDate = frontmatter.updatedDate ? formatDate(frontmatter.updatedDate) : null
 ---
 
 <Layout
@@ -24,19 +28,68 @@ const { Content } = await render(note)
   description={frontmatter.description || frontmatter.title}
   image={frontmatter.ogImage?.src ? `${SITE.website}${frontmatter.ogImage.src}` : SITE.ogImage}
 >
-  <article class="px-6 sm:px-8 py-8 sm:py-10">
-    <div class="global-layout-width mx-auto">
+  <article class="note-reading apple-ui relative isolate">
+    <div class="pointer-events-none absolute inset-x-0 top-[-14rem] -z-10 h-[28rem] bg-[radial-gradient(62%_54%_at_50%_62%,rgba(188,194,204,0.24),rgba(255,255,255,0))] dark:bg-[radial-gradient(62%_54%_at_50%_62%,rgba(86,96,112,0.2),rgba(0,0,0,0))]">
+    </div>
+
+    <div class="mx-auto w-full max-w-[44rem] px-6 pb-16 pt-10 sm:px-8 sm:pb-24 sm:pt-14">
       <PostKindTabs active="notes" />
 
-      <header class="mt-6 border-b border-border/60 pb-6">
-        <p class="text-sm text-muted-foreground/85">{frontmatter.pubDate.toLocaleDateString('en-US')}</p>
-        <h1 class="mt-2 text-2xl sm:text-3xl font-semibold leading-tight">{frontmatter.title}</h1>
-        {frontmatter.description && <p class="mt-3 text-muted-foreground">{frontmatter.description}</p>}
+      <header class="mt-8 border-b border-border/55 pb-8">
+        <div class="flex flex-wrap items-center gap-x-5 gap-y-2 text-sm text-muted-foreground/82">
+          <time datetime={frontmatter.pubDate.toISOString()}>{publishedDate}</time>
+          {updatedDate && <span>Updated {updatedDate}</span>}
+          {frontmatter.author && <span>{frontmatter.author}</span>}
+        </div>
+
+        <h1 class="mt-5 text-[clamp(2rem,5.2vw,3.8rem)] font-semibold leading-[1.05] tracking-[-0.04em] text-foreground">{frontmatter.title}</h1>
+        {frontmatter.description && <p class="mt-5 max-w-[44ch] text-[clamp(1.02rem,2vw,1.28rem)] leading-[1.8] text-foreground/72">{frontmatter.description}</p>}
+
+        {tags.length > 0 && (
+          <div class="mt-5 flex flex-wrap gap-2 text-xs text-muted-foreground/75">
+            {tags.map((tag) => (
+              <a href={`/tags/${encodeURIComponent(tag)}`} class="inline-flex rounded-full border border-border/55 bg-background/78 px-2.5 py-1 transition-colors hover:text-foreground">
+                {tag}
+              </a>
+            ))}
+          </div>
+        )}
       </header>
 
-      <Prose class="mt-8">
-        <Content />
-      </Prose>
+      <main class="mt-14 sm:mt-16">
+        <Prose class="article-prose">
+          <Content />
+        </Prose>
+      </main>
     </div>
   </article>
+
+  <style>
+    :global(.note-reading .article-prose) {
+      color: hsl(var(--foreground) / 0.87);
+      font-size: clamp(1.04rem, 1.18vw, 1.14rem);
+      line-height: 1.92;
+      letter-spacing: 0.002em;
+    }
+
+    :global(.note-reading .article-prose p) {
+      margin-block: 1.45em;
+      color: hsl(var(--foreground) / 0.8);
+    }
+
+    :global(.note-reading .article-prose h2) {
+      margin-top: 3.2rem;
+      margin-bottom: 1.1rem;
+      font-size: clamp(1.45rem, 1.9vw, 1.84rem);
+      line-height: 1.22;
+      letter-spacing: -0.015em;
+    }
+
+    :global(.note-reading .article-prose h3) {
+      margin-top: 2.55rem;
+      margin-bottom: 0.9rem;
+      font-size: clamp(1.2rem, 1.5vw, 1.42rem);
+      line-height: 1.28;
+    }
+  </style>
 </Layout>
