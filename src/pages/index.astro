@@ -3,27 +3,51 @@ import { SITE } from '~/config.ts'
 import { getAllNotes, getAllPosts, getAllProjects } from '~/lib/data'
 import Layout from '~/layouts/Layout.astro'
 
-import Feliz from '~/assets/svg/Feliz.svg?url'
-import Kiddo from '~/assets/svg/Kiddo.svg?url'
-import MeelaPantalones from '~/assets/svg/Meela Pantalones.svg?url'
-import Pacheco from '~/assets/svg/Pacheco.svg?url'
-import Pilot from '~/assets/svg/Pilot.svg?url'
-import Rogue from '~/assets/svg/Rogue.svg?url'
-import Whoa from '~/assets/svg/Whoa.svg?url'
-import WontStop from '~/assets/svg/Wont Stop.svg?url'
+import Peep1 from '~/assets/bust/peep-1.svg?url'
+import Peep2 from '~/assets/bust/peep-2.svg?url'
+import Peep8 from '~/assets/bust/peep-8.svg?url'
+import Peep10 from '~/assets/bust/peep-10.svg?url'
+import Peep15 from '~/assets/bust/peep-15.svg?url'
+import Peep17 from '~/assets/bust/peep-17.svg?url'
+import Peep22 from '~/assets/bust/peep-22.svg?url'
+import Peep24 from '~/assets/bust/peep-24.svg?url'
+import Peep29 from '~/assets/bust/peep-29.svg?url'
+import Peep31 from '~/assets/bust/peep-31.svg?url'
+import Peep36 from '~/assets/bust/peep-36.svg?url'
+import Peep38 from '~/assets/bust/peep-38.svg?url'
+import Peep43 from '~/assets/bust/peep-43.svg?url'
+import Peep50 from '~/assets/bust/peep-50.svg?url'
+import Peep57 from '~/assets/bust/peep-57.svg?url'
+import Peep64 from '~/assets/bust/peep-64.svg?url'
+import Peep71 from '~/assets/bust/peep-71.svg?url'
+import Peep78 from '~/assets/bust/peep-78.svg?url'
+import Peep85 from '~/assets/bust/peep-85.svg?url'
+import Peep92 from '~/assets/bust/peep-92.svg?url'
 
 const cleanDescription = SITE.description.replace(/^👋\s*/, '')
 const [posts, notes, projects] = await Promise.all([getAllPosts(), getAllNotes(), getAllProjects()])
 
-const doodles = [
-  { src: Kiddo, alt: 'Kiddo doodle', shift: 'translate-y-8', width: 'w-28 sm:w-32 lg:w-36' },
-  { src: Pacheco, alt: 'Pacheco doodle', shift: 'translate-y-2', width: 'w-36 sm:w-40 lg:w-44' },
-  { src: Feliz, alt: 'Feliz doodle', shift: 'translate-y-4', width: 'w-28 sm:w-32 lg:w-36' },
-  { src: Pilot, alt: 'Pilot doodle', shift: 'translate-y-10', width: 'w-32 sm:w-36 lg:w-40' },
-  { src: MeelaPantalones, alt: 'Meela Pantalones doodle', shift: 'translate-y-0', width: 'w-[7.5rem] sm:w-36 lg:w-40' },
-  { src: Rogue, alt: 'Rogue doodle', shift: 'translate-y-6', width: 'w-28 sm:w-32 lg:w-36' },
-  { src: Whoa, alt: 'Whoa doodle', shift: 'translate-y-12', width: 'w-32 sm:w-36 lg:w-40' },
-  { src: WontStop, alt: 'Wont Stop doodle', shift: 'translate-y-4', width: 'w-32 sm:w-36 lg:w-40' },
+const busts = [
+  { src: Peep2, alt: 'Bust portrait 0', height: 'h-[7.5rem] sm:h-[8.5rem] lg:h-[9.5rem]' },
+  { src: Peep1, alt: 'Bust portrait 1', height: 'h-28 sm:h-32 lg:h-36' },
+  { src: Peep8, alt: 'Bust portrait 2', height: 'h-36 sm:h-40 lg:h-44' },
+  { src: Peep10, alt: 'Bust portrait 2b', height: 'h-[8rem] sm:h-[9rem] lg:h-[10rem]' },
+  { src: Peep15, alt: 'Bust portrait 3', height: 'h-[8rem] sm:h-[9rem] lg:h-[10rem]' },
+  { src: Peep17, alt: 'Bust portrait 3b', height: 'h-32 sm:h-36 lg:h-40' },
+  { src: Peep22, alt: 'Bust portrait 4', height: 'h-[7rem] sm:h-[8rem] lg:h-[9rem]' },
+  { src: Peep24, alt: 'Bust portrait 4b', height: 'h-[8.25rem] sm:h-[9.25rem] lg:h-[10.25rem]' },
+  { src: Peep29, alt: 'Bust portrait 5', height: 'h-40 sm:h-44 lg:h-48' },
+  { src: Peep31, alt: 'Bust portrait 5b', height: 'h-[7.75rem] sm:h-[8.75rem] lg:h-[9.75rem]' },
+  { src: Peep36, alt: 'Bust portrait 6', height: 'h-32 sm:h-36 lg:h-40' },
+  { src: Peep38, alt: 'Bust portrait 6b', height: 'h-36 sm:h-40 lg:h-44' },
+  { src: Peep43, alt: 'Bust portrait 7', height: 'h-[8rem] sm:h-[9rem] lg:h-[10rem]' },
+  { src: Peep50, alt: 'Bust portrait 8', height: 'h-36 sm:h-40 lg:h-44' },
+  { src: Peep57, alt: 'Bust portrait 9', height: 'h-28 sm:h-32 lg:h-36' },
+  { src: Peep64, alt: 'Bust portrait 10', height: 'h-32 sm:h-36 lg:h-40' },
+  { src: Peep71, alt: 'Bust portrait 11', height: 'h-[7.75rem] sm:h-[8.75rem] lg:h-[9.75rem]' },
+  { src: Peep78, alt: 'Bust portrait 12', height: 'h-40 sm:h-44 lg:h-48' },
+  { src: Peep85, alt: 'Bust portrait 13', height: 'h-[8rem] sm:h-[9rem] lg:h-[10rem]' },
+  { src: Peep92, alt: 'Bust portrait 14', height: 'h-[8.5rem] sm:h-[9.5rem] lg:h-[10.5rem]' },
 ]
 ---
 
@@ -32,7 +56,7 @@ const doodles = [
     <div class="pointer-events-none absolute inset-0 bg-[radial-gradient(42%_28%_at_50%_42%,rgba(0,0,0,0.08),rgba(244,244,240,0)_70%)] dark:bg-[radial-gradient(42%_28%_at_50%_42%,rgba(255,255,255,0.12),rgba(0,0,0,0)_70%)]"></div>
     <div class="pointer-events-none absolute inset-x-0 bottom-0 h-40 bg-[linear-gradient(to_top,rgba(244,244,240,0.96),rgba(244,244,240,0))] dark:bg-[linear-gradient(to_top,rgba(0,0,0,0.96),rgba(0,0,0,0))]"></div>
 
-    <div class="relative mx-auto flex min-h-[calc(100svh-5rem)] w-full max-w-7xl flex-col items-center justify-center px-4 pb-48 pt-16 text-center sm:px-6 sm:pb-56 lg:px-8">
+    <div class="relative mx-auto flex min-h-[calc(100svh-5rem)] w-full max-w-7xl flex-col items-center justify-center px-4 pb-60 pt-16 text-center sm:px-6 sm:pb-[17rem] lg:px-8 lg:pb-80">
       <p class="text-[0.72rem] uppercase tracking-[0.22em] text-black/46 dark:text-white/46">Independent archive</p>
 
       <h1 class="mt-6 max-w-[12ch] text-balance font-['Iowan_Old_Style','Palatino_Linotype','Book_Antiqua','Georgia',serif] text-[clamp(3.3rem,8vw,6.2rem)] font-semibold italic leading-[0.92] tracking-[-0.06em]">
@@ -76,14 +100,14 @@ const doodles = [
       </div>
     </div>
 
-    <div class="pointer-events-none absolute inset-x-0 bottom-0 overflow-hidden px-2 sm:px-4 lg:px-6">
-      <div class="flex min-w-max items-end justify-between gap-2">
-        {doodles.map((doodle) => (
-          <div class:list={['shrink-0 opacity-100', doodle.shift, doodle.width]}>
+    <div class="pointer-events-none absolute inset-x-0 bottom-0 overflow-hidden">
+      <div class="relative left-1/2 flex w-[112vw] min-w-max -translate-x-1/2 translate-y-3 items-end justify-center -space-x-4 sm:translate-y-4 sm:-space-x-6 lg:translate-y-5 lg:-space-x-8 xl:-space-x-10">
+        {busts.map((bust) => (
+          <div class:list={['shrink-0 overflow-hidden opacity-100', bust.height]}>
             <img
-              src={doodle.src}
-              alt={doodle.alt}
-              class="h-auto w-full object-contain [filter:brightness(0)] dark:[filter:brightness(0)_invert(1)]"
+              src={bust.src}
+              alt={bust.alt}
+              class="h-full w-auto -scale-x-100 object-contain object-bottom dark:invert"
               loading="lazy"
               decoding="async"
             />
