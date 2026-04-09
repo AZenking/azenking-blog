@@ -1,6 +1,10 @@
 import { useEffect, useRef, useState } from 'react'
 
-const ThemeToggle = () => {
+type ThemeToggleProps = {
+  className?: string
+}
+
+const ThemeToggle = ({ className = '' }: ThemeToggleProps) => {
   const [mounted, setMounted] = useState(false)
   const [isDark, setIsDark] = useState(false)
   const isTransitioningRef = useRef(false)
@@ -122,13 +126,13 @@ const ThemeToggle = () => {
   return (
     <button
       onClick={handleClick}
-      className="relative inline-flex size-6 items-center justify-center text-muted-foreground hover:text-foreground transition-colors"
+      className={`ui-control ui-control-icon relative ${className}`.trim()}
       aria-label="Toggle theme"
       role="switch"
       aria-checked={isDark}
       title="Toggle theme"
     >
-      <span className={isDark ? 'icon-[tabler--moon-filled] size-5' : 'icon-[tabler--sun-filled] size-5'}></span>
+      <span className={isDark ? 'icon-[tabler--moon-filled] size-[17px]' : 'icon-[tabler--sun-filled] size-[17px]'}></span>
     </button>
   )
 }
