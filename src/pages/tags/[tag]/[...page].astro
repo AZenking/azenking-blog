@@ -1,18 +1,17 @@
 ---
 import type { GetStaticPaths, Page } from 'astro'
 import type { CollectionEntry } from 'astro:content'
-import { POSTS_CONFIG } from '~/config'
-import Layout from '~/layouts/Layout.astro'
+import LqipImage from '~/components/base/LqipImage.astro'
 import Pagination from '~/components/base/Pagination.astro'
-import List from '~/components/posts/card/List.astro'
+import { POSTS_CONFIG } from '~/config'
 import { getAllPosts, getAllTags } from '~/lib/data'
+import { formatDate } from '~/lib/utils'
+import Layout from '~/layouts/Layout.astro'
 
 export const getStaticPaths: GetStaticPaths = async ({ paginate }) => {
   const [allPosts, tagsMap] = await Promise.all([getAllPosts(), getAllTags()])
 
-  const uniqueTags = Object.keys(tagsMap)
-
-  return uniqueTags
+  return Object.keys(tagsMap)
     .map((tag) => {
       const tagPosts = allPosts.filter((post) => post.data.tags?.includes(tag))
       return paginate(tagPosts, {
@@ -30,36 +29,171 @@ interface Props {
 }
 
 const { page, tag } = Astro.props
-const encodedTag = encodeURIComponent(tag)
 const description = `Posts with the tag #${tag}`
+const encodedTag = encodeURIComponent(tag)
+const allTags = await getAllTags()
+
+const relatedTags = Object.entries(allTags)
+  .filter(([name]) => name !== tag)
+  .sort(([, countA], [, countB]) => countB - countA)
+  .slice(0, 8)
+
+const isFirstPage = page.currentPage === 1
+const featuredPost = isFirstPage ? page.data[0] : null
+const compactPosts = isFirstPage ? page.data.slice(1, 4) : []
+const gridPosts = isFirstPage ? page.data.slice(1) : page.data
 ---
 
-<Layout title={`#${tag}`} {description}>
-  <div class="apple-ui relative isolate px-6 py-14 sm:px-8 sm:py-20">
-    <div class="pointer-events-none absolute inset-x-0 top-[-15rem] -z-10 h-[30rem] bg-[radial-gradient(66%_56%_at_50%_62%,rgba(186,194,204,0.24),rgba(255,255,255,0))] dark:bg-[radial-gradient(66%_56%_at_50%_62%,rgba(86,96,112,0.2),rgba(0,0,0,0))]">
-    </div>
+<Layout title={`#${tag}`} {description} fullWidth>
+  <div class="min-h-screen bg-[#f4f4f0] text-black dark:bg-[#242423] dark:text-white">
+    <section class="w-full px-4 py-14 sm:px-6 sm:py-20 lg:px-8">
+      <div class="border-b border-black pb-8 dark:border-white/35">
+        <a
+          href="/tags"
+          class="inline-flex items-center gap-2 text-sm text-[#d64b2a] no-underline transition-colors hover:text-[#b22f14]"
+        >
+          <span class="icon-[ph--arrow-left] size-4" />
+          <span>Back to tags</span>
+        </a>
 
-    <section class="mx-auto max-w-3xl">
-      <a href="/tags" class="inline-flex items-center gap-2 text-sm text-muted-foreground transition-colors hover:text-foreground">
-        <span class="icon-[ph--arrow-left] size-4" />
-        <span>Back to tags</span>
-      </a>
-      <p class="mt-7 text-[0.7rem] font-medium uppercase tracking-[0.16em] text-muted-foreground/84">Tag Archive</p>
-      <h1 class="mt-4 text-[clamp(2.05rem,5vw,3.7rem)] font-semibold leading-[1.05] tracking-[-0.04em] text-foreground">#{tag}</h1>
-      <p class="mt-4 text-base leading-8 text-muted-foreground">
-        {page.total} {page.total === 1 ? 'article' : 'articles'} in this topic.
-      </p>
+        <div class="mt-7 flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
+          <div class="max-w-3xl">
+            <p class="text-[0.72rem] uppercase tracking-[0.14em] text-black/48 dark:text-white/45">Tag Archive</p>
+            <h1 class="mt-4 text-[clamp(2.5rem,6vw,4.75rem)] leading-[1.02] tracking-[-0.06em]">#{tag}</h1>
+            <p class="mt-5 max-w-[48rem] text-base leading-8 text-black/66 sm:text-lg dark:text-white/66">
+              {page.total} {page.total === 1 ? 'article' : 'articles'} in this topic.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div class="mt-8 flex flex-wrap gap-2">
+        <span class="inline-flex items-center rounded-sm bg-black px-3 py-2 text-sm text-white dark:bg-white dark:text-black">
+          #{tag}
+        </span>
+        {relatedTags.map(([name, count]) => (
+          <a
+            href={`/tags/${encodeURIComponent(name)}`}
+            class="inline-flex items-center gap-2 rounded-sm border border-black bg-white px-3 py-2 text-sm text-black no-underline transition-colors hover:bg-black hover:text-white dark:border-white/35 dark:bg-black dark:text-white dark:hover:bg-white dark:hover:text-black"
+          >
+            <span>{name}</span>
+            <span class="text-black/50 dark:text-white/50">({count})</span>
+          </a>
+        ))}
+      </div>
+
+      {featuredPost && (
+        <div class="mt-8 flex flex-col items-start lg:flex-row lg:gap-7.5">
+          <section class="mb-8 w-full lg:mb-0 lg:w-[calc(67%-0.9375rem)]">
+            <article class="h-full">
+              <a
+                href={`/posts/${featuredPost.id}`}
+                class="grid h-full overflow-hidden rounded-lg border border-black bg-white text-black no-underline transition-all duration-200 ease-in-out hover:-translate-x-1 hover:-translate-y-1 hover:shadow-[3px_3px_0_0_#000] dark:border-white/35 dark:bg-black dark:text-white dark:hover:shadow-[3px_3px_0_0_rgba(255,255,255,0.35)]"
+              >
+                {
+                  featuredPost.data.cover ? (
+                    <figure class="aspect-[1200/630] overflow-hidden border-b border-black dark:border-white/35">
+                      <LqipImage
+                        src={featuredPost.data.cover}
+                        alt={featuredPost.data.title}
+                        width={1200}
+                        height={630}
+                        loading="eager"
+                        decoding="async"
+                        format="webp"
+                        class="h-full w-full object-cover"
+                      />
+                    </figure>
+                  ) : (
+                    <div class="flex aspect-[1200/630] items-center justify-center border-b border-black bg-[#ff90e8] px-8 text-center text-3xl leading-tight dark:border-white/35 dark:text-black">
+                      {featuredPost.data.title}
+                    </div>
+                  )
+                }
+
+                <div class="flex h-full grow flex-col space-y-3 p-6">
+                  <h2 class="text-2xl leading-tight md:text-4xl">{featuredPost.data.title}</h2>
+                  {featuredPost.data.description && (
+                    <p class="flex-1 text-base leading-8 text-black/72 dark:text-white/68">{featuredPost.data.description}</p>
+                  )}
+                  <p class="text-base text-black/58 dark:text-white/58">
+                    {formatDate(featuredPost.data.updatedDate ?? featuredPost.data.pubDate)}
+                  </p>
+                </div>
+              </a>
+            </article>
+          </section>
+
+          <aside class="hidden w-full lg:block lg:w-[calc(33%-0.9375rem)]">
+            <div class="flex h-full flex-col rounded-lg border border-black bg-white p-5 dark:border-white/35 dark:bg-black">
+              <ul class="grow divide-y divide-black/12 overflow-y-auto dark:divide-white/12">
+                {compactPosts.map((post) => (
+                  <li class="py-4 first:pt-0 last:pb-0">
+                    <a href={`/posts/${post.id}`} class="group flex items-end justify-between gap-3 text-black no-underline dark:text-white">
+                      <div class="grid grid-cols-1 gap-1">
+                        <h3 class="mb-0.5 text-2xl font-normal leading-tight tracking-[-0.04em]">{post.data.title}</h3>
+                        <p class="pb-0.5 text-base text-black/50 dark:text-white/50">
+                          {formatDate(post.data.updatedDate ?? post.data.pubDate)}
+                        </p>
+                      </div>
+                      <div class="mr-1 ml-3 flex size-10 shrink-0 items-center justify-center self-end rounded-md border border-black p-2 transition-all duration-200 ease-in-out group-hover:-translate-x-px group-hover:-translate-y-px group-hover:shadow-[2px_2px_0_0_#000] dark:border-white/35 dark:group-hover:shadow-[2px_2px_0_0_rgba(255,255,255,0.35)]">
+                        →
+                      </div>
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </aside>
+        </div>
+      )}
+
+      <section class="mt-8">
+        {gridPosts.length > 0 ? (
+          <div class="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
+            {gridPosts.map((post) => (
+              <article class="h-full">
+                <a
+                  href={`/posts/${post.id}`}
+                  class:list={[
+                    'grid h-full overflow-hidden rounded-lg border border-black bg-white text-black no-underline transition-all duration-200 ease-in-out hover:-translate-x-1 hover:-translate-y-1 hover:shadow-[3px_3px_0_0_#000] dark:border-white/35 dark:bg-black dark:text-white dark:hover:shadow-[3px_3px_0_0_rgba(255,255,255,0.35)]',
+                    post.data.cover && 'grid-rows-[auto_1fr]',
+                  ]}
+                >
+                  {post.data.cover ? (
+                    <figure class="aspect-[1200/630] overflow-hidden border-b border-black dark:border-white/35">
+                      <LqipImage
+                        src={post.data.cover}
+                        alt={post.data.title}
+                        width={1200}
+                        height={630}
+                        loading="lazy"
+                        decoding="async"
+                        format="webp"
+                        class="h-full w-full object-cover"
+                      />
+                    </figure>
+                  ) : null}
+
+                  <div class="flex h-full grow flex-col space-y-2 p-6">
+                    <h3 class="text-2xl leading-tight">{post.data.title}</h3>
+                    {post.data.description ? (
+                      <p class="flex-1 overflow-hidden text-base text-black/72 dark:text-white/68">{post.data.description}</p>
+                    ) : (
+                      <div class="flex-1"></div>
+                    )}
+                    <p class="text-base text-black/58 dark:text-white/58">{formatDate(post.data.updatedDate ?? post.data.pubDate)}</p>
+                  </div>
+                </a>
+              </article>
+            ))}
+          </div>
+        ) : (
+          <p class="py-10 text-center text-black/58 dark:text-white/58">No posts found for this tag.</p>
+        )}
+      </section>
+
+      <Pagination {page} baseUrl={`/tags/${encodedTag}`} class="mx-auto mt-16 max-w-4xl" />
     </section>
-
-    <section class="mx-auto mt-14 max-w-4xl fade-up">
-      <List
-        posts={page.data}
-        type={POSTS_CONFIG.tagsPageConfig.type}
-        coverLayout={POSTS_CONFIG.tagsPageConfig?.coverLayout}
-        customSpacing="space-y-16 sm:space-y-20"
-      />
-    </section>
-
-    <Pagination {page} baseUrl={`/tags/${encodedTag}`} class="mx-auto mt-16 max-w-4xl" />
   </div>
 </Layout>

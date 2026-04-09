@@ -7,7 +7,8 @@ interface Props {
 const { title, introduce } = Astro.props
 ---
 
-<div class="apple-ui mx-auto max-w-3xl">
-  <h1 class="text-[clamp(2.1rem,5vw,3.7rem)] font-semibold leading-[1.05] tracking-[-0.04em] text-foreground">{title}</h1>
-  <p class="mt-5 max-w-[62ch] text-base leading-8 text-muted-foreground">{introduce}</p>
+<div class="mx-auto max-w-3xl">
+  <p class="text-[0.72rem] uppercase tracking-[0.14em] text-black/48 dark:text-white/45">Archive</p>
+  <h1 class="mt-4 text-[clamp(2.5rem,6vw,4.2rem)] leading-[1.03] tracking-[-0.06em] text-black dark:text-white">{title}</h1>
+  <p class="mt-5 max-w-[62ch] text-base leading-8 text-black/66 dark:text-white/66">{introduce}</p>
 </div>

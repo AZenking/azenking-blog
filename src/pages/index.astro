@@ -1,25 +1,95 @@
 ---
 import { SITE } from '~/config.ts'
+import { getAllNotes, getAllPosts, getAllProjects } from '~/lib/data'
 import Layout from '~/layouts/Layout.astro'
 
+import Feliz from '~/assets/svg/Feliz.svg?url'
+import Kiddo from '~/assets/svg/Kiddo.svg?url'
+import MeelaPantalones from '~/assets/svg/Meela Pantalones.svg?url'
+import Pacheco from '~/assets/svg/Pacheco.svg?url'
+import Pilot from '~/assets/svg/Pilot.svg?url'
+import Rogue from '~/assets/svg/Rogue.svg?url'
+import Whoa from '~/assets/svg/Whoa.svg?url'
+import WontStop from '~/assets/svg/Wont Stop.svg?url'
+
 const cleanDescription = SITE.description.replace(/^👋\s*/, '')
+const [posts, notes, projects] = await Promise.all([getAllPosts(), getAllNotes(), getAllProjects()])
+
+const doodles = [
+  { src: Kiddo, alt: 'Kiddo doodle', shift: 'translate-y-8', width: 'w-28 sm:w-32 lg:w-36' },
+  { src: Pacheco, alt: 'Pacheco doodle', shift: 'translate-y-2', width: 'w-36 sm:w-40 lg:w-44' },
+  { src: Feliz, alt: 'Feliz doodle', shift: 'translate-y-4', width: 'w-28 sm:w-32 lg:w-36' },
+  { src: Pilot, alt: 'Pilot doodle', shift: 'translate-y-10', width: 'w-32 sm:w-36 lg:w-40' },
+  { src: MeelaPantalones, alt: 'Meela Pantalones doodle', shift: 'translate-y-0', width: 'w-[7.5rem] sm:w-36 lg:w-40' },
+  { src: Rogue, alt: 'Rogue doodle', shift: 'translate-y-6', width: 'w-28 sm:w-32 lg:w-36' },
+  { src: Whoa, alt: 'Whoa doodle', shift: 'translate-y-12', width: 'w-32 sm:w-36 lg:w-40' },
+  { src: WontStop, alt: 'Wont Stop doodle', shift: 'translate-y-4', width: 'w-32 sm:w-36 lg:w-40' },
+]
 ---
 
-<Layout title="Home" description={SITE.description}>
-  <div class="apple-ui relative isolate overflow-hidden px-6 sm:px-8">
-    <div class="pointer-events-none absolute inset-x-0 top-[-14rem] -z-10 h-[30rem] bg-[radial-gradient(65%_60%_at_50%_60%,rgba(183,190,200,0.34),rgba(255,255,255,0))] dark:bg-[radial-gradient(65%_60%_at_50%_60%,rgba(90,101,116,0.28),rgba(0,0,0,0))]">
-    </div>
+<Layout title="Home" description={SITE.description} fullWidth hideFooter>
+  <section class="relative min-h-[calc(100svh-5rem)] overflow-hidden bg-[#f4f4f0] text-black transition-colors dark:bg-black dark:text-white">
+    <div class="pointer-events-none absolute inset-0 bg-[radial-gradient(42%_28%_at_50%_42%,rgba(0,0,0,0.08),rgba(244,244,240,0)_70%)] dark:bg-[radial-gradient(42%_28%_at_50%_42%,rgba(255,255,255,0.12),rgba(0,0,0,0)_70%)]"></div>
+    <div class="pointer-events-none absolute inset-x-0 bottom-0 h-40 bg-[linear-gradient(to_top,rgba(244,244,240,0.96),rgba(244,244,240,0))] dark:bg-[linear-gradient(to_top,rgba(0,0,0,0.96),rgba(0,0,0,0))]"></div>
 
-    <section id="about" class="mx-auto flex min-h-[calc(100svh-11rem)] w-full max-w-4xl items-center py-20 sm:py-28">
-      <div class="w-full">
-        <p class="text-[0.68rem] font-medium uppercase tracking-[0.16em] text-muted-foreground/85">Personal Blog</p>
-        <h1 class="mt-4 text-balance text-[clamp(2.4rem,7vw,5rem)] font-semibold leading-[1.03] tracking-[-0.045em] text-foreground">
-          {SITE.title}
-        </h1>
-        <p class="mt-8 max-w-[34ch] text-pretty text-[clamp(1.05rem,2.2vw,1.4rem)] font-normal leading-[1.75] tracking-[-0.01em] text-foreground/70 dark:text-foreground/72">
-          {cleanDescription}
+    <div class="relative mx-auto flex min-h-[calc(100svh-5rem)] w-full max-w-7xl flex-col items-center justify-center px-4 pb-48 pt-16 text-center sm:px-6 sm:pb-56 lg:px-8">
+      <p class="text-[0.72rem] uppercase tracking-[0.22em] text-black/46 dark:text-white/46">Independent archive</p>
+
+      <h1 class="mt-6 max-w-[12ch] text-balance font-['Iowan_Old_Style','Palatino_Linotype','Book_Antiqua','Georgia',serif] text-[clamp(3.3rem,8vw,6.2rem)] font-semibold italic leading-[0.92] tracking-[-0.06em]">
+        Start making quiet things.
+      </h1>
+
+      <p class="mt-5 max-w-[36rem] text-pretty text-sm leading-7 text-black/68 sm:text-base dark:text-white/74">
+        {cleanDescription}
+      </p>
+
+      <div class="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
+        <a
+          href="/posts"
+          class="inline-flex min-w-44 items-center justify-center rounded-none border border-black bg-black px-8 py-3.5 text-base text-white no-underline transition-colors hover:bg-white hover:text-black dark:border-white dark:bg-black dark:hover:bg-white"
+        >
+          Read posts
+        </a>
+        <a
+          href="/projects"
+          class="inline-flex min-w-44 items-center justify-center rounded-none border border-black bg-white px-8 py-3.5 text-base text-black no-underline transition-colors hover:bg-black hover:text-white dark:border-white dark:bg-white dark:text-black dark:hover:bg-black dark:hover:text-white"
+        >
+          View projects
+        </a>
+      </div>
+
+      <div class="mt-7 text-sm leading-7 text-black/58 dark:text-white/62">
+        <p>
+          {posts.length} posts, {notes.length} notes, {projects.length} public builds.
+        </p>
+        <p class="mt-1">
+          You can also browse
+          <a href="/notes" class="mx-1 text-current underline decoration-current/40 underline-offset-4 hover:decoration-current">
+            notes
+          </a>
+          and
+          <a href="/photos" class="ml-1 text-current underline decoration-current/40 underline-offset-4 hover:decoration-current">
+            photos
+          </a>
+          .
         </p>
       </div>
-    </section>
-  </div>
+    </div>
+
+    <div class="pointer-events-none absolute inset-x-0 bottom-0 overflow-hidden px-2 sm:px-4 lg:px-6">
+      <div class="flex min-w-max items-end justify-between gap-2">
+        {doodles.map((doodle) => (
+          <div class:list={['shrink-0 opacity-100', doodle.shift, doodle.width]}>
+            <img
+              src={doodle.src}
+              alt={doodle.alt}
+              class="h-auto w-full object-contain [filter:brightness(0)] dark:[filter:brightness(0)_invert(1)]"
+              loading="lazy"
+              decoding="async"
+            />
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
 </Layout>
