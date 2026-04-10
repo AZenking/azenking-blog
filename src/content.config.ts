@@ -1,35 +1,34 @@
 import { glob } from 'astro/loaders'
 import { defineCollection, z } from 'astro:content'
 import { POSTS_CONFIG } from '~/config'
-import type { CoverLayout, PostType } from '~/types'
+
+const contentSchema = ({ image }: { image: Function }) =>
+  z
+    .object({
+      title: z.string(),
+      description: z.string(),
+      pubDate: z.date(),
+      tags: z.array(z.string()).optional(),
+      updatedDate: z.date().optional(),
+      author: z.string().default(POSTS_CONFIG.author),
+      cover: image().optional(),
+      ogImage: image().optional(),
+      recommend: z.boolean().default(false),
+      pinned: z.boolean().default(false),
+      draft: z.boolean().default(false),
+      license: z.string().optional(),
+    })
+    .transform((data) => ({
+      ...data,
+      ogImage: POSTS_CONFIG.ogImageUseCover && data.cover ? data.cover : data.ogImage,
+    }))
 
 const posts = defineCollection({
   loader: glob({
     pattern: '**/*.{md,mdx}',
     base: './content/posts',
   }),
-  schema: ({ image }) =>
-    z
-      .object({
-        title: z.string(),
-        description: z.string(),
-        pubDate: z.date(),
-        tags: z.array(z.string()).optional(),
-        updatedDate: z.date().optional(),
-        author: z.string().default(POSTS_CONFIG.author),
-        cover: image().optional(),
-        ogImage: image().optional(),
-        recommend: z.boolean().default(false),
-        postType: z.custom<PostType>().optional(),
-        coverLayout: z.custom<CoverLayout>().optional(),
-        pinned: z.boolean().default(false),
-        draft: z.boolean().default(false),
-        license: z.string().optional(),
-      })
-      .transform((data) => ({
-        ...data,
-        ogImage: POSTS_CONFIG.ogImageUseCover && data.cover ? data.cover : data.ogImage,
-      })),
+  schema: contentSchema,
 })
 
 const notes = defineCollection({
@@ -37,28 +36,7 @@ const notes = defineCollection({
     pattern: '**/*.{md,mdx}',
     base: './content/notes',
   }),
-  schema: ({ image }) =>
-    z
-      .object({
-        title: z.string(),
-        description: z.string(),
-        pubDate: z.date(),
-        tags: z.array(z.string()).optional(),
-        updatedDate: z.date().optional(),
-        author: z.string().default(POSTS_CONFIG.author),
-        cover: image().optional(),
-        ogImage: image().optional(),
-        recommend: z.boolean().default(false),
-        postType: z.custom<PostType>().optional(),
-        coverLayout: z.custom<CoverLayout>().optional(),
-        pinned: z.boolean().default(false),
-        draft: z.boolean().default(false),
-        license: z.string().optional(),
-      })
-      .transform((data) => ({
-        ...data,
-        ogImage: POSTS_CONFIG.ogImageUseCover && data.cover ? data.cover : data.ogImage,
-      })),
+  schema: contentSchema,
 })
 
 const projects = defineCollection({

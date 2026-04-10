@@ -1,12 +1,12 @@
 ---
 import type { GetStaticPaths, Page } from 'astro'
 import type { CollectionEntry } from 'astro:content'
-import { getAllNotes } from '~/lib/data'
-import Layout from '~/layouts/Layout.astro'
+import LqipImage from '~/components/base/LqipImage.astro'
 import Pagination from '~/components/base/Pagination.astro'
-import PageTitle from '~/components/base/PageTitle.astro'
-import Noise from '~/components/reactbits/Noise'
 import PostKindTabs from '~/components/posts/base/PostKindTabs.astro'
+import { getAllNotes } from '~/lib/data'
+import { formatDate } from '~/lib/utils'
+import Layout from '~/layouts/Layout.astro'
 
 export const getStaticPaths: GetStaticPaths = async ({ paginate }) => {
   const sortedNotes = await getAllNotes()
@@ -21,37 +21,194 @@ interface Props {
 }
 
 const { page } = Astro.props
+const allNotes = await getAllNotes()
+
+const noteTagMap = allNotes.reduce(
+  (acc, note) => {
+    for (const tag of note.data.tags ?? []) {
+      acc[tag] = (acc[tag] ?? 0) + 1
+    }
+    return acc
+  },
+  {} as Record<string, number>
+)
+
+const topTags = Object.entries(noteTagMap)
+  .sort(([, countA], [, countB]) => countB - countA)
+  .slice(0, 8)
+
+const totalTagMentions = Object.values(noteTagMap).reduce((sum, count) => sum + count, 0)
+const isFirstPage = page.currentPage === 1
+const featuredNote = isFirstPage ? page.data[0] : null
+const compactNotes = isFirstPage ? page.data.slice(1, 4) : []
+const gridNotes = isFirstPage ? page.data.slice(1) : page.data
 ---
 
-<Layout title="Notes" description="Short notes and logs">
-  <div class="relative z-[1] py-8 pb-10 px-6 sm:px-8">
-    <div class="pointer-events-none absolute inset-y-0 left-1/2 -z-10 w-screen -translate-x-1/2 overflow-hidden">
-      <div class="absolute inset-0 opacity-[0.14]">
-        <Noise patternSize={768} patternRefreshInterval={5} patternAlpha={14} client:load />
+<Layout title="Notes" description="Short notes and logs" fullWidth>
+  <div class="min-h-screen bg-[#f4f4f0] text-black dark:bg-[#242423] dark:text-white">
+    <section class="w-full px-4 py-14 sm:px-6 sm:py-20 lg:px-8">
+      <div class="border-b border-black pb-8 dark:border-white/35">
+        <div class="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
+          <div class="max-w-3xl">
+            <p class="text-[0.72rem] uppercase tracking-[0.14em] text-black/48 dark:text-white/45">Quick Notes</p>
+            <h1 class="mt-4 text-[clamp(2.5rem,6vw,4.75rem)] leading-[1.02] tracking-[-0.06em]">Notes</h1>
+            <p class="mt-5 max-w-[48rem] text-base leading-8 text-black/66 sm:text-lg dark:text-white/66">
+              Short notes, small fixes, and working fragments collected in the same archive system as the long-form posts.
+            </p>
+          </div>
+
+          <PostKindTabs active="notes" />
+        </div>
       </div>
-      <div class="absolute inset-0 bg-[radial-gradient(circle_at_50%_0%,rgba(130,180,255,0.14),transparent_40%),linear-gradient(to_bottom,rgba(0,0,0,0),hsl(var(--background)/0.42))]" />
-    </div>
 
-    <PageTitle title="Notes" introduce="Short notes, ideas and work logs." />
-    <PostKindTabs active="notes" />
+      <div class="mt-8 flex flex-wrap gap-2">
+        <span class="inline-flex items-center rounded-sm bg-black px-3 py-2 text-sm text-white dark:bg-white dark:text-black">
+          All notes ({allNotes.length})
+        </span>
+        {topTags.map(([tag, count]) => (
+          <span class="inline-flex items-center gap-2 rounded-sm border border-black bg-white px-3 py-2 text-sm text-black dark:border-white/35 dark:bg-black dark:text-white">
+            <span>{tag}</span>
+            <span class="text-black/50 dark:text-white/50">({count})</span>
+          </span>
+        ))}
+      </div>
 
-    <ul class="mt-8 divide-y divide-border/50 border-y border-border/50 bg-background/35 backdrop-blur-sm fade-up">
-      {
-        page.data.map((note) => (
-          <li>
-            <a href={`/notes/${note.id}`} class="block px-4 sm:px-6 py-4 sm:py-5 hover:bg-muted/35 transition-colors">
-              <div class="flex flex-wrap items-center gap-3 text-xs text-muted-foreground/80">
-                <time datetime={note.data.pubDate.toISOString()}>{note.data.pubDate.toLocaleDateString('en-US')}</time>
-                {note.data.tags?.length ? <span>#{note.data.tags.join(' #')}</span> : null}
-              </div>
-              <h2 class="mt-2 text-base sm:text-lg font-semibold text-foreground/95">{note.data.title}</h2>
-              <p class="mt-1 text-sm text-muted-foreground line-clamp-2">{note.data.description}</p>
-            </a>
-          </li>
-        ))
-      }
-    </ul>
+      <div class="mt-8 grid gap-3 sm:grid-cols-3">
+        <div class="rounded-lg border border-black bg-white px-4 py-4 dark:border-white/35 dark:bg-black">
+          <p class="text-[0.72rem] uppercase tracking-[0.12em] text-black/48 dark:text-white/48">Total</p>
+          <p class="mt-2 text-3xl leading-none tracking-[-0.05em]">{allNotes.length}</p>
+        </div>
+        <div class="rounded-lg border border-black bg-white px-4 py-4 dark:border-white/35 dark:bg-black">
+          <p class="text-[0.72rem] uppercase tracking-[0.12em] text-black/48 dark:text-white/48">This page</p>
+          <p class="mt-2 text-3xl leading-none tracking-[-0.05em]">{page.data.length}</p>
+        </div>
+        <div class="rounded-lg border border-black bg-white px-4 py-4 dark:border-white/35 dark:bg-black">
+          <p class="text-[0.72rem] uppercase tracking-[0.12em] text-black/48 dark:text-white/48">Tag mentions</p>
+          <p class="mt-2 text-3xl leading-none tracking-[-0.05em]">{totalTagMentions}</p>
+        </div>
+      </div>
 
-    <Pagination {page} baseUrl="/notes" />
+      {featuredNote && (
+        <div class="mt-8 flex flex-col items-start lg:flex-row lg:gap-7.5">
+          <section class="mb-8 w-full lg:mb-0 lg:w-[calc(67%-0.9375rem)]">
+            <article class="h-full">
+              <a
+                href={`/notes/${featuredNote.id}`}
+                class="grid h-full overflow-hidden rounded-lg border border-black bg-white text-black no-underline transition-all duration-200 ease-in-out hover:-translate-x-1 hover:-translate-y-1 hover:shadow-[3px_3px_0_0_#000] dark:border-white/35 dark:bg-black dark:text-white dark:hover:shadow-[3px_3px_0_0_rgba(255,255,255,0.35)]"
+              >
+                {
+                  featuredNote.data.cover ? (
+                    <figure class="aspect-[1200/630] overflow-hidden border-b border-black dark:border-white/35">
+                      <LqipImage
+                        src={featuredNote.data.cover}
+                        alt={featuredNote.data.title}
+                        width={1200}
+                        height={630}
+                        loading="eager"
+                        decoding="async"
+                        format="webp"
+                        class="h-full w-full object-cover"
+                      />
+                    </figure>
+                  ) : (
+                    <div class="flex aspect-[1200/630] items-center justify-center border-b border-black bg-[#ff90e8] px-8 text-center text-3xl leading-tight dark:border-white/35 dark:text-black">
+                      {featuredNote.data.title}
+                    </div>
+                  )
+                }
+
+                <div class="flex h-full grow flex-col space-y-3 p-6">
+                  <h2 class="text-2xl leading-tight md:text-4xl">{featuredNote.data.title}</h2>
+                  {featuredNote.data.description && (
+                    <p class="flex-1 text-base leading-8 text-black/72 dark:text-white/68">{featuredNote.data.description}</p>
+                  )}
+                  <p class="text-base text-black/58 dark:text-white/58">
+                    {formatDate(featuredNote.data.updatedDate ?? featuredNote.data.pubDate)}
+                  </p>
+                </div>
+              </a>
+            </article>
+          </section>
+
+          <aside class="hidden w-full lg:block lg:w-[calc(33%-0.9375rem)]">
+            <div class="flex h-full flex-col rounded-lg border border-black bg-white p-5 dark:border-white/35 dark:bg-black">
+              <ul class="grow divide-y divide-black/12 overflow-y-auto dark:divide-white/12">
+                {compactNotes.map((note) => (
+                  <li class="py-4 first:pt-0 last:pb-0">
+                    <a href={`/notes/${note.id}`} class="group flex items-end justify-between gap-3 text-black no-underline dark:text-white">
+                      <div class="grid grid-cols-1 gap-1">
+                        <h3 class="mb-0.5 text-2xl font-normal leading-tight tracking-[-0.04em]">{note.data.title}</h3>
+                        <p class="pb-0.5 text-base text-black/50 dark:text-white/50">
+                          {formatDate(note.data.updatedDate ?? note.data.pubDate)}
+                        </p>
+                      </div>
+                      <div class="mr-1 ml-3 flex size-10 shrink-0 items-center justify-center self-end rounded-md border border-black p-2 transition-all duration-200 ease-in-out group-hover:-translate-x-px group-hover:-translate-y-px group-hover:shadow-[2px_2px_0_0_#000] dark:border-white/35 dark:group-hover:shadow-[2px_2px_0_0_rgba(255,255,255,0.35)]">
+                        →
+                      </div>
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </aside>
+        </div>
+      )}
+
+      <section class="mt-8">
+        {gridNotes.length > 0 ? (
+          <div class="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
+            {gridNotes.map((note) => (
+              <article class="h-full">
+                <a
+                  href={`/notes/${note.id}`}
+                  class:list={[
+                    'grid h-full overflow-hidden rounded-lg border border-black bg-white text-black no-underline transition-all duration-200 ease-in-out hover:-translate-x-1 hover:-translate-y-1 hover:shadow-[3px_3px_0_0_#000] dark:border-white/35 dark:bg-black dark:text-white dark:hover:shadow-[3px_3px_0_0_rgba(255,255,255,0.35)]',
+                    note.data.cover && 'grid-rows-[auto_1fr]',
+                  ]}
+                >
+                  {note.data.cover ? (
+                    <figure class="aspect-[1200/630] overflow-hidden border-b border-black dark:border-white/35">
+                      <LqipImage
+                        src={note.data.cover}
+                        alt={note.data.title}
+                        width={1200}
+                        height={630}
+                        loading="lazy"
+                        decoding="async"
+                        format="webp"
+                        class="h-full w-full object-cover"
+                      />
+                    </figure>
+                  ) : null}
+
+                  <div class="flex h-full grow flex-col space-y-2 p-6">
+                    <h3 class="text-2xl leading-tight">{note.data.title}</h3>
+                    {note.data.description ? (
+                      <p class="flex-1 overflow-hidden text-base text-black/72 dark:text-white/68">{note.data.description}</p>
+                    ) : (
+                      <div class="flex-1"></div>
+                    )}
+                    <p class="text-base text-black/58 dark:text-white/58">{formatDate(note.data.updatedDate ?? note.data.pubDate)}</p>
+                    {note.data.tags && note.data.tags.length > 0 && (
+                      <div class="flex flex-wrap gap-2">
+                        {note.data.tags.slice(0, 3).map((tag) => (
+                          <span class="inline-flex rounded-sm border border-black px-2 py-1 text-sm leading-none dark:border-white/35">
+                            {tag}
+                          </span>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                </a>
+              </article>
+            ))}
+          </div>
+        ) : (
+          <p class="py-10 text-center text-black/58 dark:text-white/58">No notes found.</p>
+        )}
+      </section>
+
+      <Pagination {page} baseUrl="/notes" class="mx-auto mt-16 max-w-4xl" />
+    </section>
   </div>
 </Layout>

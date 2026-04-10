@@ -1,14 +1,25 @@
 ---
+interface Props {
+  className?: string
+  label?: string
+  labelClass?: string
+}
 
+const {
+  className = '',
+  label = 'Search',
+  labelClass = 'hidden lg:inline',
+}: Props = Astro.props
 ---
 
 <button
-  class="inline-flex items-center text-foreground cursor-pointer hover:scale-105 size-6 origin-center"
+  class:list={['ui-control', className]}
   id="search-switch"
   aria-label="Search"
   title="Search (Ctrl+K)"
 >
-    <span class="icon-[material-symbols--manage-search] size-6"></span>
+  <span class="icon-[material-symbols--manage-search] size-[17px]"></span>
+  <span class:list={[labelClass]}>{label}</span>
 </button>
 
 <div id="search-mask" class="fixed z-200 hidden inset-0 bg-background/80 backdrop-blur-md dark:bg-background/90 transition-opacity duration-200 opacity-0">
