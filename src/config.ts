@@ -3,13 +3,11 @@ import type {
   CommentConfig,
   FriendLinkItem,
   FriendsConfig,
-  GithubConfig,
   Link,
   PhotosConfig,
   PostConfig,
   ProjectConfig,
   Site,
-  SkillsShowcaseConfig,
   SocialLink,
   TagsConfig,
 } from '~/types'
@@ -19,7 +17,7 @@ export const SITE: Site = {
   title: 'Ethan Yang',
   description: '👋 大家好，我是 Ethan Young，一名常驻南京的程序员，也是一位在生活中持续迭代的普通人',
   website: 'https://ethyoung.me/',
-  lang: 'en',
+  lang: 'zh-CN',
   base: '/',
   author: 'Ethan',
   ogImage: '/og-image.webp',
@@ -70,74 +68,8 @@ export const SOCIAL_LINKS: SocialLink[] = [
     name: 'github',
     url: 'https://github.com/yy921010',
     icon: 'icon-[ri--github-fill]',
-    count: 20,
   },
 ]
-
-/**
- * SkillsShowcase 配置接口 / SkillsShowcase configuration type
- * @property {boolean} SKILLS_ENABLED  - 是否启用SkillsShowcase功能 / Whether to enable SkillsShowcase features
- * @property {Object} SKILLS_DATA - 技能展示数据 / Skills showcase data
- * @property {string} SKILLS_DATA.direction - 技能展示方向 / Skills showcase direction
- * @property {Object} SKILLS_DATA.skills - 技能展示数据 / Skills showcase data
- * @property {string} SKILLS_DATA.skills.icon - 技能图标 / Skills icon
- * @property {string} SKILLS_DATA.skills.name - 技能名称 / Skills name
- * get icon https://icon-sets.iconify.design/
- */
-export const SKILLSSHOWCASE_CONFIG: SkillsShowcaseConfig = {
-  SKILLS_ENABLED: true,
-  SKILLS_DATA: [
-    {
-      direction: 'left',
-      skills: [
-        {
-          name: 'JavaScript',
-          icon: 'icon-[skill-icons--javascript]',
-          url: 'https://developer.mozilla.org/en-US/docs/Web/JavaScript',
-        },
-        {
-          name: 'CSS',
-          icon: 'icon-[skill-icons--css]',
-          url: 'https://developer.mozilla.org/en-US/docs/Web/CSS',
-        },
-        {
-          name: 'HTML',
-          icon: 'icon-[skill-icons--html]',
-          url: 'https://developer.mozilla.org/en-US/docs/Web/HTML',
-        },
-        {
-          name: 'TypeScript',
-          icon: 'icon-[skill-icons--typescript]',
-          url: 'https://www.typescriptlang.org/',
-        },
-        {
-          name: 'Vue',
-          icon: 'icon-[skill-icons--vuejs-dark]',
-          url: 'https://vuejs.org/',
-        },
-        {
-          name: 'Sass',
-          icon: 'icon-[skill-icons--sass]',
-          url: 'https://sass-lang.com/',
-        },
-      ],
-    },
-  ],
-}
-
-/**
- * GitHub配置 / GitHub configuration
- *
- * @property {boolean} ENABLED - 是否启用GitHub功能 / Whether to enable GitHub features
- * @property {string} GITHUB_USERNAME - GITHUB用户名 / GitHub username
- * @property {boolean} TOOLTIP_ENABLED - 是否开启Tooltip功能 / Whether to enable Github Tooltip features
- */
-
-export const GITHUB_CONFIG: GithubConfig = {
-  ENABLED: true,
-  GITHUB_USERNAME: 'yy921010',
-  TOOLTIP_ENABLED: true,
-}
 
 //--- Posts Page Config ---
 export const POSTS_CONFIG: PostConfig = {
@@ -145,30 +77,18 @@ export const POSTS_CONFIG: PostConfig = {
   description: 'Ethan Yang',
   introduce: '在这里，我分享了我在编程、技术和生活方面的见解和经验。希望你能在这里找到有价值的内容，并与我一起成长！',
   author: 'Ethan',
-  homePageConfig: {
-    size: 2,
-    type: 'minimal',
-  },
   postPageConfig: {
     size: 10,
-    type: 'image',
-    coverLayout: 'right',
   },
   tagsPageConfig: {
     size: 10,
-    type: 'image',
   },
   ogImageUseCover: false,
-  postType: 'metaOnly',
   imageDarkenInDark: true,
-  readMoreText: 'vi .',
   prevPageText: '<--',
   nextPageText: '-->',
-  tocText: '目录',
-  backToPostsText: 'cd ..',
   nextPostText: '上一篇',
   prevPostText: '下一篇',
-  recommendText: 'REC',
   wordCountView: true,
 }
 
