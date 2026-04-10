@@ -1,42 +1,239 @@
 ---
-import Layout from '~/layouts/Layout.astro'
-import Prose from '~/components/posts/base/Prose.astro'
-import { SITE } from '~/config'
+import type { CollectionEntry } from 'astro:content'
 import { render } from 'astro:content'
-import { getAllNotes } from '~/lib/data'
+import LqipImage from '~/components/base/LqipImage.astro'
+import Prose from '~/components/posts/base/Prose.astro'
 import PostKindTabs from '~/components/posts/base/PostKindTabs.astro'
+import { SITE } from '~/config'
+import { getAllNotes } from '~/lib/data'
+import { formatDate } from '~/lib/utils'
+import Layout from '~/layouts/Layout.astro'
 
 export async function getStaticPaths() {
   const sortedNotes = await getAllNotes()
-  return sortedNotes.map((note) => ({
+  return sortedNotes.map((note, index) => ({
     params: { id: note.id },
-    props: { note },
+    props: {
+      note,
+      notes: sortedNotes,
+      prev: index + 1 < sortedNotes.length ? sortedNotes[index + 1] : null,
+      next: index > 0 ? sortedNotes[index - 1] : null,
+    },
   }))
 }
 
-const { note } = Astro.props
+interface Props {
+  note: CollectionEntry<'notes'>
+  notes: CollectionEntry<'notes'>[]
+  prev: CollectionEntry<'notes'> | null
+  next: CollectionEntry<'notes'> | null
+}
+
+const { note, notes, prev, next }: Props = Astro.props
 const { data: frontmatter } = note
 const { Content } = await render(note)
+
+const tags = frontmatter.tags ?? []
+const publishedDate = formatDate(frontmatter.pubDate)
+const updatedDate = frontmatter.updatedDate ? formatDate(frontmatter.updatedDate) : null
+
+const currentTags = new Set(tags)
+const relatedNotes = notes
+  .filter((candidate) => candidate.id !== note.id)
+  .map((candidate) => {
+    const candidateTags = candidate.data.tags ?? []
+    const overlap = candidateTags.filter((tag) => currentTags.has(tag)).length
+    const referenceDate = candidate.data.updatedDate ?? candidate.data.pubDate
+    return {
+      candidate,
+      overlap,
+      timestamp: referenceDate.getTime(),
+    }
+  })
+  .sort((a, b) => {
+    if (b.overlap !== a.overlap) return b.overlap - a.overlap
+    return b.timestamp - a.timestamp
+  })
+  .slice(0, 3)
+  .map((item) => item.candidate)
 ---
 
 <Layout
   title={frontmatter.title}
   description={frontmatter.description || frontmatter.title}
   image={frontmatter.ogImage?.src ? `${SITE.website}${frontmatter.ogImage.src}` : SITE.ogImage}
+  fullWidth
 >
-  <article class="px-6 sm:px-8 py-8 sm:py-10">
-    <div class="global-layout-width mx-auto">
-      <PostKindTabs active="notes" />
+  <div class="gum-note min-h-screen bg-[#f4f4f0] text-black dark:bg-[#242423] dark:text-white">
+    <section class="mx-auto w-full max-w-3xl px-4 py-16 sm:px-6 md:py-24 lg:px-8">
+      <a
+        href="/notes"
+        class="inline-flex items-center gap-2 text-base font-medium text-[#d64b2a] no-underline transition-colors hover:text-[#b22f14]"
+      >
+        <span class="icon-[ph--arrow-left] size-5"></span>
+        <span>Back to Notes</span>
+      </a>
 
-      <header class="mt-6 border-b border-border/60 pb-6">
-        <p class="text-sm text-muted-foreground/85">{frontmatter.pubDate.toLocaleDateString('en-US')}</p>
-        <h1 class="mt-2 text-2xl sm:text-3xl font-semibold leading-tight">{frontmatter.title}</h1>
-        {frontmatter.description && <p class="mt-3 text-muted-foreground">{frontmatter.description}</p>}
+      <PostKindTabs active="notes" class="mt-6" />
+
+      <header class="mt-10">
+        <div class="flex flex-wrap gap-2">
+          {tags.slice(0, 4).map((tag) => (
+            <a
+              href={`/tags/${encodeURIComponent(tag)}`}
+              class="inline-flex rounded-sm border border-black px-2 py-1 text-sm text-black no-underline transition-colors hover:bg-black hover:text-white dark:border-white/35 dark:text-white dark:hover:bg-white dark:hover:text-black"
+            >
+              {tag}
+            </a>
+          ))}
+        </div>
+
+        <h1 class="mt-6 text-[clamp(2.4rem,6vw,4.2rem)] leading-[1.06] tracking-[-0.06em]">{frontmatter.title}</h1>
+
+        <div class="mt-5 flex flex-wrap items-center gap-x-5 gap-y-2 text-lg text-black/56 dark:text-white/56">
+          <time datetime={frontmatter.pubDate.toISOString()}>{publishedDate}</time>
+          {updatedDate && <span>Updated {updatedDate}</span>}
+          {frontmatter.author && <span>{frontmatter.author}</span>}
+        </div>
+
+        {frontmatter.description && (
+          <p class="mt-6 max-w-[44rem] text-xl leading-9 text-black/68 dark:text-white/68">{frontmatter.description}</p>
+        )}
       </header>
 
-      <Prose class="mt-8">
-        <Content />
-      </Prose>
-    </div>
-  </article>
+      {frontmatter.cover && (
+        <figure class="mt-12 overflow-hidden rounded-lg border border-black bg-white dark:border-white/35 dark:bg-black">
+          <div class="aspect-[1200/630]">
+            <LqipImage
+              src={frontmatter.cover}
+              alt={frontmatter.title}
+              width={1200}
+              height={630}
+              loading="eager"
+              decoding="async"
+              format="webp"
+              class="h-full w-full object-cover"
+            />
+          </div>
+        </figure>
+      )}
+
+      <main class="mt-10 border-t border-black py-12 dark:border-white/35">
+        <Prose class="gum-note-body">
+          <Content />
+        </Prose>
+      </main>
+
+      {(prev || next) && (
+        <nav class="border-t border-black py-10 dark:border-white/35" aria-label="Note navigation">
+          <div class="grid gap-4 sm:grid-cols-2">
+            {next ? (
+              <a
+                href={`/notes/${next.id}`}
+                class="group rounded-lg border border-black bg-white px-5 py-4 text-black no-underline transition-all duration-150 hover:-translate-x-[2px] hover:-translate-y-[2px] hover:shadow-[2px_2px_0_0_#000] dark:border-white/35 dark:bg-black dark:text-white dark:hover:shadow-[2px_2px_0_0_rgba(255,255,255,0.35)]"
+              >
+                <p class="text-[0.72rem] uppercase tracking-[0.1em] text-black/52 dark:text-white/52">Previous note</p>
+                <p class="mt-2 text-base leading-7">{next.data.title}</p>
+              </a>
+            ) : (
+              <div></div>
+            )}
+
+            {prev ? (
+              <a
+                href={`/notes/${prev.id}`}
+                class="group rounded-lg border border-black bg-white px-5 py-4 text-black no-underline transition-all duration-150 hover:-translate-x-[2px] hover:-translate-y-[2px] hover:shadow-[2px_2px_0_0_#000] sm:text-right dark:border-white/35 dark:bg-black dark:text-white dark:hover:shadow-[2px_2px_0_0_rgba(255,255,255,0.35)]"
+              >
+                <p class="text-[0.72rem] uppercase tracking-[0.1em] text-black/52 dark:text-white/52">Next note</p>
+                <p class="mt-2 text-base leading-7">{prev.data.title}</p>
+              </a>
+            ) : (
+              <div></div>
+            )}
+          </div>
+        </nav>
+      )}
+
+      {relatedNotes.length > 0 && (
+        <section class="border-t border-black py-10 dark:border-white/35">
+          <h2 class="text-[0.78rem] uppercase tracking-[0.14em] text-black/48 dark:text-white/45">Related Notes</h2>
+          <div class="mt-5 space-y-4">
+            {relatedNotes.map((related) => {
+              const relatedDate = related.data.updatedDate ?? related.data.pubDate
+              return (
+                <a
+                  href={`/notes/${related.id}`}
+                  class="group block rounded-lg border border-black bg-white px-5 py-4 text-black no-underline transition-all duration-150 hover:-translate-x-[2px] hover:-translate-y-[2px] hover:shadow-[2px_2px_0_0_#000] dark:border-white/35 dark:bg-black dark:text-white dark:hover:shadow-[2px_2px_0_0_rgba(255,255,255,0.35)]"
+                >
+                  <p class="text-[0.75rem] text-black/50 dark:text-white/50">{formatDate(relatedDate)}</p>
+                  <h3 class="mt-1.5 text-xl leading-tight tracking-[-0.03em]">{related.data.title}</h3>
+                  {related.data.description && (
+                    <p class="mt-2 line-clamp-2 text-sm leading-7 text-black/64 dark:text-white/64">{related.data.description}</p>
+                  )}
+                </a>
+              )
+            })}
+          </div>
+        </section>
+      )}
+    </section>
+  </div>
+
+  <style>
+    :global(.gum-note .gum-note-body) {
+      color: rgb(0 0 0 / 0.86);
+      font-size: clamp(1.04rem, 1.15vw, 1.14rem);
+      line-height: 1.95;
+      letter-spacing: 0.002em;
+    }
+
+    :global(.dark .gum-note .gum-note-body) {
+      color: rgb(255 255 255 / 0.86);
+    }
+
+    :global(.gum-note .gum-note-body p) {
+      margin-block: 1.45em;
+      color: rgb(0 0 0 / 0.74);
+    }
+
+    :global(.dark .gum-note .gum-note-body p) {
+      color: rgb(255 255 255 / 0.72);
+    }
+
+    :global(.gum-note .gum-note-body h2) {
+      margin-top: 3.2rem;
+      margin-bottom: 1rem;
+      font-size: clamp(1.6rem, 2vw, 2rem);
+      line-height: 1.18;
+      letter-spacing: -0.03em;
+    }
+
+    :global(.gum-note .gum-note-body h3) {
+      margin-top: 2.45rem;
+      margin-bottom: 0.85rem;
+      font-size: clamp(1.24rem, 1.5vw, 1.48rem);
+      line-height: 1.25;
+      letter-spacing: -0.02em;
+    }
+
+    :global(.gum-note .gum-note-body img) {
+      border-radius: 0.5rem;
+      border: 1px solid rgb(0 0 0 / 0.15);
+    }
+
+    :global(.dark .gum-note .gum-note-body img) {
+      border-color: rgb(255 255 255 / 0.18);
+    }
+
+    :global(.gum-note .gum-note-body blockquote) {
+      border-left: 2px solid rgb(0 0 0 / 0.65);
+      padding-left: 1rem;
+      color: rgb(0 0 0 / 0.68);
+    }
+
+    :global(.dark .gum-note .gum-note-body blockquote) {
+      border-left-color: rgb(255 255 255 / 0.5);
+      color: rgb(255 255 255 / 0.68);
+    }
+  </style>
 </Layout>

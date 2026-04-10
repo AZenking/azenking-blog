@@ -13,9 +13,11 @@ type Props = {
   title: string
   description: string
   image?: string
+  fullWidth?: boolean
+  hideFooter?: boolean
 }
 
-const { title, description, image }: Props = Astro.props
+const { title, description, image, fullWidth = false, hideFooter = false }: Props = Astro.props
 ---
 
 <!doctype html>
@@ -26,11 +28,11 @@ const { title, description, image }: Props = Astro.props
   <body class="flex flex-col">
     <Header />
     <div class="grow flex">
-      <main class="relative global-layout-width mx-auto grow min-w-0">
+      <main class:list={['relative grow min-w-0', fullWidth ? 'w-full' : 'global-layout-width mx-auto']}>
         <slot />
         <Analytics />
       </main>
     </div>
-    <Footer />
+    {!hideFooter && <Footer />}
   </body>
 </html>

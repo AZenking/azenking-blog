@@ -1,105 +1,141 @@
 ---
 import { PHOTOS_CONFIG } from '~/config'
-import Layout from '~/layouts/Layout.astro'
-import PhotoTimeline from '~/components/photos/PhotoTimeline.astro'
-import PageTitle from '~/components/base/PageTitle.astro'
 import { PhotosList } from '~/lib/photos'
-import Threads from '~/components/reactbits/Threads'
+import Layout from '~/layouts/Layout.astro'
+import MasonryPhotoFeed from '~/components/photos/MasonryPhotoFeed'
 
 const { title, description, introduce } = PHOTOS_CONFIG
+
+const galleryPhotos = PhotosList.flatMap((album) =>
+  album.photos.map((photo, index) => ({
+    src: typeof photo.src === 'string' ? photo.src : photo.src.src,
+    alt: photo.alt,
+    description: photo.description ?? `${album.title} · 生活片段 ${String(index + 1).padStart(2, '0')}`,
+    album: album.title,
+    date: album.date,
+    width: photo.width,
+    height: photo.height,
+  }))
+)
+
 const totalAlbums = PhotosList.length
-const totalPhotos = PhotosList.reduce((sum, album) => sum + album.photos.length, 0)
-const latestDate = PhotosList.map((album) => album.date).sort((a, b) => b.localeCompare(a))[0] ?? '--'
-const featuredPhotos = PhotosList[0]?.photos.slice(0, 6).map((photo) => ({
-  src: typeof photo.src === 'string' ? photo.src : photo.src.src,
-  alt: photo.alt,
-})) ?? []
+const totalPhotos = galleryPhotos.length
+const latestAlbum = PhotosList[0]
+const featuredPhoto = galleryPhotos[0]
 ---
 
-<Layout {title} {description}>
-  <div class="relative z-[1] px-6 py-8 pb-10 sm:px-8">
-    <div class="pointer-events-none absolute inset-y-0 left-1/2 -z-10 w-screen -translate-x-1/2 overflow-hidden">
-      <div class="absolute inset-0 dark:hidden opacity-30">
-        <Threads color={[0.2, 0.24, 0.3]} amplitude={1.2} distance={0.2} client:load />
-      </div>
-      <div class="absolute inset-0 hidden dark:block opacity-36">
-        <Threads color={[0.58, 0.66, 0.74]} amplitude={1.28} distance={0.2} client:load />
-      </div>
-      <div class="absolute inset-0 bg-[radial-gradient(circle_at_20%_0%,rgba(94,138,168,0.16),transparent_38%),radial-gradient(circle_at_88%_24%,rgba(150,170,190,0.16),transparent_34%)] dark:bg-[radial-gradient(circle_at_20%_0%,rgba(120,166,196,0.2),transparent_38%),radial-gradient(circle_at_88%_24%,rgba(98,116,136,0.2),transparent_34%)]"></div>
-      <div class="absolute inset-0 bg-gradient-to-b from-background/24 via-background/10 to-background/70"></div>
-    </div>
+<Layout {title} {description} fullWidth>
+  <div class="min-h-screen bg-[#f4f4f0] text-black dark:bg-[#242423] dark:text-white">
+    <section class="w-full px-4 py-14 sm:px-6 sm:py-20 lg:px-8">
+      <div class="border-b border-black pb-8 dark:border-white/35">
+        <div class="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
+          <div class="max-w-3xl">
+            <p class="text-[0.72rem] uppercase tracking-[0.14em] text-black/48 dark:text-white/45">Photo Journal</p>
+            <h1 class="mt-4 text-[clamp(2.5rem,6vw,4.75rem)] leading-[1.02] tracking-[-0.06em]">{title}</h1>
+            <p class="mt-5 max-w-[48rem] text-base leading-8 text-black/66 sm:text-lg dark:text-white/66">
+              {introduce}
+            </p>
+          </div>
 
-    <PageTitle {title} {introduce} />
+          <div class="grid w-full max-w-xl grid-cols-1 gap-3 sm:grid-cols-3">
+            <div class="rounded-lg border border-black bg-white px-4 py-4 dark:border-white/35 dark:bg-black">
+              <p class="text-[0.72rem] uppercase tracking-[0.12em] text-black/48 dark:text-white/48">Albums</p>
+              <p class="mt-2 text-3xl leading-none tracking-[-0.05em]">{totalAlbums}</p>
+            </div>
+            <div class="rounded-lg border border-black bg-white px-4 py-4 dark:border-white/35 dark:bg-black">
+              <p class="text-[0.72rem] uppercase tracking-[0.12em] text-black/48 dark:text-white/48">Frames</p>
+              <p class="mt-2 text-3xl leading-none tracking-[-0.05em]">{totalPhotos}</p>
+            </div>
+            <div class="rounded-lg border border-black bg-white px-4 py-4 dark:border-white/35 dark:bg-black">
+              <p class="text-[0.72rem] uppercase tracking-[0.12em] text-black/48 dark:text-white/48">Updated</p>
+              <p class="mt-2 text-2xl leading-none tracking-[-0.05em]">{latestAlbum?.date ?? 'Soon'}</p>
+            </div>
+          </div>
+        </div>
+      </div>
 
-    <section class="mt-8 overflow-hidden rounded-2xl border border-border/70 bg-background/55 backdrop-blur-sm">
-      <div class="grid gap-0 lg:grid-cols-[1.2fr_0.8fr]">
-        <div class="p-6 sm:p-7">
-          <p class="text-xs uppercase tracking-[0.15em] text-muted-foreground">Photo Journal</p>
-          <h2 class="mt-3 max-w-[20ch] font-sans text-[clamp(1.5rem,3.2vw,2.4rem)] leading-[1.12] tracking-tight text-foreground">
-            在日常细节里，留下可回看、可回忆、可被再次感动的瞬间。
-          </h2>
-          <p class="mt-4 max-w-[48ch] text-sm leading-6 text-muted-foreground">
-            这不是作品集，而是生活痕迹。每一组照片都按时间归档，按情绪呈现。
+      <div class="mt-8 flex flex-wrap gap-2">
+        <span class="inline-flex items-center rounded-sm bg-black px-3 py-2 text-sm text-white dark:bg-white dark:text-black">
+          All frames ({totalPhotos})
+        </span>
+        {PhotosList.map((album) => (
+          <span class="inline-flex items-center gap-2 rounded-sm border border-black bg-white px-3 py-2 text-sm text-black dark:border-white/35 dark:bg-black dark:text-white">
+            <span>{album.title}</span>
+            <span class="text-black/50 dark:text-white/50">({album.photos.length})</span>
+          </span>
+        ))}
+      </div>
+
+      <div class="mt-8 grid gap-8 lg:grid-cols-[minmax(0,1.35fr)_24rem]">
+        {featuredPhoto && (
+          <article class="overflow-hidden rounded-lg border border-black bg-white dark:border-white/35 dark:bg-black">
+            <div class="aspect-[4/3] overflow-hidden border-b border-black bg-[#ece9df] dark:border-white/35 dark:bg-[#111]">
+              <img
+                src={featuredPhoto.src}
+                alt={featuredPhoto.alt}
+                width={featuredPhoto.width}
+                height={featuredPhoto.height}
+                class="h-full w-full object-cover"
+                loading="eager"
+                decoding="async"
+              />
+            </div>
+            <div class="grid gap-3 p-6">
+              <p class="text-[0.72rem] uppercase tracking-[0.14em] text-black/48 dark:text-white/48">Featured frame</p>
+              <h2 class="text-[clamp(1.8rem,3vw,3rem)] leading-[1.04] tracking-[-0.05em]">
+                {featuredPhoto.description ?? featuredPhoto.alt}
+              </h2>
+              <p class="text-base leading-8 text-black/66 dark:text-white/66">
+                Click any frame below to open the lightbox. The page keeps the same editorial shell as the rest of the site, but
+                lets the photography stay dominant.
+              </p>
+              <p class="text-sm uppercase tracking-[0.12em] text-black/48 dark:text-white/48">
+                {[featuredPhoto.album, featuredPhoto.date].filter(Boolean).join(' · ')}
+              </p>
+            </div>
+          </article>
+        )}
+
+        <aside class="rounded-lg border border-black bg-white p-5 dark:border-white/35 dark:bg-black">
+          <p class="text-[0.72rem] uppercase tracking-[0.14em] text-black/48 dark:text-white/45">Recent sets</p>
+          <ul class="mt-4 divide-y divide-black/12 dark:divide-white/12">
+            {PhotosList.map((album) => (
+              <li class="py-4 first:pt-0 last:pb-0">
+                <div class="flex items-start justify-between gap-4">
+                  <div>
+                    <h3 class="text-2xl leading-tight tracking-[-0.04em]">{album.title}</h3>
+                    <p class="mt-2 text-sm leading-7 text-black/64 dark:text-white/64">{album.description}</p>
+                  </div>
+                  <div class="rounded-md border border-black px-3 py-2 text-right text-sm dark:border-white/35">
+                    <p>{album.photos.length}</p>
+                    <p class="mt-1 text-[0.68rem] uppercase tracking-[0.12em] text-black/45 dark:text-white/45">frames</p>
+                  </div>
+                </div>
+                <p class="mt-3 text-sm uppercase tracking-[0.12em] text-black/45 dark:text-white/45">{album.date}</p>
+              </li>
+            ))}
+          </ul>
+        </aside>
+      </div>
+
+      <section class="mt-14 border-t border-black pt-8 dark:border-white/35">
+        <div class="mb-8 flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
+          <div>
+            <p class="text-[0.72rem] uppercase tracking-[0.14em] text-black/48 dark:text-white/45">Gallery</p>
+            <h2 class="mt-3 text-[clamp(1.9rem,4vw,3.15rem)] leading-[1.04] tracking-[-0.05em]">Recent Frames</h2>
+          </div>
+          <p class="max-w-xl text-sm leading-7 text-black/62 dark:text-white/62">
+            A running archive of daily fragments, loaded progressively as you scroll. Open any image to browse the sequence in a
+            dedicated lightbox.
           </p>
         </div>
 
-        <div class="grid grid-cols-3 border-t border-border/60 lg:border-t-0 lg:border-l">
-          <div class="col-span-1 border-b border-r border-border/60 p-4 sm:p-5">
-            <p class="text-xs uppercase tracking-[0.12em] text-muted-foreground">Albums</p>
-            <p class="mt-2 font-sans text-2xl font-semibold tracking-tight">{totalAlbums}</p>
-          </div>
-          <div class="col-span-2 border-b border-border/60 p-4 sm:p-5">
-            <p class="text-xs uppercase tracking-[0.12em] text-muted-foreground">Photos</p>
-            <p class="mt-2 font-sans text-2xl font-semibold tracking-tight">{totalPhotos}</p>
-          </div>
-          <div class="col-span-3 p-4 sm:p-5">
-            <p class="text-xs uppercase tracking-[0.12em] text-muted-foreground">Latest Update</p>
-            <p class="mt-2 text-lg font-medium tracking-tight text-foreground">{latestDate}</p>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    {featuredPhotos.length > 0 && (
-      <section class="mt-6">
-        <div class="mb-4 flex items-center justify-between">
-          <h3 class="font-sans text-lg font-semibold tracking-tight text-foreground">精选预览</h3>
-          <span class="text-xs uppercase tracking-[0.12em] text-muted-foreground">{featuredPhotos.length} shots</span>
-        </div>
-        <div class="grid grid-cols-2 gap-3 sm:grid-cols-3">
-          {
-            featuredPhotos.map((photo) => (
-              <div class="group relative overflow-hidden rounded-xl border border-border/60 bg-muted/20">
-                <img
-                  src={photo.src}
-                  alt={photo.alt}
-                  loading="lazy"
-                  decoding="async"
-                  class="aspect-[4/3] w-full object-cover transition-transform duration-500 group-hover:scale-[1.04]"
-                />
-              </div>
-            ))
-          }
-        </div>
-      </section>
-    )}
-
-    <section class="mt-10">
-      <div class="mb-6 flex items-end justify-between gap-3">
-        <div>
-          <p class="text-xs uppercase tracking-[0.14em] text-muted-foreground">Timeline</p>
-          <h3 class="mt-1 font-sans text-2xl font-semibold tracking-tight text-foreground">按时间浏览</h3>
-        </div>
-      </div>
-      {
-        PhotosList.length > 0 ? (
-          <PhotoTimeline photoData={PhotosList} class="rounded-2xl border border-border/60 bg-background/45 p-4 sm:p-6" />
+        {galleryPhotos.length > 0 ? (
+          <MasonryPhotoFeed photos={galleryPhotos} initialCount={9} loadStep={6} client:visible />
         ) : (
-          <div class="mb-4 text-muted-foreground">
-            <p class="text-sm">No photos yet, wait for me to return, OvO</p>
-          </div>
-        )
-      }
+          <p class="text-sm text-black/56 dark:text-white/56">No photos yet, wait for me to return.</p>
+        )}
+      </section>
     </section>
   </div>
 </Layout>

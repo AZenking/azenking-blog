@@ -1,181 +1,151 @@
 ---
-import { HEADER_LINKS } from '~/config'
-import { SITE } from '~/config'
-import { SOCIAL_LINKS } from '~/config'
+import { SITE, SOCIAL_LINKS } from '~/config'
 import ThemeToggle from '~/components/theme/ThemeToggle'
 import SearchSwitch from '~/components/base/SearchSwitch.astro'
 
-const githubLink = SOCIAL_LINKS.find((item) => item.name.toLowerCase() === 'github')?.url
+const navLinks = [
+  { name: '首页', url: '/' },
+  { name: '文章', url: '/posts' },
+  { name: '照片', url: '/photos' },
+  { name: '朋友', url: '/friends' },
+  { name: '分类', url: '/tags' },
+]
 
-const navIconMap: Record<string, string> = {
-  Posts: 'icon-[ri--article-line]',
-  Projects: 'icon-[ri--lightbulb-line]',
-  Photos: 'icon-[ri--camera-3-line]',
-  Friends: 'icon-[ri--heart-line]',
+const isLinkActive = (linkUrl: string, pathname: string) => {
+  if (linkUrl.startsWith('/#')) return false
+  if (linkUrl === '/') return pathname === '/'
+  return pathname.startsWith(linkUrl)
 }
+
+const githubLink = SOCIAL_LINKS.find((link) => link.name === 'github')
 ---
 
-<style>
-  /* Nav Link Underline Animation */
-  .nav-link {
-    position: relative;
-  }
+<header class="sticky top-0 z-40 border-b border-black bg-[#f4f4f0] text-black dark:border-white/35 dark:bg-black dark:text-white">
+  <div class="mx-auto flex h-20 w-full max-w-[96rem] items-center justify-between px-4 sm:px-6 lg:px-8">
+    <div class="flex min-w-0 items-center gap-2 sm:gap-3">
+      <a href="/" class="inline-flex min-w-0 items-center gap-3 no-underline" transition:persist>
+        <span class="inline-flex size-9 shrink-0 items-center justify-center rounded-sm border border-black bg-white p-1 dark:border-white/35 dark:bg-black">
+          <img src="/avatar.svg" alt="" class="themed-svg size-full object-contain" loading="eager" decoding="async" />
+        </span>
+        <span class="truncate text-[1rem] font-medium tracking-[-0.025em] sm:text-[1.05rem]">
+          {SITE.author}
+        </span>
+      </a>
 
-  .nav-link::after {
-    content: '';
-    position: absolute;
-    bottom: -2px;
-    left: 0;
-    width: 0;
-    height: 1px;
-    background: currentColor;
-    transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  }
+      {githubLink && (
+        <a
+          href={githubLink.url}
+          target="_blank"
+          rel="noreferrer"
+          class="hidden items-center gap-1.5 rounded-full border border-black bg-white px-2.5 py-1.5 text-sm font-medium text-black no-underline transition-all duration-150 hover:-translate-x-[2px] hover:-translate-y-[2px] hover:bg-[#fff8fd] hover:shadow-[2px_2px_0_0_#000] dark:border-white/35 dark:bg-black dark:text-white dark:hover:bg-zinc-900 dark:hover:shadow-[2px_2px_0_0_rgba(255,255,255,0.35)] sm:inline-flex"
+        >
+          <span class:list={[githubLink.icon, 'size-4']}></span>
+          <span>GitHub</span>
+        </a>
+      )}
+    </div>
 
-  .nav-link:hover::after,
-  .nav-link.active::after {
-    width: 100%;
-  }
+    <div class="hidden h-full items-stretch lg:flex">
+      <nav class="flex items-center gap-1 px-6" aria-label="主导航">
+        {navLinks.map((link) => (
+          <a
+            href={link.url}
+            class:list={[
+              'inline-flex items-center justify-center rounded-full border px-4 py-2 text-[0.95rem] font-normal leading-none whitespace-nowrap no-underline transition-colors duration-200',
+              isLinkActive(link.url, Astro.url.pathname)
+                ? 'border-black bg-black text-white dark:border-white dark:bg-white dark:text-black'
+                : 'border-transparent text-black hover:border-black hover:bg-black hover:text-white dark:text-white dark:hover:border-white/35 dark:hover:bg-white dark:hover:text-black',
+            ]}
+            aria-current={isLinkActive(link.url, Astro.url.pathname) ? 'page' : undefined}
+          >
+            {link.name}
+          </a>
+        ))}
+      </nav>
 
-  /* Icon Button Hover Effect */
-  .icon-btn {
-    position: relative;
-    overflow: hidden;
-  }
+      <div class="flex h-full items-stretch border-l border-black dark:border-white/35">
+        <div class="hidden sm:flex" transition:persist="header-search-switch">
+          <SearchSwitch
+            className="h-full rounded-none border-y-0 border-r-0 border-l border-black bg-white px-5 text-[0.95rem] font-normal text-black hover:bg-[#ff90e8] hover:text-black dark:border-white/35 dark:bg-black dark:text-white dark:hover:bg-white dark:hover:text-black"
+          />
+        </div>
+        <ThemeToggle
+          client:load
+          className="h-full w-[4.5rem] rounded-none border-y-0 border-r-0 border-l border-black bg-black text-white hover:bg-[#ff90e8] hover:text-black dark:border-white/35 dark:bg-white dark:text-black dark:hover:bg-[#ff90e8]"
+        />
+      </div>
+    </div>
 
-  .icon-btn::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: currentColor;
-    opacity: 0;
-    transition: opacity 0.2s ease;
-    border-radius: inherit;
-  }
+    <div class="flex items-center gap-2 lg:hidden">
+      <ThemeToggle
+        client:load
+        className="size-10 rounded-sm border-black bg-white text-black hover:bg-[#ff90e8] hover:text-black dark:border-white/35 dark:bg-transparent dark:text-white dark:hover:bg-white dark:hover:text-black"
+      />
+      <button
+        id="header-menu-button"
+        class="relative flex size-10 items-center justify-center"
+        type="button"
+        aria-expanded="false"
+        aria-controls="header-mobile-menu"
+        aria-label="切换导航菜单"
+      >
+        <span
+          data-header-line="top"
+          class="absolute h-0.5 w-6 -translate-y-[5px] bg-current transition-transform duration-200"
+        ></span>
+        <span
+          data-header-line="bottom"
+          class="absolute h-0.5 w-6 translate-y-[5px] bg-current transition-transform duration-200"
+        ></span>
+      </button>
+    </div>
+  </div>
 
-  .icon-btn:hover::before {
-    opacity: 0.08;
-  }
-
-  /* Logo Mark */
-  .logo-mark {
-    width: 6px;
-    height: 6px;
-    background: currentColor;
-    border-radius: 50%;
-    animation: logo-pulse 3s ease-in-out infinite;
-  }
-
-  @keyframes logo-pulse {
-    0%, 100% {
-      opacity: 1;
-      transform: scale(1);
-    }
-    50% {
-      opacity: 0.7;
-      transform: scale(0.9);
-    }
-  }
-
-  /* Custom breakpoint at 960px */
-  @media (max-width: 960px) {
-    .show-text {
-      display: none !important;
-    }
-    .show-icon {
-      display: inline-flex !important;
-    }
-  }
-
-  @media (min-width: 961px) {
-    .show-icon {
-      display: none !important;
-    }
-    .show-text {
-      display: inline-flex !important;
-    }
-  }
-</style>
-
-<header class="border-b border-border/40">
-  <div class="flex items-center justify-end h-16 px-4 sm:px-6 gap-3 sm:gap-4">
-    <!-- Logo (Left, minimal) -->
-    <a
-      href="/"
-      class="mr-auto flex items-center gap-3 text-lg sm:text-xl font-semibold tracking-tight text-foreground transition-opacity hover:opacity-70"
-      transition:persist
-    >
-      <span class="logo-mark"></span>
-      <span class="font-sans">{SITE.author}</span>
-    </a>
-
-    <!-- Navigation -->
-    <nav class="flex items-center gap-1">
-      {HEADER_LINKS.map((link) => (
+  <div id="header-mobile-menu" class="hidden border-t border-black bg-[#f4f4f0] dark:border-white/35 dark:bg-black lg:hidden">
+    <nav class="flex flex-col gap-2 p-4" aria-label="移动端导航">
+      {navLinks.map((link) => (
         <a
           href={link.url}
           class:list={[
-            'nav-link px-3 py-1.5 text-sm font-medium text-muted-foreground transition-colors hover:text-foreground',
-            Astro.url.pathname.startsWith(link.url) && 'active text-foreground',
+            'flex items-center justify-center rounded-sm border px-4 py-3 text-base no-underline transition-colors duration-200',
+            isLinkActive(link.url, Astro.url.pathname)
+              ? 'border-black bg-black text-white dark:border-white dark:bg-white dark:text-black'
+              : 'border-black/15 bg-transparent text-black hover:bg-black hover:text-white dark:border-white/20 dark:text-white dark:hover:bg-white dark:hover:text-black',
           ]}
-          title={link.name}
+          aria-current={isLinkActive(link.url, Astro.url.pathname) ? 'page' : undefined}
         >
-          <span class="show-text">{link.name}</span>
-          <span class:list={['text-lg show-icon', navIconMap[link.name]]}></span>
+          {link.name}
         </a>
       ))}
-      {githubLink && (
-        <a
-          href={githubLink}
-          target="_blank"
-          rel="noreferrer"
-          class="nav-link px-3 py-1.5 text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
-          title="GitHub"
-        >
-          <span class="show-text">GitHub</span>
-          <span class="icon-[ri--github-line] text-lg show-icon"></span>
-        </a>
-      )}
     </nav>
-
-    <!-- Right Actions -->
-    <div class="flex items-center gap-1" transition:persist="header-theme-toggle">
-      <!-- Search Icon (small screens) -->
-      <button
-        id="search-trigger"
-        aria-label="Search"
-        class="show-icon icon-btn p-2 rounded text-muted-foreground transition-colors hover:text-foreground"
-      >
-        <span class="icon-[ri--search-2-line] text-base"></span>
-      </button>
-
-      <!-- Search Input (large screens) -->
-      <div class="show-text">
-        <SearchSwitch />
-      </div>
-
-      <!-- RSS -->
-      <a
-        href="/atom.xml"
-        target="_blank"
-        class="icon-btn p-1.5 rounded text-muted-foreground transition-colors hover:text-foreground"
-        aria-label="RSS Feed"
-        title="RSS Feed"
-      >
-        <span class="icon-[ri--rss-line] text-[16px]"></span>
-      </a>
-
-      <!-- Theme Toggle -->
-      <div class="icon-btn p-1.5 rounded">
-        <ThemeToggle client:load />
-      </div>
-    </div>
   </div>
 </header>
 
 <script>
-  // Mobile search trigger
-  document.getElementById('search-trigger')?.addEventListener('click', () => {
-    document.getElementById('search-input')?.focus()
+  const menuButton = document.getElementById('header-menu-button')
+  const mobileMenu = document.getElementById('header-mobile-menu')
+  const topLine = document.querySelector('[data-header-line="top"]')
+  const bottomLine = document.querySelector('[data-header-line="bottom"]')
+
+  const syncMenuState = (expanded: boolean) => {
+    menuButton?.setAttribute('aria-expanded', expanded ? 'true' : 'false')
+    mobileMenu?.classList.toggle('hidden', !expanded)
+    topLine?.classList.toggle('-translate-y-[5px]', !expanded)
+    topLine?.classList.toggle('translate-y-0', expanded)
+    topLine?.classList.toggle('rotate-45', expanded)
+    bottomLine?.classList.toggle('translate-y-[5px]', !expanded)
+    bottomLine?.classList.toggle('translate-y-0', expanded)
+    bottomLine?.classList.toggle('-rotate-45', expanded)
+  }
+
+  syncMenuState(false)
+
+  menuButton?.addEventListener('click', () => {
+    const expanded = menuButton.getAttribute('aria-expanded') === 'true'
+    syncMenuState(!expanded)
+  })
+
+  mobileMenu?.querySelectorAll('a').forEach((link) => {
+    link.addEventListener('click', () => syncMenuState(false))
   })
 </script>

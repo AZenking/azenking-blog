@@ -1,120 +1,211 @@
 ---
-import { cn } from '~/lib/utils'
-import { PROJECTS_CONFIG } from '~/config'
-import Layout from '~/layouts/Layout.astro'
-import SectionDivider from '~/components/base/SectionDivider.astro'
-import NumberTicker from '~/components/base/NumberTicker'
 import { Image } from 'astro:assets'
+import { PROJECTS_CONFIG } from '~/config'
 import { getAllProjects } from '~/lib/data'
-import PageTitle from '~/components/base/PageTitle.astro'
-import Squares from '~/components/reactbits/Squares'
+import Layout from '~/layouts/Layout.astro'
 
 const { title, description, introduce } = PROJECTS_CONFIG
 const projects = await getAllProjects()
+const totalStars = projects.reduce((sum, project) => sum + (project.data.star ?? 0), 0)
+const totalForks = projects.reduce((sum, project) => sum + (project.data.fork ?? 0), 0)
+const featuredProject = projects[0]
+const gridProjects = projects.slice(1)
 ---
 
-<Layout {title} {description}>
-  <div class="relative z-[1] min-h-screen py-8 pb-10">
-    <div class="pointer-events-none absolute inset-0 left-1/2 -z-10 w-screen -translate-x-1/2 overflow-hidden">
-      <div class="absolute inset-0 opacity-35">
-        <Squares direction="diagonal" speed={0.35} borderColor="#4b4b65" hoverFillColor="#1f1f35" squareSize={44} client:load />
+<Layout {title} {description} fullWidth>
+  <div class="min-h-screen bg-[#f4f4f0] text-black dark:bg-[#242423] dark:text-white">
+    <section class="w-full px-4 py-14 sm:px-6 sm:py-20 lg:px-8">
+      <div class="border-b border-black pb-8 dark:border-white/35">
+        <div class="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
+          <div class="max-w-3xl">
+            <p class="text-[0.72rem] uppercase tracking-[0.14em] text-black/48 dark:text-white/45">Selected Work</p>
+            <h1 class="mt-4 text-[clamp(2.5rem,6vw,4.75rem)] leading-[1.02] tracking-[-0.06em]">{title}</h1>
+            <p class="mt-5 max-w-[48rem] text-base leading-8 text-black/66 sm:text-lg dark:text-white/66">{introduce}</p>
+          </div>
+
+          <div class="grid w-full max-w-xl grid-cols-1 gap-3 sm:grid-cols-3">
+            <div class="rounded-lg border border-black bg-white px-4 py-4 dark:border-white/35 dark:bg-black">
+              <p class="text-[0.72rem] uppercase tracking-[0.12em] text-black/48 dark:text-white/48">Projects</p>
+              <p class="mt-2 text-3xl leading-none tracking-[-0.05em]">{projects.length}</p>
+            </div>
+            <div class="rounded-lg border border-black bg-white px-4 py-4 dark:border-white/35 dark:bg-black">
+              <p class="text-[0.72rem] uppercase tracking-[0.12em] text-black/48 dark:text-white/48">Stars</p>
+              <p class="mt-2 text-3xl leading-none tracking-[-0.05em]">{totalStars}</p>
+            </div>
+            <div class="rounded-lg border border-black bg-white px-4 py-4 dark:border-white/35 dark:bg-black">
+              <p class="text-[0.72rem] uppercase tracking-[0.12em] text-black/48 dark:text-white/48">Forks</p>
+              <p class="mt-2 text-3xl leading-none tracking-[-0.05em]">{totalForks}</p>
+            </div>
+          </div>
+        </div>
       </div>
-      <div class="absolute inset-0 bg-gradient-to-b from-background/24 via-transparent to-background/46"></div>
-    </div>
 
-    <div class="px-6 sm:px-8">
-      <PageTitle {title} {introduce} />
-    </div>
-    <div class="grid grid-cols-1 fade-up">
-      {
-        projects.map((project, index) => {
-          let githubRepo = undefined
-          if (project.data.githubUrl) {
-            try {
-              const urlObj = new URL(project.data.githubUrl)
-              if (urlObj.hostname.includes('github.com')) {
-                githubRepo = urlObj.pathname.replace(/^\/|\/$/g, '')
-              }
-            } catch (e) {}
-          }
-
-          return (
-            <div>
-              <div class="group relative hover:bg-muted/30 dark:hover:bg-muted/30 transition-colors duration-300 px-6 sm:px-8 py-4 ">
-                <div class="absolute right-8 top-4 hidden sm:block">
-                  {project.data.type == 'icon' && <span class={cn('size-10', project.data.icon)} />}
-                  {project.data.type == 'image' && project.data?.icon && (
-                    <Image
-                      src={project.data?.icon}
-                      alt="icon"
-                      width={40}
-                      height={40}
-                      class={cn(project.data.imageClass)}
-                      densities={[1, 2]}
-                      loading="lazy"
-                    />
-                  )}
-                </div>
-                <a
-                  href={project.data.website}
-                  target="_blank"
-                  class="inline-flex items-center justify-between font-semibold text-lg/relaxed "
-                >
-                  {project.data.name}
-                </a>
-                <p class="pr-0 sm:pr-14 text-muted-foreground mb-3">{project.data.description}</p>
-                <div class="flex flex-col sm:flex-row gap-4 sm:gap-0 items-start sm:items-center justify-between sm:h-14">
-                  <div class="flex gap-4 ">
-                    <div class="flex items-center py-1.5 gap-3">
-                      {project.data.star != null && (
-                        <>
-                          <span class="text-xs uppercase tracking-wide font-medium text-muted-foreground">Stars</span>
-                          <span class="font-semibold text-lg tracking-wider">
-                            <NumberTicker play value={project.data.star} client:load githubRepo={githubRepo} githubType="stars" />
-                          </span>
-                        </>
-                      )}
-                    </div>
-                    <div class="flex items-center py-1.5 gap-3">
-                      {project.data.fork != null && (
-                        <>
-                          <span class="text-xs uppercase tracking-wide font-medium text-muted-foreground">Forks</span>
-                          <span class="font-semibold text-lg tracking-wider">
-                            <NumberTicker play value={project.data.fork} client:load githubRepo={githubRepo} githubType="forks" />
-                          </span>
-                        </>
-                      )}
-                    </div>
+      {featuredProject ? (
+        <>
+          <div class="mt-8 grid gap-8 lg:grid-cols-[minmax(0,1.35fr)_24rem]">
+            <article class="overflow-hidden rounded-lg border border-black bg-white dark:border-white/35 dark:bg-black">
+              <div class="border-b border-black px-6 py-6 dark:border-white/35">
+                <div class="flex items-start gap-4">
+                  <div class="inline-flex size-14 shrink-0 items-center justify-center rounded-lg border border-black bg-[#ff90e8] text-xl text-black dark:border-white/35">
+                    {featuredProject.data.type === 'icon' && typeof featuredProject.data.icon === 'string' ? (
+                      <span class={featuredProject.data.icon} />
+                    ) : featuredProject.data.icon ? (
+                      <Image
+                        src={featuredProject.data.icon}
+                        alt={featuredProject.data.name}
+                        width={48}
+                        height={48}
+                        class={featuredProject.data.imageClass ?? 'size-12'}
+                        densities={[1, 2]}
+                        loading="eager"
+                      />
+                    ) : (
+                      <span>↗</span>
+                    )}
                   </div>
-                  <div class="flex items-center gap-5 text-zinc-500 text-sm z-10 ">
-                    {project.data.website && (
-                      <a
-                        href={project.data.website}
-                        target="_blank"
-                        class="hover:text-zinc-600 dark:hover:text-zinc-100 flex items-center gap-1"
-                      >
-                        <span class="icon-[mdi--web] size-4" />
-                        <span>Website</span>
-                      </a>
-                    )}
-                    {project.data.githubUrl && (
-                      <a
-                        href={project.data.githubUrl}
-                        target="_blank"
-                        class="hover:text-zinc-600 dark:hover:text-zinc-100 flex items-center gap-1"
-                      >
-                        <span class="icon-[mdi--github] size-4" />
-                        <span>GitHub</span>
-                      </a>
-                    )}
+
+                  <div class="min-w-0">
+                    <p class="text-[0.72rem] uppercase tracking-[0.12em] text-black/48 dark:text-white/48">Featured project</p>
+                    <h2 class="mt-2 text-[clamp(1.8rem,3.4vw,3rem)] leading-[1.04] tracking-[-0.05em]">{featuredProject.data.name}</h2>
                   </div>
                 </div>
               </div>
-              <SectionDivider className={index == projects.length - 1 ? 'hidden' : ''} />
+
+              <div class="grid gap-5 p-6">
+                <p class="max-w-3xl text-base leading-8 text-black/68 dark:text-white/68">{featuredProject.data.description}</p>
+
+                <div class="flex flex-wrap gap-2">
+                  <span class="inline-flex rounded-sm border border-black px-3 py-2 text-sm dark:border-white/35">
+                    Stars {featuredProject.data.star}
+                  </span>
+                  <span class="inline-flex rounded-sm border border-black px-3 py-2 text-sm dark:border-white/35">
+                    Forks {featuredProject.data.fork}
+                  </span>
+                </div>
+
+                <div class="flex flex-wrap gap-3">
+                  {featuredProject.data.website && (
+                    <a
+                      href={featuredProject.data.website}
+                      target="_blank"
+                      rel="noreferrer"
+                      class="inline-flex items-center gap-2 rounded-sm bg-black px-4 py-2.5 text-sm text-white no-underline transition-all hover:-translate-x-px hover:-translate-y-px hover:shadow-[2px_2px_0_0_#000] dark:bg-white dark:text-black dark:hover:shadow-[2px_2px_0_0_rgba(255,255,255,0.35)]"
+                    >
+                      <span class="icon-[mdi--web] size-4" />
+                      <span>Visit site</span>
+                    </a>
+                  )}
+                  {featuredProject.data.githubUrl && (
+                    <a
+                      href={featuredProject.data.githubUrl}
+                      target="_blank"
+                      rel="noreferrer"
+                      class="inline-flex items-center gap-2 rounded-sm border border-black bg-white px-4 py-2.5 text-sm text-black no-underline transition-all hover:-translate-x-px hover:-translate-y-px hover:shadow-[2px_2px_0_0_#000] dark:border-white/35 dark:bg-black dark:text-white dark:hover:shadow-[2px_2px_0_0_rgba(255,255,255,0.35)]"
+                    >
+                      <span class="icon-[mdi--github] size-4" />
+                      <span>Source</span>
+                    </a>
+                  )}
+                </div>
+              </div>
+            </article>
+
+            <aside class="rounded-lg border border-black bg-white p-5 dark:border-white/35 dark:bg-black">
+              <p class="text-[0.72rem] uppercase tracking-[0.14em] text-black/48 dark:text-white/45">Project index</p>
+              <ul class="mt-4 divide-y divide-black/12 dark:divide-white/12">
+                {projects.map((project) => (
+                  <li class="py-4 first:pt-0 last:pb-0">
+                    <div class="flex items-start justify-between gap-4">
+                      <div>
+                        <h3 class="text-2xl leading-tight tracking-[-0.04em]">{project.data.name}</h3>
+                        <p class="mt-2 text-sm leading-7 text-black/64 dark:text-white/64">
+                          {project.data.star} stars · {project.data.fork} forks
+                        </p>
+                      </div>
+                      <div class="inline-flex size-10 items-center justify-center rounded-md border border-black dark:border-white/35">
+                        ↗
+                      </div>
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            </aside>
+          </div>
+
+          <section class="mt-14 border-t border-black pt-8 dark:border-white/35">
+            <div class="mb-8 flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
+              <div>
+                <p class="text-[0.72rem] uppercase tracking-[0.14em] text-black/48 dark:text-white/45">Archive</p>
+                <h2 class="mt-3 text-[clamp(1.9rem,4vw,3.15rem)] leading-[1.04] tracking-[-0.05em]">Builds & Experiments</h2>
+              </div>
+              <p class="max-w-xl text-sm leading-7 text-black/62 dark:text-white/62">
+                A compact archive of products, side projects, and experiments with a shared interface language.
+              </p>
             </div>
-          )
-        })
-      }
-    </div>
+
+            {gridProjects.length > 0 ? (
+              <div class="grid grid-cols-1 gap-8 md:grid-cols-2">
+                {gridProjects.map((project) => (
+                  <article class="rounded-lg border border-black bg-white p-6 transition-all duration-200 ease-out hover:-translate-x-1 hover:-translate-y-1 hover:shadow-[3px_3px_0_0_#000] dark:border-white/35 dark:bg-black dark:hover:shadow-[3px_3px_0_0_rgba(255,255,255,0.35)]">
+                    <div class="flex items-start gap-4">
+                      <div class="inline-flex size-12 shrink-0 items-center justify-center rounded-lg border border-black bg-[#ece9df] text-lg text-black dark:border-white/35 dark:bg-[#111] dark:text-white">
+                        {project.data.type === 'icon' && typeof project.data.icon === 'string' ? (
+                          <span class={project.data.icon} />
+                        ) : project.data.icon ? (
+                          <Image
+                            src={project.data.icon}
+                            alt={project.data.name}
+                            width={42}
+                            height={42}
+                            class={project.data.imageClass ?? 'size-10'}
+                            densities={[1, 2]}
+                            loading="lazy"
+                          />
+                        ) : (
+                          <span>↗</span>
+                        )}
+                      </div>
+
+                      <div class="min-w-0 flex-1">
+                        <h3 class="text-2xl leading-tight tracking-[-0.04em]">{project.data.name}</h3>
+                        <p class="mt-3 text-sm leading-7 text-black/68 dark:text-white/68">{project.data.description}</p>
+                      </div>
+                    </div>
+
+                    <div class="mt-5 flex flex-wrap gap-2">
+                      <span class="inline-flex rounded-sm border border-black px-2 py-1 text-xs uppercase tracking-[0.1em] dark:border-white/35">
+                        Stars {project.data.star}
+                      </span>
+                      <span class="inline-flex rounded-sm border border-black px-2 py-1 text-xs uppercase tracking-[0.1em] dark:border-white/35">
+                        Forks {project.data.fork}
+                      </span>
+                    </div>
+
+                    <div class="mt-5 flex flex-wrap gap-3 text-sm">
+                      {project.data.website && (
+                        <a href={project.data.website} target="_blank" rel="noreferrer" class="text-[#d64b2a] no-underline hover:text-[#b22f14]">
+                          Website
+                        </a>
+                      )}
+                      {project.data.githubUrl && (
+                        <a href={project.data.githubUrl} target="_blank" rel="noreferrer" class="text-[#d64b2a] no-underline hover:text-[#b22f14]">
+                          GitHub
+                        </a>
+                      )}
+                    </div>
+                  </article>
+                ))}
+              </div>
+            ) : (
+              <p class="text-sm text-black/56 dark:text-white/56">No additional projects available yet.</p>
+            )}
+          </section>
+        </>
+      ) : (
+        <section class="mt-10 rounded-lg border border-black bg-white px-6 py-14 text-center dark:border-white/35 dark:bg-black">
+          <p class="text-sm text-black/56 dark:text-white/56">No projects available yet.</p>
+        </section>
+      )}
+    </section>
   </div>
 </Layout>
