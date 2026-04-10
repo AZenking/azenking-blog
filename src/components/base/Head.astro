@@ -28,7 +28,8 @@ const ogImage = new URL(image || SITE.ogImage, Astro.url)
 <meta name="author" content={SITE.author} />
 
 <!-- color -->
-<meta name="theme-color" content="" />
+<meta name="theme-color" content="#f4f4f0" media="(prefers-color-scheme: light)" />
+<meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)" />
 <meta name="color-scheme" content="light dark" />
 
 <!-- icon -->
@@ -40,6 +41,7 @@ const ogImage = new URL(image || SITE.ogImage, Astro.url)
 <link rel="alternate" type="application/rss+xml" title={SITE.title} href={new URL('/rss.xml', Astro.site).href} />
 
 <link rel="dns-prefetch" href="https://cdn.jsdelivr.net" />
+<link rel="preconnect" href="https://api.github.com" crossorigin />
 
 <!-- 预加载 -->
 <!-- 中文字体启用 -->

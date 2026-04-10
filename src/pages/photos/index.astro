@@ -131,7 +131,7 @@ const featuredPhoto = galleryPhotos[0]
         </div>
 
         {galleryPhotos.length > 0 ? (
-          <MasonryPhotoFeed photos={galleryPhotos} initialCount={9} loadStep={6} client:load />
+          <MasonryPhotoFeed photos={galleryPhotos} initialCount={9} loadStep={6} client:visible />
         ) : (
           <p class="text-sm text-black/56 dark:text-white/56">No photos yet, wait for me to return.</p>
         )}

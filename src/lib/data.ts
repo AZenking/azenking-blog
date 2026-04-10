@@ -1,21 +1,16 @@
 import { getCollection, type CollectionEntry } from 'astro:content'
 
-// 文章按时间排序
-export function postsSort(posts: CollectionEntry<'posts'>[]) {
-  return posts.slice().sort((a, b) => {
+// 通用内容按时间排序
+function contentSort<T extends { data: { updatedDate?: Date; pubDate: Date } }>(items: T[]): T[] {
+  return items.slice().sort((a, b) => {
     const dateA = a.data.updatedDate ?? a.data.pubDate
     const dateB = b.data.updatedDate ?? b.data.pubDate
-    return new Date(dateB).getTime() - new Date(dateA).getTime()
+    return dateB.getTime() - dateA.getTime()
   })
 }
 
-export function notesSort(notes: CollectionEntry<'notes'>[]) {
-  return notes.slice().sort((a, b) => {
-    const dateA = a.data.updatedDate ?? a.data.pubDate
-    const dateB = b.data.updatedDate ?? b.data.pubDate
-    return new Date(dateB).getTime() - new Date(dateA).getTime()
-  })
-}
+export const postsSort = (posts: CollectionEntry<'posts'>[]) => contentSort(posts)
+export const notesSort = (notes: CollectionEntry<'notes'>[]) => contentSort(notes)
 
 // 获取所有非草稿文章，按时间排序
 export async function getAllPosts(): Promise<CollectionEntry<'posts'>[]> {

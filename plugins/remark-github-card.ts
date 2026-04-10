@@ -5,6 +5,13 @@ import type { RemarkPlugin } from '@astrojs/markdown-remark'
  * Remark plugin to transform GitHub directive into GitHub card component
  * Usage: ::github{repo="owner/repo"}
  */
+
+function escapeHtml(str: string): string {
+  return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#039;')
+}
+
+let cardCounter = 0
+
 export const remarkGithubCard: RemarkPlugin = () => {
   return (tree: any) => {
     visit(tree, (node: any) => {
@@ -40,8 +47,11 @@ export const remarkGithubCard: RemarkPlugin = () => {
             return
           }
 
-          const cardUuid = `GC${Math.random().toString(36).slice(-6)}`
+          const cardUuid = `GC${(cardCounter++).toString(36)}${Date.now().toString(36).slice(-4)}`
           const [owner, repoName] = repo.split('/')
+          const safeRepo = escapeHtml(repo)
+          const safeOwner = escapeHtml(owner)
+          const safeRepoName = escapeHtml(repoName)
 
           // Create HAST structure
           data.hName = 'div'
@@ -54,15 +64,15 @@ export const remarkGithubCard: RemarkPlugin = () => {
             {
               type: 'html',
               value: `
-<a id="${cardUuid}-card" class="card-github fetch-waiting" href="https://github.com/${repo}" target="_blank" rel="noopener noreferrer" data-repo="${repo}">
+<a id="${cardUuid}-card" class="card-github fetch-waiting" href="https://github.com/${safeRepo}" target="_blank" rel="noopener noreferrer" data-repo="${safeRepo}">
   <div class="gc-titlebar">
     <div class="gc-titlebar-left">
       <div class="gc-owner">
         <div id="${cardUuid}-avatar" class="gc-avatar"></div>
-        <div class="gc-user">${owner}</div>
+        <div class="gc-user">${safeOwner}</div>
       </div>
       <div class="gc-divider">/</div>
-      <div class="gc-repo">${repoName}</div>
+      <div class="gc-repo">${safeRepoName}</div>
     </div>
     <div class="github-logo">
       <svg height="20" width="20" viewBox="0 0 16 16" fill="currentColor">
@@ -98,7 +108,7 @@ export const remarkGithubCard: RemarkPlugin = () => {
   const card = document.getElementById(cardId);
   if (!card) return;
 
-  const repo = '${repo}';
+  const repo = '${safeRepo}';
 
   fetch(\`https://api.github.com/repos/\${repo}\`, { referrerPolicy: "no-referrer" })
     .then(response => {
@@ -154,10 +164,10 @@ export const remarkGithubCard: RemarkPlugin = () => {
 
       // Remove loading state
       card.classList.remove('fetch-waiting');
-      console.log('[GITHUB-CARD] Loaded card for ${repo}');
+      console.log('[GITHUB-CARD] Loaded card for ${safeRepo}');
     })
     .catch(err => {
-      console.warn('[GITHUB-CARD] Error loading card for ${repo}:', err);
+      console.warn('[GITHUB-CARD] Error loading card for ${safeRepo}:', err);
       card.classList.remove('fetch-waiting');
       card.classList.add('fetch-error');
       const desc = document.getElementById('${cardUuid}-description');
