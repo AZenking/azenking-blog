@@ -24,8 +24,8 @@ const githubLink = SOCIAL_LINKS.find((link) => link.name === 'github')
   <div class="mx-auto flex h-20 w-full max-w-[96rem] items-center justify-between px-4 sm:px-6 lg:px-8">
     <div class="flex min-w-0 items-center gap-2 sm:gap-3">
       <a href="/" class="inline-flex min-w-0 items-center gap-3 no-underline" transition:persist>
-        <span class="inline-flex size-9 shrink-0 items-center justify-center rounded-sm border border-black bg-black text-sm font-medium text-white dark:border-white/35 dark:bg-white dark:text-black">
-          {SITE.author.slice(0, 1)}
+        <span class="inline-flex size-9 shrink-0 items-center justify-center rounded-sm border border-black bg-white p-1 dark:border-white/35 dark:bg-black">
+          <img src="/logo.svg" alt="" class="size-full object-contain dark:invert" loading="eager" decoding="async" />
         </span>
         <span class="truncate text-[1rem] font-medium tracking-[-0.025em] sm:text-[1.05rem]">
           {SITE.author}

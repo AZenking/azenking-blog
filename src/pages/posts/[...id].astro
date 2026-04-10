@@ -81,6 +81,17 @@ const relatedPosts = posts
   image={frontmatter.ogImage?.src ? `${SITE.website}${frontmatter.ogImage.src}` : SITE.ogImage}
   fullWidth
 >
+  <script is:inline type="application/ld+json" set:html={JSON.stringify({
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    "headline": frontmatter.title,
+    "description": frontmatter.description,
+    "datePublished": frontmatter.pubDate.toISOString(),
+    "dateModified": (frontmatter.updatedDate ?? frontmatter.pubDate).toISOString(),
+    "author": { "@type": "Person", "name": displayAuthor },
+    "url": canonicalUrl,
+    ...(frontmatter.ogImage?.src ? { "image": `${SITE.website}${frontmatter.ogImage.src}` } : {}),
+  })} />
   <div class="gumroad-post min-h-screen bg-[#f4f4f0] text-black dark:bg-[#242423] dark:text-white">
     <section class="mx-auto w-full max-w-3xl px-4 py-16 sm:px-6 md:py-24 lg:px-8">
       <a
