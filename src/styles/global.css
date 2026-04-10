@@ -642,4 +642,14 @@ input[type='search']::-moz-search-cancel-button {
     border: 1px solid hsl(var(--foreground) / 0.25);
     background-color: hsl(var(--foreground) / 0.45);
   }
+
+  .themed-svg {
+    opacity: 0.68;
+    transition: opacity 180ms ease, filter 180ms ease;
+  }
+
+  .dark .themed-svg {
+    filter: invert(1);
+    opacity: 0.8;
+  }
 }

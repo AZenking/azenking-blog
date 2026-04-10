@@ -1,17 +1,3 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="none">
-  <g stroke="black" stroke-width="8" stroke-linecap="round" stroke-linejoin="round">
-    <path d="M120 180Q256 80 400 160Q420 220 360 240Q260 260 140 220Z" />
-    <path d="M180 150Q260 120 330 150" />
-    <circle cx="260" cy="150" r="20" fill="black" />
-    <path d="M140 220Q120 300 200 360Q260 400 340 360Q400 320 380 250" />
-    <circle cx="220" cy="280" r="40" />
-    <circle cx="300" cy="280" r="40" />
-    <line x1="260" y1="280" x2="260" y2="280" />
-    <circle cx="220" cy="280" r="20" fill="black" />
-    <circle cx="300" cy="280" r="20" fill="black" />
-    <path d="M240 340Q260 350 280 340" />
-    <path d="M180 240Q200 210 240 220Q280 200 320 220" />
-    <path d="M140 260Q120 280 140 300" />
-    <path d="M180 360Q260 420 340 360" />
-  </g>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024">
+  <image href="/avatar.svg" width="1024" height="1024" />
 </svg>
