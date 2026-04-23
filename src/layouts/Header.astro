@@ -1,70 +1,119 @@
 ---
-import { SITE, SOCIAL_LINKS } from '~/config'
-import ThemeToggle from '~/components/theme/ThemeToggle'
-import SearchSwitch from '~/components/base/SearchSwitch.astro'
+import SearchSwitch from "~/components/base/SearchSwitch.astro";
+import ThemeToggle from "~/components/theme/ThemeToggle";
+import { SITE, SOCIAL_LINKS } from "~/config";
 
 const navLinks = [
-  { name: '首页', url: '/' },
-  { name: '文章', url: '/posts' },
-  { name: '照片', url: '/photos' },
-  { name: '朋友', url: '/friends' },
-  { name: '分类', url: '/tags' },
-]
+  { name: "首页", url: "/" },
+  { name: "文章", url: "/posts" },
+  { name: "照片", url: "/photos" },
+  { name: "朋友", url: "/friends" },
+  { name: "分类", url: "/tags" },
+];
 
-const isLinkActive = (linkUrl: string, pathname: string) => {
-  if (linkUrl.startsWith('/#')) return false
-  if (linkUrl === '/') return pathname === '/'
-  return pathname.startsWith(linkUrl)
-}
+const isLinkActive = (
+  linkUrl: string,
+  pathname: string,
+) => {
+  if (linkUrl.startsWith("/#")) return false;
+  if (linkUrl === "/") return pathname === "/";
+  return pathname.startsWith(linkUrl);
+};
 
-const githubLink = SOCIAL_LINKS.find((link) => link.name === 'github')
+const githubLink = SOCIAL_LINKS.find(
+  (link) => link.name === "github",
+);
 ---
 
-<header class="sticky top-0 z-40 border-b border-black bg-[#f4f4f0] text-black dark:border-white/35 dark:bg-black dark:text-white">
-  <div class="mx-auto flex h-20 w-full max-w-[96rem] items-center justify-between px-4 sm:px-6 lg:px-8">
-    <div class="flex min-w-0 items-center gap-2 sm:gap-3">
-      <a href="/" class="inline-flex min-w-0 items-center gap-3 no-underline" transition:persist>
-        <span class="inline-flex size-9 shrink-0 items-center justify-center rounded-sm border border-black bg-white p-1 dark:border-white/35 dark:bg-black">
-          <img src="/avatar.svg" alt="" class="themed-svg size-full object-contain" loading="eager" decoding="async" />
-        </span>
-        <span class="truncate text-[1rem] font-medium tracking-[-0.025em] sm:text-[1.05rem]">
-          {SITE.author}
+<header
+  class="sticky top-0 z-40 border-b border-black bg-[#f4f4f0] text-black dark:border-white/35 dark:bg-black dark:text-white"
+>
+  <div
+    class="mx-auto flex h-20 w-full max-w-[96rem] items-center justify-between px-4 sm:px-6 lg:px-8"
+  >
+    <div
+      class="flex min-w-0 items-center gap-2 sm:gap-3"
+    >
+      <a
+        href="/"
+        class="inline-flex min-w-0 items-center gap-3 no-underline"
+        transition:persist
+      >
+        <span
+          class="inline-flex size-16 shrink-0 items-center justify-center rounded-sm"
+        >
+          <img
+            src="/avatar.svg"
+            alt=""
+            class="themed-svg size-full object-contain !opacity-100 dark:!opacity-30"
+            loading="eager"
+            decoding="async"
+          />
         </span>
       </a>
 
-      {githubLink && (
-        <a
-          href={githubLink.url}
-          target="_blank"
-          rel="noreferrer"
-          class="hidden items-center gap-1.5 rounded-full border border-black bg-white px-2.5 py-1.5 text-sm font-medium text-black no-underline transition-all duration-150 hover:-translate-x-[2px] hover:-translate-y-[2px] hover:bg-[#fff8fd] hover:shadow-[2px_2px_0_0_#000] dark:border-white/35 dark:bg-black dark:text-white dark:hover:bg-zinc-900 dark:hover:shadow-[2px_2px_0_0_rgba(255,255,255,0.35)] sm:inline-flex"
-        >
-          <span class:list={[githubLink.icon, 'size-4']}></span>
-          <span>GitHub</span>
-        </a>
-      )}
+      {
+        githubLink && (
+          <a
+            href={githubLink.url}
+            target="_blank"
+            rel="noreferrer"
+            class="hidden items-center gap-1.5 rounded-full border border-black bg-white px-2.5 py-1.5 text-sm font-medium text-black no-underline transition-all duration-150 hover:-translate-x-[2px] hover:-translate-y-[2px] hover:bg-[#fff8fd] hover:shadow-[2px_2px_0_0_#000] dark:border-white/35 dark:bg-black dark:text-white dark:hover:bg-zinc-900 dark:hover:shadow-[2px_2px_0_0_rgba(255,255,255,0.35)] sm:inline-flex"
+          >
+            <span
+              class:list={[
+                githubLink.icon,
+                "size-4",
+              ]}
+            />
+            <span>GitHub</span>
+          </a>
+        )
+      }
     </div>
 
-    <div class="hidden h-full items-stretch lg:flex">
-      <nav class="flex items-center gap-1 px-6" aria-label="主导航">
-        {navLinks.map((link) => (
-          <a
-            href={link.url}
-            class:list={[
-              'inline-flex items-center justify-center rounded-full border px-4 py-2 text-[0.95rem] font-normal leading-none whitespace-nowrap no-underline transition-colors duration-200',
-              isLinkActive(link.url, Astro.url.pathname)
-                ? 'border-black bg-black text-white dark:border-white dark:bg-white dark:text-black'
-                : 'border-transparent text-black hover:border-black hover:bg-black hover:text-white dark:text-white dark:hover:border-white/35 dark:hover:bg-white dark:hover:text-black',
-            ]}
-            aria-current={isLinkActive(link.url, Astro.url.pathname) ? 'page' : undefined}
-          >
-            {link.name}
-          </a>
-        ))}
+    <div
+      class="hidden h-full items-stretch lg:flex"
+    >
+      <nav
+        class="flex items-center gap-1 px-6"
+        aria-label="主导航"
+      >
+        {
+          navLinks.map((link) => (
+            <a
+              href={link.url}
+              class:list={[
+                "inline-flex items-center justify-center rounded-full border px-4 py-2 text-[0.95rem] font-normal leading-none whitespace-nowrap no-underline transition-colors duration-200",
+                isLinkActive(
+                  link.url,
+                  Astro.url.pathname,
+                )
+                  ? "border-black bg-black text-white dark:border-white dark:bg-white dark:text-black"
+                  : "border-transparent text-black hover:border-black hover:bg-black hover:text-white dark:text-white dark:hover:border-white/35 dark:hover:bg-white dark:hover:text-black",
+              ]}
+              aria-current={
+                isLinkActive(
+                  link.url,
+                  Astro.url.pathname,
+                )
+                  ? "page"
+                  : undefined
+              }
+            >
+              {link.name}
+            </a>
+          ))
+        }
       </nav>
 
-      <div class="flex h-full items-stretch border-l border-black dark:border-white/35">
-        <div class="hidden sm:flex" transition:persist="header-search-switch">
+      <div
+        class="flex h-full items-stretch border-l border-black dark:border-white/35"
+      >
+        <div
+          class="hidden sm:flex"
+          transition:persist="header-search-switch"
+        >
           <SearchSwitch
             className="h-full rounded-none border-y-0 border-r-0 border-l border-black bg-white px-5 text-[0.95rem] font-normal text-black hover:bg-[#ff90e8] hover:text-black dark:border-white/35 dark:bg-black dark:text-white dark:hover:bg-white dark:hover:text-black"
           />
@@ -76,7 +125,9 @@ const githubLink = SOCIAL_LINKS.find((link) => link.name === 'github')
       </div>
     </div>
 
-    <div class="flex items-center gap-2 lg:hidden">
+    <div
+      class="flex items-center gap-2 lg:hidden"
+    >
       <ThemeToggle
         client:load
         className="size-10 rounded-sm border-black bg-white text-black hover:bg-[#ff90e8] hover:text-black dark:border-white/35 dark:bg-transparent dark:text-white dark:hover:bg-white dark:hover:text-black"
@@ -101,51 +152,107 @@ const githubLink = SOCIAL_LINKS.find((link) => link.name === 'github')
     </div>
   </div>
 
-  <div id="header-mobile-menu" class="hidden border-t border-black bg-[#f4f4f0] dark:border-white/35 dark:bg-black lg:hidden">
-    <nav class="flex flex-col gap-2 p-4" aria-label="移动端导航">
-      {navLinks.map((link) => (
-        <a
-          href={link.url}
-          class:list={[
-            'flex items-center justify-center rounded-sm border px-4 py-3 text-base no-underline transition-colors duration-200',
-            isLinkActive(link.url, Astro.url.pathname)
-              ? 'border-black bg-black text-white dark:border-white dark:bg-white dark:text-black'
-              : 'border-black/15 bg-transparent text-black hover:bg-black hover:text-white dark:border-white/20 dark:text-white dark:hover:bg-white dark:hover:text-black',
-          ]}
-          aria-current={isLinkActive(link.url, Astro.url.pathname) ? 'page' : undefined}
-        >
-          {link.name}
-        </a>
-      ))}
+  <div
+    id="header-mobile-menu"
+    class="hidden border-t border-black bg-[#f4f4f0] dark:border-white/35 dark:bg-black lg:hidden"
+  >
+    <nav
+      class="flex flex-col gap-2 p-4"
+      aria-label="移动端导航"
+    >
+      {
+        navLinks.map((link) => (
+          <a
+            href={link.url}
+            class:list={[
+              "flex items-center justify-center rounded-sm border px-4 py-3 text-base no-underline transition-colors duration-200",
+              isLinkActive(
+                link.url,
+                Astro.url.pathname,
+              )
+                ? "border-black bg-black text-white dark:border-white dark:bg-white dark:text-black"
+                : "border-black/15 bg-transparent text-black hover:bg-black hover:text-white dark:border-white/20 dark:text-white dark:hover:bg-white dark:hover:text-black",
+            ]}
+            aria-current={
+              isLinkActive(
+                link.url,
+                Astro.url.pathname,
+              )
+                ? "page"
+                : undefined
+            }
+          >
+            {link.name}
+          </a>
+        ))
+      }
     </nav>
   </div>
 </header>
 
 <script>
-  const menuButton = document.getElementById('header-menu-button')
-  const mobileMenu = document.getElementById('header-mobile-menu')
-  const topLine = document.querySelector('[data-header-line="top"]')
-  const bottomLine = document.querySelector('[data-header-line="bottom"]')
+  const menuButton = document.getElementById(
+    "header-menu-button",
+  );
+  const mobileMenu = document.getElementById(
+    "header-mobile-menu",
+  );
+  const topLine = document.querySelector(
+    '[data-header-line="top"]',
+  );
+  const bottomLine = document.querySelector(
+    '[data-header-line="bottom"]',
+  );
 
   const syncMenuState = (expanded: boolean) => {
-    menuButton?.setAttribute('aria-expanded', expanded ? 'true' : 'false')
-    mobileMenu?.classList.toggle('hidden', !expanded)
-    topLine?.classList.toggle('-translate-y-[5px]', !expanded)
-    topLine?.classList.toggle('translate-y-0', expanded)
-    topLine?.classList.toggle('rotate-45', expanded)
-    bottomLine?.classList.toggle('translate-y-[5px]', !expanded)
-    bottomLine?.classList.toggle('translate-y-0', expanded)
-    bottomLine?.classList.toggle('-rotate-45', expanded)
-  }
+    menuButton?.setAttribute(
+      "aria-expanded",
+      expanded ? "true" : "false",
+    );
+    mobileMenu?.classList.toggle(
+      "hidden",
+      !expanded,
+    );
+    topLine?.classList.toggle(
+      "-translate-y-[5px]",
+      !expanded,
+    );
+    topLine?.classList.toggle(
+      "translate-y-0",
+      expanded,
+    );
+    topLine?.classList.toggle(
+      "rotate-45",
+      expanded,
+    );
+    bottomLine?.classList.toggle(
+      "translate-y-[5px]",
+      !expanded,
+    );
+    bottomLine?.classList.toggle(
+      "translate-y-0",
+      expanded,
+    );
+    bottomLine?.classList.toggle(
+      "-rotate-45",
+      expanded,
+    );
+  };
 
-  syncMenuState(false)
+  syncMenuState(false);
 
-  menuButton?.addEventListener('click', () => {
-    const expanded = menuButton.getAttribute('aria-expanded') === 'true'
-    syncMenuState(!expanded)
-  })
+  menuButton?.addEventListener("click", () => {
+    const expanded =
+      menuButton.getAttribute("aria-expanded") ===
+      "true";
+    syncMenuState(!expanded);
+  });
 
-  mobileMenu?.querySelectorAll('a').forEach((link) => {
-    link.addEventListener('click', () => syncMenuState(false))
-  })
+  mobileMenu
+    ?.querySelectorAll("a")
+    .forEach((link) => {
+      link.addEventListener("click", () =>
+        syncMenuState(false),
+      );
+    });
 </script>

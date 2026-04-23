@@ -1,5 +1,5 @@
 /* ===== 导入依赖 ===== */
-@import 'tailwindcss';
+@import "tailwindcss";
 @plugin "@tailwindcss/typography";
 @plugin "@iconify/tailwind4";
 
@@ -19,11 +19,17 @@
   --color-background: hsl(var(--background));
   --color-foreground: hsl(var(--foreground));
   --color-primary: hsl(var(--primary));
-  --color-primary-foreground: hsl(var(--primary-foreground));
+  --color-primary-foreground: hsl(
+    var(--primary-foreground)
+  );
   --color-accent: hsl(var(--accent));
-  --color-accent-foreground: hsl(var(--accent-foreground));
+  --color-accent-foreground: hsl(
+    var(--accent-foreground)
+  );
   --color-muted: hsl(var(--muted));
-  --color-muted-foreground: hsl(var(--muted-foreground));
+  --color-muted-foreground: hsl(
+    var(--muted-foreground)
+  );
   --color-tag-bg: hsl(var(--tag-bg));
   --color-tag-bg-hover: hsl(var(--tag-bg-hover));
   --color-tag-border: hsl(var(--tag-border));
@@ -36,22 +42,25 @@
 @layer base {
   /* Geist 字体 */
   @font-face {
-    font-family: 'Geist';
-    src: url('/fonts/GeistVF.woff2') format('woff2');
+    font-family: "Geist";
+    src: url("/fonts/GeistVF.woff2")
+      format("woff2");
     font-display: swap;
   }
 
   /* 标题字体 */
   @font-face {
-    font-family: 'Lexend';
-    src: url('/fonts/Lexend-VariableFont_wght.woff2') format('woff2');
+    font-family: "Lexend";
+    src: url("/fonts/Lexend-VariableFont_wght.woff2")
+      format("woff2");
     font-display: swap;
   }
 
   /* 等宽字体 */
   @font-face {
-    font-family: 'GeistMono';
-    src: url('/fonts/GeistMono.woff2') format('woff2');
+    font-family: "GeistMono";
+    src: url("/fonts/GeistMono.woff2")
+      format("woff2");
     font-display: swap;
   }
 }
@@ -60,9 +69,15 @@
 @layer base {
   :root {
     /* 字体族 */
-    --font-lexend: 'Lexend', 'Geist', 'ShangguSansSC-VF', ui-sans-serif, system-ui, sans-serif;
-    --font-sans: 'Geist', 'ShangguSansSC-VF', ui-sans-serif, system-ui, sans-serif;
-    --font-geist-mono: 'GeistMono', 'Input Mono', 'Fira Code', 'ShangguSansSC-VF', monospace;
+    --font-lexend:
+      "Lexend", "Geist", "ShangguSansSC-VF",
+      ui-sans-serif, system-ui, sans-serif;
+    --font-sans:
+      "Geist", "ShangguSansSC-VF", ui-sans-serif,
+      system-ui, sans-serif;
+    --font-geist-mono:
+      "GeistMono", "Input Mono", "Fira Code",
+      "ShangguSansSC-VF", monospace;
 
     /* 基础色调 */
     --background: 48 18% 95%;
@@ -94,7 +109,9 @@
 
     /* 布局宽度变量 */
     --layout-width: 60rem;
-    --layout-half-width: calc(var(--layout-width) / 2);
+    --layout-half-width: calc(
+      var(--layout-width) / 2
+    );
     --layout-change-width: 136rem;
     --theme-reveal-x: 50vw;
     --theme-reveal-y: 50vh;
@@ -166,7 +183,9 @@
 
   body {
     @apply min-h-screen bg-background text-foreground;
-    font-feature-settings: 'ss01' 1, 'cv11' 1;
+    font-feature-settings:
+      "ss01" 1,
+      "cv11" 1;
   }
 
   /* 标题样式 */
@@ -244,7 +263,8 @@
   }
 
   .animate-subtle-pulse {
-    animation: subtle-pulse 2s ease-in-out infinite;
+    animation: subtle-pulse 2s ease-in-out
+      infinite;
   }
 
   /* 主题切换动画 */
@@ -282,26 +302,40 @@
 
 ::view-transition-new(root) {
   z-index: 9999;
-  clip-path: circle(var(--theme-reveal-radius) at var(--theme-reveal-x) var(--theme-reveal-y));
+  clip-path: circle(
+    var(--theme-reveal-radius) at
+      var(--theme-reveal-x) var(--theme-reveal-y)
+  );
 }
 
-.theme-transition-active::view-transition-old(root) {
-  animation: theme-old-fade 520ms cubic-bezier(0.22, 1, 0.36, 1) both;
+.theme-transition-active::view-transition-old(
+  root
+) {
+  animation: theme-old-fade 520ms
+    cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
-.theme-transition-to-light::view-transition-old(root) {
+.theme-transition-to-light::view-transition-old(
+  root
+) {
   z-index: 1;
 }
 
-.theme-transition-to-light::view-transition-new(root) {
+.theme-transition-to-light::view-transition-new(
+  root
+) {
   z-index: 9999;
 }
 
-.theme-transition-to-dark::view-transition-old(root) {
+.theme-transition-to-dark::view-transition-old(
+  root
+) {
   z-index: 9999;
 }
 
-.theme-transition-to-dark::view-transition-new(root) {
+.theme-transition-to-dark::view-transition-new(
+  root
+) {
   z-index: 1;
   clip-path: none;
 }
@@ -335,11 +369,13 @@
 }
 
 .fade-in {
-  animation: fade-in var(--fade-in-duration, 0.3s) forwards;
+  animation: fade-in var(--fade-in-duration, 0.3s)
+    forwards;
 }
 
 .fade-out {
-  animation: fade-out var(--fade-out-duration, 0.3s) forwards;
+  animation: fade-out
+    var(--fade-out-duration, 0.3s) forwards;
 }
 
 /* ===== 滚动条样式 ===== */
@@ -347,7 +383,8 @@
 @supports (scrollbar-width: auto) {
   * {
     scrollbar-width: auto;
-    scrollbar-color: hsl(var(--scrollbar)) hsl(var(--scrollbar-bg));
+    scrollbar-color: hsl(var(--scrollbar))
+      hsl(var(--scrollbar-bg));
   }
 }
 
@@ -368,7 +405,11 @@
     background: hsl(var(--scrollbar));
   }
   ::-webkit-scrollbar-thumb:hover {
-    background: color-mix(in srgb, hsl(var(--scrollbar)), hsl(var(--foreground)) 20%);
+    background: color-mix(
+      in srgb,
+      hsl(var(--scrollbar)),
+      hsl(var(--foreground)) 20%
+    );
   }
 }
 
@@ -395,7 +436,7 @@
   height: 0;
 }
 
-input[type='search']::-moz-search-cancel-button {
+input[type="search"]::-moz-search-cancel-button {
   display: none;
 }
 
@@ -407,7 +448,8 @@ input[type='search']::-moz-search-cancel-button {
 .search-results-item {
   display: block;
   padding: 0.875rem 1rem;
-  border-bottom: 1px solid hsl(var(--border) / 0.7);
+  border-bottom: 1px solid
+    hsl(var(--border) / 0.7);
   transition:
     background-color 0.18s ease,
     transform 0.12s ease,
@@ -415,11 +457,13 @@ input[type='search']::-moz-search-cancel-button {
 }
 
 /* 连续主结果之间增加轻微的垂直间距 */
-.search-results-item:not(.sub-result) + .search-results-item:not(.sub-result) {
+.search-results-item:not(.sub-result)
+  + .search-results-item:not(.sub-result) {
   margin-top: 0.375rem;
 }
 /* 子结果结束到下一个主结果的过渡间距 */
-.search-results-item.sub-result + .search-results-item:not(.sub-result) {
+.search-results-item.sub-result
+  + .search-results-item:not(.sub-result) {
   margin-top: 0.5rem;
 }
 
@@ -461,7 +505,8 @@ input[type='search']::-moz-search-cancel-button {
   color: hsl(var(--primary));
 }
 
-.search-results-item.sub-result .search-results-title {
+.search-results-item.sub-result
+  .search-results-title {
   font-weight: 500;
   font-size: 0.9375rem;
 }
@@ -487,7 +532,8 @@ input[type='search']::-moz-search-cancel-button {
 
 /* 搜索面板动画 */
 .search-panel-show {
-  animation: searchPanelShow 0.3s cubic-bezier(0.21, 1.02, 0.73, 1) forwards;
+  animation: searchPanelShow 0.3s
+    cubic-bezier(0.21, 1.02, 0.73, 1) forwards;
 }
 
 @keyframes searchPanelShow {
@@ -526,8 +572,11 @@ input[type='search']::-moz-search-cancel-button {
 @layer components {
   .apple-ui {
     font-family:
-      -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'SF Pro Display', 'Helvetica Neue', 'Segoe UI', 'PingFang SC',
-      'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+      -apple-system, BlinkMacSystemFont,
+      "SF Pro Text", "SF Pro Display",
+      "Helvetica Neue", "Segoe UI", "PingFang SC",
+      "Hiragino Sans GB", "Microsoft YaHei",
+      sans-serif;
   }
 
   .ui-control {
@@ -538,7 +587,11 @@ input[type='search']::-moz-search-cancel-button {
     flex-shrink: 0;
     height: var(--ui-control-height);
     padding-inline: var(--ui-control-padding-x);
-    border: 1px solid hsl(var(--border) / var(--ui-control-border-alpha));
+    border: 1px solid
+      hsl(
+        var(--border) /
+          var(--ui-control-border-alpha)
+      );
     border-radius: var(--ui-control-radius);
     background-color: hsl(var(--background));
     color: hsl(var(--foreground) / 0.72);
@@ -546,12 +599,17 @@ input[type='search']::-moz-search-cancel-button {
     font-weight: 500;
     line-height: 1;
     letter-spacing: 0.01em;
-    transition: background-color 180ms ease, border-color 180ms ease, color 180ms ease;
+    transition:
+      background-color 180ms ease,
+      border-color 180ms ease,
+      color 180ms ease;
     text-decoration: none;
   }
 
   .ui-control:hover {
-    background-color: hsl(var(--muted) / var(--ui-control-muted-alpha));
+    background-color: hsl(
+      var(--muted) / var(--ui-control-muted-alpha)
+    );
     color: hsl(var(--foreground));
   }
 
@@ -561,7 +619,7 @@ input[type='search']::-moz-search-cancel-button {
   }
 
   .ui-control.is-active,
-  .ui-control[aria-current='page'] {
+  .ui-control[aria-current="page"] {
     border-color: hsl(var(--foreground));
     background-color: hsl(var(--foreground));
     color: hsl(var(--background));
@@ -573,7 +631,11 @@ input[type='search']::-moz-search-cancel-button {
     align-items: center;
     gap: 0.25rem;
     overflow-x: auto;
-    border: 1px solid hsl(var(--border) / var(--ui-control-border-alpha));
+    border: 1px solid
+      hsl(
+        var(--border) /
+          var(--ui-control-border-alpha)
+      );
     border-radius: 0.55rem;
     padding: 0.25rem;
     background-color: hsl(var(--background));
@@ -600,7 +662,7 @@ input[type='search']::-moz-search-cancel-button {
   }
 
   .ui-menu-link::after {
-    content: '';
+    content: "";
     position: absolute;
     left: 0;
     right: 0;
@@ -617,12 +679,12 @@ input[type='search']::-moz-search-cancel-button {
   }
 
   .ui-menu-link.is-active,
-  .ui-menu-link[aria-current='page'] {
+  .ui-menu-link[aria-current="page"] {
     color: hsl(var(--foreground));
   }
 
   .ui-menu-link.is-active::after,
-  .ui-menu-link[aria-current='page']::after {
+  .ui-menu-link[aria-current="page"]::after {
     transform: scaleX(1);
   }
 
@@ -639,17 +701,22 @@ input[type='search']::-moz-search-cancel-button {
     width: 0.5rem;
     height: 0.5rem;
     border-radius: 9999px;
-    border: 1px solid hsl(var(--foreground) / 0.25);
-    background-color: hsl(var(--foreground) / 0.45);
+    border: 1px solid
+      hsl(var(--foreground) / 0.25);
+    background-color: hsl(
+      var(--foreground) / 0.45
+    );
   }
 
   .themed-svg {
-    opacity: 0.68;
-    transition: opacity 180ms ease, filter 180ms ease;
+    opacity: 0.4;
+    transition:
+      opacity 180ms ease,
+      filter 180ms ease;
   }
 
   .dark .themed-svg {
     filter: invert(1);
-    opacity: 0.8;
+    opacity: 0.1;
   }
 }
