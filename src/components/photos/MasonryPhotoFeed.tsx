@@ -1,4 +1,5 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react'
+import type React from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
 
 interface MasonryPhotoItem {
@@ -41,7 +42,7 @@ const MasonryPhotoFeed: React.FC<Props> = ({ photos, initialCount = 6, loadStep 
           setVisibleCount((prev) => Math.min(prev + loadStep, photos.length))
         }
       },
-      { rootMargin: '720px 0px' }
+      { rootMargin: '720px 0px' },
     )
 
     observer.observe(sentinelRef.current)
@@ -237,7 +238,7 @@ const MasonryPhotoFeed: React.FC<Props> = ({ photos, initialCount = 6, loadStep 
               </div>
             </div>
           </div>,
-          document.body
+          document.body,
         )}
     </>
   )
