@@ -51,63 +51,52 @@ const busts = [
 ]
 ---
 
-<Layout title="Home" description={SITE.description} fullWidth hideFooter>
-  <section class="relative min-h-[calc(100svh-5rem)] overflow-hidden bg-[#f4f4f0] text-black transition-colors dark:bg-black dark:text-white">
-    <div class="pointer-events-none absolute inset-0 bg-[radial-gradient(42%_28%_at_50%_42%,rgba(0,0,0,0.08),rgba(244,244,240,0)_70%)] dark:bg-[radial-gradient(42%_28%_at_50%_42%,rgba(255,255,255,0.12),rgba(0,0,0,0)_70%)]"></div>
-    <div class="pointer-events-none absolute inset-x-0 bottom-0 h-40 bg-[linear-gradient(to_top,rgba(244,244,240,0.96),rgba(244,244,240,0))] dark:bg-[linear-gradient(to_top,rgba(0,0,0,0.96),rgba(0,0,0,0))]"></div>
+<Layout title="首页" description={SITE.description} fullWidth hideFooter>
+  <section class="relative min-h-[calc(100svh-5rem)] overflow-hidden bg-[#131313] text-white">
+    <div class="pointer-events-none absolute inset-x-0 top-0 h-px bg-white/35"></div>
+    <div class="pointer-events-none absolute left-0 top-0 h-28 w-28 bg-[#3cffd0] sm:h-36 sm:w-36"></div>
+    <div class="pointer-events-none absolute right-0 top-0 h-20 w-32 bg-[#5200ff] sm:h-28 sm:w-44"></div>
+    <div class="pointer-events-none absolute inset-x-0 bottom-0 h-1/3 border-t border-white/35 bg-[#1b1b1b]"></div>
 
-    <div class="relative mx-auto flex min-h-[calc(100svh-5rem)] w-full max-w-7xl flex-col items-center justify-center px-4 pb-60 pt-16 text-center sm:px-6 sm:pb-[17rem] lg:px-8 lg:pb-80">
-      <p class="text-[0.72rem] uppercase tracking-[0.22em] text-black/46 dark:text-white/46">Independent archive</p>
+    <div class="relative mx-auto flex min-h-[calc(100svh-5rem)] w-full max-w-[82rem] flex-col items-center justify-center px-4 pb-60 pt-16 text-center sm:px-6 sm:pb-[17rem] lg:px-8 lg:pb-80">
+      <p class="verge-kicker text-white/58">个人归档 / 技术笔记 / 产品实践</p>
 
-      <h1 class="mt-6 max-w-[12ch] text-balance font-['Iowan_Old_Style','Palatino_Linotype','Book_Antiqua','Georgia',serif] text-[clamp(3.3rem,8vw,6.2rem)] font-semibold italic leading-[0.92] tracking-[-0.06em]">
-        Start making quiet things.
+      <h1 class="verge-display mt-6 max-w-[8ch] text-balance text-[clamp(5rem,18vw,13.5rem)] leading-[0.76] tracking-normal">
+        {'<EY />'}
       </h1>
 
-      <p class="mt-5 max-w-[36rem] text-pretty text-sm leading-7 text-black/68 sm:text-base dark:text-white/74">
+      <p class="verge-copy mt-5 max-w-[40rem] text-pretty text-base sm:text-lg">
         {cleanDescription}
       </p>
 
       <div class="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
-        <a
-          href="/posts"
-          class="inline-flex min-w-44 items-center justify-center rounded-none border border-black bg-black px-8 py-3.5 text-base text-white no-underline transition-colors hover:bg-white hover:text-black dark:border-white dark:bg-black dark:hover:bg-white"
-        >
-          Read posts
+        <a href="/posts" class="verge-button-primary min-w-44">
+          阅读文章
         </a>
-        <a
-          href="/projects"
-          class="inline-flex min-w-44 items-center justify-center rounded-none border border-black bg-white px-8 py-3.5 text-base text-black no-underline transition-colors hover:bg-black hover:text-white dark:border-white dark:bg-white dark:text-black dark:hover:bg-black dark:hover:text-white"
-        >
-          View projects
+        <a href="/projects" class="verge-button-secondary min-w-44">
+          查看项目
         </a>
       </div>
 
-      <div class="mt-7 text-sm leading-7 text-black/58 dark:text-white/62">
-        <p>
-          {posts.length} posts, {notes.length} notes, {projects.length} public builds.
-        </p>
-        <p class="mt-1">
-          You can also browse
-          <a href="/notes" class="mx-1 text-current underline decoration-current/40 underline-offset-4 hover:decoration-current">
-            notes
-          </a>
-          and
-          <a href="/photos" class="ml-1 text-current underline decoration-current/40 underline-offset-4 hover:decoration-current">
-            photos
-          </a>
-          .
-        </p>
+      <div class="mt-7 grid w-full max-w-[22rem] grid-cols-2 gap-2 text-sm leading-7 text-white/62 sm:flex sm:max-w-none sm:flex-wrap sm:items-center sm:justify-center">
+        <a href="/posts" class="verge-pill justify-center">文章 {posts.length}</a>
+        <a href="/notes" class="verge-pill justify-center">笔记 {notes.length}</a>
+        <a href="/projects" class="verge-pill justify-center">项目 {projects.length}</a>
+        <a href="/photos" class="verge-pill justify-center">照片</a>
       </div>
     </div>
 
     <div class="pointer-events-none absolute inset-x-0 bottom-0 overflow-hidden">
       <div class="relative left-1/2 flex w-[112vw] min-w-max -translate-x-1/2 translate-y-3 items-end justify-center -space-x-4 sm:translate-y-4 sm:-space-x-6 lg:translate-y-5 lg:-space-x-8 xl:-space-x-10">
-        {busts.map((bust) => (
+        {busts.map((bust, index) => (
           <div class:list={['shrink-0 overflow-hidden opacity-100', bust.height]}>
             <img
               src={bust.src}
               alt={bust.alt}
-              class="themed-svg h-full w-auto -scale-x-100 object-contain object-bottom"
+              class:list={[
+                'themed-svg h-full w-auto -scale-x-100 object-contain object-bottom',
+                index % 5 === 0 && 'opacity-90',
+              ]}
               loading="lazy"
               decoding="async"
             />

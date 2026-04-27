@@ -222,7 +222,7 @@ export async function generateRSS20(): Promise<string> {
     <author>${escapeXml(author)}</author>
     <pubDate>${lastBuildDate}</pubDate>
     <lastBuildDate>${lastBuildDate}</lastBuildDate>
-    <generator>Astro Litos Theme</generator>
+    <generator>Astro &lt;EY /&gt; Theme</generator>
     <atom:link href="${siteUrl}/rss.xml" rel="self" type="application/rss+xml" />
     ${processedPosts
       .map(
@@ -264,7 +264,7 @@ export async function generateAtom10(): Promise<string> {
     <name>${escapeXml(author)}</name>
     <uri>${siteUrl}</uri>
   </author>
-  <generator uri="https://github.com/yy921010/Litos" version="5.0">Astro Litos Theme</generator>
+  <generator uri="https://github.com/yy921010/Litos" version="5.0">Astro &lt;EY /&gt; Theme</generator>
   <rights>Copyright © ${new Date().getFullYear()} ${escapeXml(author)}</rights>
   ${processedPosts
     .map(
