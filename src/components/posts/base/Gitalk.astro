@@ -115,51 +115,296 @@ const { id, title } = Astro.props
 <style is:global>
   #gitalk-container {
     min-height: 10px;
+    color: #fff;
+    overflow-wrap: anywhere;
   }
-  .markdown-body {
-    font-family: var(--font-sans) !important;
+
+  .comment-container {
+    color: #fff;
+  }
+
+  .gt-container {
+    color: #fff !important;
+    font-family: var(--font-geist), var(--font-sans), ui-sans-serif, system-ui, sans-serif !important;
+  }
+
+  .gt-container a,
+  .gt-container .gt-link,
+  .gt-container .gt-user-name,
+  .gt-container .gt-counts {
+    color: var(--theme-accent) !important;
+    text-decoration: none !important;
+    transition: color 180ms ease;
+  }
+
+  .gt-container a:hover,
+  .gt-container .gt-link:hover,
+  .gt-container .gt-user-name:hover {
+    color: var(--theme-highlight) !important;
+    border-color: transparent !important;
+  }
+
+  .gt-container .gt-meta {
+    border-bottom: 1px solid rgb(255 255 255 / 0.35) !important;
+    color: rgb(233 233 233 / 0.62) !important;
+    font-family: var(--font-geist-mono);
+    font-size: 0.78rem;
+    letter-spacing: 0.08em;
+  }
+
+  .gt-container .gt-header {
+    margin-top: 1.5rem !important;
+    display: flex !important;
+    align-items: flex-start !important;
+    gap: 1rem;
+  }
+
+  .gt-container .gt-header-comment {
+    flex: 1 1 auto !important;
+    min-width: 0;
+    margin-left: 0 !important;
+  }
+
+  .gt-container .gt-avatar,
+  .gt-container .gt-avatar-github {
+    width: 3.5rem !important;
+    height: 3.5rem !important;
+    flex: 0 0 3.5rem;
+  }
+
+  .gt-container .gt-avatar img {
+    border-radius: 9999px !important;
+    background: var(--theme-surface-soft) !important;
+  }
+
+  .gt-container .gt-header-comment .gt-header-content {
+    min-width: 0;
+  }
+
+  .gt-container .gt-header-textarea {
+    min-height: 6rem !important;
+    border: 1px solid rgb(255 255 255 / 0.72) !important;
+    border-radius: 1.25rem !important;
+    background: var(--theme-surface) !important;
+    color: #fff !important;
+    font-family: var(--font-geist), var(--font-sans), ui-sans-serif, system-ui, sans-serif !important;
+    font-size: 0.95rem !important;
+    line-height: 1.7 !important;
+    outline: none !important;
+    resize: vertical !important;
+    transition:
+      border-color 180ms ease,
+      background-color 180ms ease;
+  }
+
+  .gt-container .gt-header-textarea::placeholder {
+    color: rgb(233 233 233 / 0.52) !important;
+  }
+
+  .gt-container .gt-header-textarea:focus {
+    border-color: var(--theme-accent) !important;
+    background: var(--theme-bg) !important;
+  }
+
+  .gt-container .gt-header-preview {
+    min-height: 6rem !important;
+    border: 1px solid rgb(255 255 255 / 0.72) !important;
+    border-radius: 1.25rem !important;
+    background: var(--theme-surface) !important;
+    color: var(--theme-text) !important;
+  }
+
+  .gt-container .gt-header-controls {
+    position: relative !important;
+    margin-top: 1rem !important;
+  }
+
+  .gt-container .gt-header-controls::before,
+  .gt-container .gt-header-controls::after {
+    display: table;
+    content: "";
+  }
+
+  .gt-container .gt-header-controls::after {
+    clear: both;
+  }
+
+  .gt-container .gt-header-controls-tip {
+    color: var(--theme-accent) !important;
     font-size: 0.875rem !important;
   }
+
+  .gt-container .gt-header-controls-tip .gt-ico {
+    color: var(--theme-accent) !important;
+  }
+
+  .gt-container .gt-header-controls-tip .gt-svg {
+    fill: var(--theme-accent) !important;
+  }
+
+  .gt-container .gt-header-controls .gt-btn {
+    float: right;
+    margin-left: 1rem !important;
+    min-height: 2.75rem !important;
+    border-radius: 0.85rem !important;
+    padding: 0.72rem 1.4rem !important;
+    font-family: var(--font-geist-mono) !important;
+    font-size: 0.75rem !important;
+    font-weight: 700 !important;
+    letter-spacing: 0.1em !important;
+    line-height: 1 !important;
+    text-transform: uppercase !important;
+    transition:
+      background-color 180ms ease,
+      border-color 180ms ease,
+      color 180ms ease !important;
+  }
+
+  .gt-container .gt-btn-public {
+    border: 1px solid var(--theme-accent) !important;
+    background: var(--theme-accent) !important;
+    color: #000 !important;
+  }
+
+  .gt-container .gt-btn-login {
+    border: 1px solid var(--theme-accent) !important;
+    background: var(--theme-accent) !important;
+    color: #000 !important;
+  }
+
+  .gt-container .gt-btn-public:hover,
+  .gt-container .gt-btn-login:hover {
+    border-color: var(--theme-highlight) !important;
+    background: var(--theme-highlight) !important;
+    color: #fff !important;
+  }
+
+  .gt-container .gt-btn-preview {
+    border: 1px solid rgb(255 255 255 / 0.72) !important;
+    background: var(--theme-surface-soft) !important;
+    color: var(--theme-text) !important;
+  }
+
+  .gt-container .gt-btn-preview:hover {
+    border-color: var(--theme-highlight) !important;
+    background: rgb(255 255 255 / 0.16) !important;
+    color: var(--theme-highlight) !important;
+  }
+
+  .gt-container .gt-btn-text {
+    color: inherit !important;
+  }
+
+  .gt-container .gt-popup {
+    border: 1px solid rgb(255 255 255 / 0.32) !important;
+    border-radius: 1.25rem !important;
+    background: var(--theme-surface-soft) !important;
+    color: #fff !important;
+    box-shadow: none !important;
+  }
+
+  .gt-container .gt-svg {
+    fill: rgb(233 233 233 / 0.72) !important;
+  }
+
+  .gt-container .gt-comments {
+    margin-top: 2rem !important;
+  }
+
+  .gt-container .gt-comment {
+    border-top: 1px solid rgb(255 255 255 / 0.14) !important;
+    padding-block: 1.25rem !important;
+  }
+
+  .gt-container .gt-comment-content {
+    border: 1px solid rgb(255 255 255 / 0.32) !important;
+    border-radius: 1.25rem !important;
+    background: var(--theme-surface-soft) !important;
+    color: var(--theme-text) !important;
+    box-shadow: none !important;
+    transition:
+      border-color 180ms ease,
+      color 180ms ease !important;
+  }
+
+  .gt-container .gt-comment-content:hover {
+    border-color: var(--theme-accent) !important;
+    box-shadow: none !important;
+  }
+
+  .gt-container .gt-comment-header {
+    color: rgb(233 233 233 / 0.62) !important;
+  }
+
+  .gt-container .gt-comment-date,
+  .gt-container .gt-comment-like,
+  .gt-container .gt-comment-edit,
+  .gt-container .gt-comment-reply {
+    color: rgb(233 233 233 / 0.52) !important;
+  }
+
+  .gt-container .gt-comment-body {
+    color: var(--theme-text) !important;
+  }
+
+  .gt-container .gt-footer,
+  .gt-container .gt-copyright {
+    border-color: rgb(255 255 255 / 0.16) !important;
+    color: rgb(233 233 233 / 0.44) !important;
+  }
+
+  .gt-container pre,
+  .gt-container code {
+    background: var(--theme-bg) !important;
+    color: var(--theme-text) !important;
+    white-space: pre-wrap !important;
+    overflow-wrap: anywhere !important;
+  }
+
+  .markdown-body {
+    font-family: var(--font-geist), var(--font-sans), ui-sans-serif, system-ui, sans-serif !important;
+    font-size: 0.875rem !important;
+    background: transparent !important;
+  }
+
   .gt-container .gt-comment-body.markdown-body {
-    color: var(--color-text-secondary) !important;
+    color: var(--theme-text) !important;
   }
 
-  .dark .gt-header-preview.markdown-body {
-    background-color: #24273a !important;
-    color: #f6f6f6 !important;
-  }
-
-  .dark .gt-container .gt-meta {
-    border-color: var(--color-border) !important;
-  }
-  .dark .gt-svg {
-    fill: #a1a1aa !important;
-  }
-  .gt-counts,
-  .gt-user-name {
-    color: var(--color-text-secondary);
-  }
-
-  .dark .gt-header-textarea,
-  .dark .gt-popup {
-    background-color: #181926 !important;
-    border-color: var(--color-border) !important;
-  }
-  .dark .gt-container .gt-copyright {
-    border-color: var(--color-border) !important;
-  }
-  .dark .gt-comment-content {
-    background-color: #181926 !important;
-  }
-  .dark .gt-comment-content:hover {
-    -webkit-box-shadow: 0 0.625em 3.75em 0 #0f1d3c !important;
-    box-shadow: 0 0.625em 3.75em #0f1d3c !important;
-  }
-  .dark .markdown-body blockquote {
-    border-color: #3b4b5b;
+  .gt-container .markdown-body blockquote {
+    border-color: var(--theme-accent) !important;
+    color: rgb(233 233 233 / 0.72) !important;
   }
 
   .gt-comments-null {
     display: none !important;
+  }
+
+  @media (max-width: 640px) {
+    .gt-container .gt-header {
+      gap: 0.75rem;
+    }
+
+    .gt-container .gt-avatar,
+    .gt-container .gt-avatar-github {
+      width: 3rem !important;
+      height: 3rem !important;
+      flex-basis: 3rem;
+    }
+
+    .gt-container .gt-header-controls-tip {
+      display: block;
+      margin-bottom: 0.75rem;
+    }
+
+    .gt-container .gt-header-controls .gt-btn {
+      float: none;
+      width: 100%;
+      margin: 0.75rem 0 0 !important;
+    }
+
+    .gt-container .gt-header-controls .gt-btn + .gt-btn {
+      margin-left: 0 !important;
+    }
   }
 </style>

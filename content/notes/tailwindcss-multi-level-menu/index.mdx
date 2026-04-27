@@ -1,12 +1,16 @@
 ---
-title: 'tailwindcss 多级菜单'
+title: 'Tailwind CSS 多级菜单'
 pubDate: 2025-01-06
-description: 'tailwindcss 多级菜单'
-author: 'Ethan YangYang'
+description: '记录一个基于 React 与 Tailwind CSS 的多级商品分类菜单实现，包含 hover 展开、二级列表渲染和选项回调处理。'
+author: 'Ethan Yang'
 comment: true
 postType: note
 tags: ['react', 'tailwindcss', 'ui', 'component', 'menu']
 ---
+
+这是一个偏业务组件的多级菜单实现，用 hover 控制一级和二级面板展示，并通过状态记录当前激活分类。
+
+代码适合用作商品分类、资源目录或后台筛选入口的原型；正式使用时需要继续补齐键盘可访问性、移动端交互和选中态展示。
 
 ```jsx
 import { MenuUnfoldOutlined, RightOutlined } from '@ant-design/icons'

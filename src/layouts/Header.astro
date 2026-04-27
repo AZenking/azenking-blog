@@ -22,11 +22,11 @@ const githubLink = SOCIAL_LINKS.find((link) => link.name === 'github')
 const activeLink = navLinks.find((link) => isLinkActive(link.url, Astro.url.pathname))
 ---
 
-<header class="sticky top-0 z-40 border-b border-white/35 bg-[#101010] text-white">
+<header class="sticky top-0 z-40 border-b border-white/35 bg-[var(--theme-header)] text-white">
   <div class="grid min-h-[4.75rem] grid-cols-[auto_1fr_auto] items-stretch border-b border-white/18 lg:min-h-[5.75rem]">
     <a
       href="/"
-      class="group flex min-w-0 items-center gap-3 border-r border-white/18 px-4 text-white no-underline transition-colors duration-200 hover:bg-[#3cffd0] hover:text-black sm:px-6 lg:min-w-[22rem] lg:px-8"
+      class="group flex min-w-0 items-center gap-3 border-r border-white/18 px-4 text-white no-underline transition-colors duration-200 hover:bg-[var(--theme-accent)] hover:text-black sm:px-6 lg:min-w-[22rem] lg:px-8"
       aria-label={`${SITE.title} 首页`}
       transition:persist
     >
@@ -65,7 +65,7 @@ const activeLink = navLinks.find((link) => isLinkActive(link.url, Astro.url.path
               href={link.url}
               class:list={[
                 'group relative flex min-h-11 shrink-0 items-center gap-2 border-l border-white/12 px-4 font-mono text-[0.72rem] font-bold uppercase tracking-[0.13em] text-white/68 no-underline transition-colors duration-200 first:border-l-0 hover:bg-white hover:text-black xl:px-5',
-                isLinkActive(link.url, Astro.url.pathname) ? 'bg-[#3cffd0] text-black' : '',
+                isLinkActive(link.url, Astro.url.pathname) ? 'bg-[var(--theme-accent)] text-black' : '',
               ]}
               aria-current={isLinkActive(link.url, Astro.url.pathname) ? 'page' : undefined}
             >
@@ -80,14 +80,14 @@ const activeLink = navLinks.find((link) => isLinkActive(link.url, Astro.url.path
     <div class="flex items-stretch justify-end border-l border-white/18">
       <div class="hidden sm:flex" transition:persist="header-search-switch">
         <SearchSwitch
-          className="h-full min-w-16 rounded-none border-y-0 border-l-0 border-r border-white/18 bg-[#101010] px-5 text-white hover:border-[#3cffd0] hover:bg-[#3cffd0] hover:text-black"
+          className="h-full min-w-16 rounded-none border-y-0 border-l-0 border-r border-white/18 bg-[var(--theme-header)] px-5 text-white hover:border-[var(--theme-accent)] hover:bg-[var(--theme-accent)] hover:text-black"
           labelClass="hidden xl:inline"
         />
       </div>
 
       <button
         id="header-menu-button"
-        class="relative flex min-w-16 cursor-pointer items-center justify-center px-4 text-white transition-colors duration-200 hover:bg-[#5200ff] lg:hidden"
+        class="relative flex min-w-16 cursor-pointer items-center justify-center px-4 text-white transition-colors duration-200 hover:bg-[var(--theme-secondary)] lg:hidden"
         type="button"
         aria-expanded="false"
         aria-controls="header-mobile-menu"
@@ -101,7 +101,7 @@ const activeLink = navLinks.find((link) => isLinkActive(link.url, Astro.url.path
 
   <div
     id="header-mobile-menu"
-    class="hidden border-t border-white/25 bg-[#101010]"
+    class="hidden border-t border-white/25 bg-[var(--theme-header)]"
   >
     <div class="grid gap-0 sm:grid-cols-[1fr_auto]">
       <nav class="grid border-b border-white/18 sm:grid-cols-2 sm:border-b-0 sm:border-r" aria-label="移动端导航">
@@ -110,8 +110,8 @@ const activeLink = navLinks.find((link) => isLinkActive(link.url, Astro.url.path
             <a
               href={link.url}
               class:list={[
-                'flex min-h-16 items-center justify-between border-b border-white/14 px-5 font-mono text-xs font-bold uppercase tracking-[0.14em] text-white no-underline transition-colors duration-200 hover:bg-[#3cffd0] hover:text-black sm:border-r',
-                isLinkActive(link.url, Astro.url.pathname) ? 'bg-[#3cffd0] text-black' : '',
+                'flex min-h-16 items-center justify-between border-b border-white/14 px-5 font-mono text-xs font-bold uppercase tracking-[0.14em] text-white no-underline transition-colors duration-200 hover:bg-[var(--theme-accent)] hover:text-black sm:border-r',
+                isLinkActive(link.url, Astro.url.pathname) ? 'bg-[var(--theme-accent)] text-black' : '',
               ]}
               aria-current={isLinkActive(link.url, Astro.url.pathname) ? 'page' : undefined}
             >

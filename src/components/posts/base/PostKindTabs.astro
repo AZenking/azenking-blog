@@ -7,17 +7,17 @@ interface Props {
 const { active, class: className = '' } = Astro.props
 
 const tabs = [
-  { key: 'posts', label: 'Posts', href: '/posts' },
-  { key: 'notes', label: 'Notes', href: '/notes' },
+  { key: 'posts', label: '文章', href: '/posts' },
+  { key: 'notes', label: '笔记', href: '/notes' },
 ] as const
 ---
 
 <nav
   class:list={[
-    'inline-flex items-center rounded-sm border border-black bg-white p-1 text-black dark:border-white/35 dark:bg-black dark:text-white',
+    'inline-flex items-center rounded-full border border-white/35 bg-[var(--theme-bg)] p-1 text-white',
     className,
   ]}
-  aria-label="Content type switch"
+  aria-label="内容类型切换"
 >
   {
     tabs.map((tab) => {
@@ -26,10 +26,10 @@ const tabs = [
         <a
           href={tab.href}
           class:list={[
-            'inline-flex items-center rounded-sm px-[1.125rem] py-2 text-sm font-normal transition-all',
+            'inline-flex min-h-11 items-center rounded-full px-[1.125rem] py-2 font-mono text-xs font-semibold uppercase tracking-[0.12em] transition-colors',
             isActive
-              ? 'bg-black text-white dark:bg-white dark:text-black'
-              : 'text-black/58 hover:-translate-x-px hover:-translate-y-px hover:bg-[#ece9df] hover:shadow-[2px_2px_0_0_#000] dark:text-white/58 dark:hover:bg-[#1d1d1b] dark:hover:shadow-[2px_2px_0_0_rgba(255,255,255,0.35)]',
+              ? 'bg-[var(--theme-accent)] text-black'
+              : 'text-white/62 hover:bg-[var(--theme-surface-soft)] hover:text-[var(--theme-highlight)]',
           ]}
           aria-current={isActive ? 'page' : undefined}
         >
