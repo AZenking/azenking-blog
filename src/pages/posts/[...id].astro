@@ -224,7 +224,7 @@ const relatedPosts = posts
       </div>
 
       {(prev || next) && (
-        <nav class="border-t border-white/35 py-10" aria-label="文章导航">
+        <nav class="border-t border-white/28 py-10" aria-label="文章导航">
           <div class="grid gap-4 sm:grid-cols-2">
             {next ? (
               <a
@@ -254,7 +254,7 @@ const relatedPosts = posts
       )}
 
       {relatedPosts.length > 0 && (
-        <section class="border-t border-white/35 py-10">
+        <section class="border-t border-white/28 py-10">
           <h2 class="text-[0.78rem] uppercase tracking-[0.14em] text-white/45">相关文章</h2>
           <div class="mt-5 space-y-4">
             {relatedPosts.map((related) => {
@@ -278,7 +278,7 @@ const relatedPosts = posts
         </section>
       )}
 
-      <section class="border-t border-white/35 pt-12">
+      <section class="border-t border-white/28 pt-12">
         <Comment id={post.id} title={frontmatter.title} />
       </section>
     </section>

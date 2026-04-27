@@ -136,7 +136,7 @@ const notesDescription = `Ethan Young 的短笔记归档，收录 ${allNotes.len
               <ul class="grow divide-y divide-white/12 overflow-y-auto">
                 {compactNotes.map((note) => (
                   <li class="py-4 first:pt-0 last:pb-0">
-                    <a href={`/notes/${note.id}`} class="group flex items-end justify-between gap-3 text-white no-underline transition-colors hover:text-[var(--theme-highlight)]">
+                    <a href={`/notes/${note.id}`} class="group flex items-end justify-between gap-3 text-white no-underline transition-colors hover:text-[var(--theme-link-hover)]">
                       <div class="grid grid-cols-1 gap-1">
                         <h3 class="mb-0.5 text-2xl font-normal leading-tight tracking-[-0.04em]">{note.data.title}</h3>
                         <p class="pb-0.5 text-base opacity-60">

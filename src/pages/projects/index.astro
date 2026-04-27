@@ -44,7 +44,7 @@ const gridProjects = projects.slice(1)
         <>
           <div class="mt-8 grid gap-8 lg:grid-cols-[minmax(0,1.35fr)_24rem]">
             <article class="verge-card overflow-hidden">
-              <div class="border-b border-white/35 px-6 py-6">
+              <div class="border-b border-white/28 px-6 py-6">
                 <div class="flex items-start gap-4">
                   <div class="verge-accent-mint inline-flex size-14 shrink-0 items-center justify-center rounded-[1.25rem] text-xl">
                     {featuredProject.data.type === 'icon' && typeof featuredProject.data.icon === 'string' ? (
@@ -148,7 +148,7 @@ const gridProjects = projects.slice(1)
                 {gridProjects.map((project) => (
                   <article class="verge-card p-6">
                     <div class="flex items-start gap-4">
-                      <div class="inline-flex size-12 shrink-0 items-center justify-center rounded-[1.25rem] border border-white/35 bg-[var(--theme-surface-soft)] text-lg text-white">
+                      <div class="inline-flex size-12 shrink-0 items-center justify-center rounded-[1.25rem] border border-white/28 bg-[var(--theme-surface-soft)] text-lg text-white">
                         {project.data.type === 'icon' && typeof project.data.icon === 'string' ? (
                           <span class={project.data.icon} />
                         ) : project.data.icon ? (
@@ -173,22 +173,22 @@ const gridProjects = projects.slice(1)
                     </div>
 
                     <div class="mt-5 flex flex-wrap gap-2">
-                      <span class="inline-flex rounded-full border border-white/35 px-2 py-1 font-mono text-xs uppercase tracking-[0.1em]">
+                      <span class="inline-flex rounded-full border border-white/28 px-2 py-1 font-mono text-xs uppercase tracking-[0.1em]">
                         星标 {project.data.star}
                       </span>
-                      <span class="inline-flex rounded-full border border-white/35 px-2 py-1 font-mono text-xs uppercase tracking-[0.1em]">
+                      <span class="inline-flex rounded-full border border-white/28 px-2 py-1 font-mono text-xs uppercase tracking-[0.1em]">
                         分叉 {project.data.fork}
                       </span>
                     </div>
 
                     <div class="mt-5 flex flex-wrap gap-3 text-sm">
                       {project.data.website && (
-                        <a href={project.data.website} target="_blank" rel="noreferrer" class="text-[var(--theme-accent)] no-underline hover:text-[var(--theme-highlight)]">
+                        <a href={project.data.website} target="_blank" rel="noreferrer" class="text-[var(--theme-accent)] no-underline hover:text-[var(--theme-link-hover)]">
                           站点
                         </a>
                       )}
                       {project.data.githubUrl && (
-                        <a href={project.data.githubUrl} target="_blank" rel="noreferrer" class="text-[var(--theme-accent)] no-underline hover:text-[var(--theme-highlight)]">
+                        <a href={project.data.githubUrl} target="_blank" rel="noreferrer" class="text-[var(--theme-accent)] no-underline hover:text-[var(--theme-link-hover)]">
                           GitHub
                         </a>
                       )}

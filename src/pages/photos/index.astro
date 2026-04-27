@@ -28,7 +28,7 @@ const sidePhotos = galleryPhotos.slice(1, 4)
 <Layout {title} {description} fullWidth>
   <div class="verge-shell">
     <section class="mx-auto w-full max-w-[88rem] px-4 py-8 sm:px-6 sm:py-10 lg:px-8">
-      <div class="border-b border-white/35 pb-5">
+      <div class="border-b border-white/28 pb-5">
         <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <p class="verge-kicker">照片日志 / 日常片段</p>
           <div class="flex flex-wrap gap-2">
@@ -66,9 +66,9 @@ const sidePhotos = galleryPhotos.slice(1, 4)
       </div>
 
       {featuredPhoto && (
-        <section class="grid gap-5 border-b border-white/35 py-5 lg:grid-cols-[minmax(0,1.4fr)_minmax(18rem,0.6fr)]">
+        <section class="grid gap-5 border-b border-white/28 py-5 lg:grid-cols-[minmax(0,1.4fr)_minmax(18rem,0.6fr)]">
           <article class="verge-card overflow-hidden">
-            <figure class="aspect-[16/10] overflow-hidden border-b border-white/35 bg-[var(--theme-surface-soft)]">
+            <figure class="aspect-[16/10] overflow-hidden border-b border-white/28 bg-[var(--theme-surface-soft)]">
               <img
                 src={featuredPhoto.src}
                 alt={featuredPhoto.alt}
@@ -99,7 +99,7 @@ const sidePhotos = galleryPhotos.slice(1, 4)
                         <h3 class="text-2xl font-black leading-tight tracking-normal text-white">{album.title}</h3>
                         <p class="mt-2 text-sm leading-7 text-white/64">{album.description}</p>
                       </div>
-                      <div class="rounded-[1.25rem] border border-white/35 px-3 py-2 text-right text-sm text-white">
+                      <div class="rounded-[1.25rem] border border-white/28 px-3 py-2 text-right text-sm text-white">
                         <p>{album.photos.length}</p>
                         <p class="mt-1 font-mono text-[0.68rem] uppercase tracking-[0.1em] text-white/45">张</p>
                       </div>
@@ -113,7 +113,7 @@ const sidePhotos = galleryPhotos.slice(1, 4)
             {sidePhotos.length > 0 && (
               <div class="grid grid-cols-3 gap-3">
                 {sidePhotos.map((photo) => (
-                  <figure class="aspect-square overflow-hidden rounded-[1.25rem] border border-white/35 bg-[var(--theme-surface-soft)]">
+                  <figure class="aspect-square overflow-hidden rounded-[1.25rem] border border-white/28 bg-[var(--theme-surface-soft)]">
                     <img
                       src={photo.src}
                       alt={photo.alt}

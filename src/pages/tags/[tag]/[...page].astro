@@ -47,7 +47,7 @@ const tileAccents = ['verge-accent-mint', 'verge-accent-purple', 'verge-accent-y
 <Layout title={`#${tag}`} {description} fullWidth>
   <div class="verge-shell">
     <section class="mx-auto w-full max-w-[88rem] px-4 py-8 sm:px-6 sm:py-10 lg:px-8">
-      <div class="border-b border-white/35 pb-5">
+      <div class="border-b border-white/28 pb-5">
         <a href="/tags" class="verge-pill">← 返回标签</a>
 
         <div class="mt-5 grid gap-5 lg:grid-cols-[minmax(0,1fr)_22rem] lg:items-end">
@@ -76,7 +76,7 @@ const tileAccents = ['verge-accent-mint', 'verge-accent-purple', 'verge-accent-y
         </div>
       </div>
 
-      <div class="flex flex-wrap gap-2 border-b border-white/35 py-5">
+      <div class="flex flex-wrap gap-2 border-b border-white/28 py-5">
         <span class="verge-pill verge-pill-active">#{tag}</span>
         {relatedTags.map(([name, count]) => (
           <a href={`/tags/${encodeURIComponent(name)}`} class="verge-pill">
@@ -87,10 +87,10 @@ const tileAccents = ['verge-accent-mint', 'verge-accent-purple', 'verge-accent-y
       </div>
 
       {featuredPost && (
-        <section class="border-b border-white/35 py-5">
+        <section class="border-b border-white/28 py-5">
           <a href={`/posts/${featuredPost.id}`} class="verge-card-link overflow-hidden p-0">
             <article class="grid h-full lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1fr)]">
-              <div class="min-h-72 border-b border-white/35 bg-[var(--theme-surface-soft)] lg:border-b-0 lg:border-r">
+              <div class="min-h-72 border-b border-white/28 bg-[var(--theme-surface-soft)] lg:border-b-0 lg:border-r">
                 {featuredPost.data.cover ? (
                   <LqipImage
                     src={featuredPost.data.cover}
@@ -157,7 +157,7 @@ const tileAccents = ['verge-accent-mint', 'verge-accent-purple', 'verge-accent-y
                   ]}
                 >
                   {post.data.cover && (
-                    <figure class="h-56 border-b border-white/35 bg-[var(--theme-surface-soft)] md:h-full md:min-h-56 md:border-b-0 md:border-r">
+                    <figure class="h-56 border-b border-white/28 bg-[var(--theme-surface-soft)] md:h-full md:min-h-56 md:border-b-0 md:border-r">
                       <LqipImage
                         src={post.data.cover}
                         alt={post.data.title}

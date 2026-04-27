@@ -121,8 +121,8 @@ const MasonryPhotoFeed: React.FC<Props> = ({ photos, initialCount = 6, loadStep 
                 className="group block w-full cursor-pointer text-left"
                 aria-label={`查看图片 ${globalIndex + 1}`}
               >
-                <div className="overflow-hidden rounded-[1.25rem] border border-white/35 bg-[var(--theme-bg)] text-white transition-colors duration-200 ease-out group-hover:border-[var(--theme-accent)]">
-                  <div className="relative overflow-hidden border-b border-white/35 bg-[var(--theme-surface-soft)]">
+                <div className="overflow-hidden rounded-[1.25rem] border border-white/28 bg-[var(--theme-bg)] text-white transition-colors duration-200 ease-out group-hover:border-[var(--theme-accent)]">
+                  <div className="relative overflow-hidden border-b border-white/28 bg-[var(--theme-surface-soft)]">
                     <img
                       src={photo.src}
                       alt={photo.alt}
@@ -146,7 +146,7 @@ const MasonryPhotoFeed: React.FC<Props> = ({ photos, initialCount = 6, loadStep 
                       ) : null}
                     </div>
 
-                    <span className="mt-0.5 inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-white/35 text-base transition-colors duration-200 group-hover:border-[var(--theme-accent)] group-hover:text-[var(--theme-accent)]">
+                    <span className="mt-0.5 inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-white/28 text-base transition-colors duration-200 group-hover:border-[var(--theme-accent)] group-hover:text-[var(--theme-accent)]">
                       ↗
                     </span>
                   </div>
@@ -176,8 +176,8 @@ const MasonryPhotoFeed: React.FC<Props> = ({ photos, initialCount = 6, loadStep 
             aria-label="照片预览"
           >
             <div className="w-full max-w-5xl" onClick={(event) => event.stopPropagation()}>
-              <div className="overflow-hidden rounded-[1.25rem] border border-white/35 bg-[var(--theme-bg)] text-white">
-                <div className="flex items-center justify-between gap-4 border-b border-white/35 px-4 py-3">
+              <div className="overflow-hidden rounded-[1.25rem] border border-white/28 bg-[var(--theme-bg)] text-white">
+                <div className="flex items-center justify-between gap-4 border-b border-white/28 px-4 py-3">
                   <div className="min-w-0">
                     <p className="truncate font-mono text-[0.72rem] uppercase tracking-[0.12em] text-white/48">
                       {[activePhoto.album, activePhoto.date].filter(Boolean).join(' · ') || '照片详情'}
@@ -186,13 +186,13 @@ const MasonryPhotoFeed: React.FC<Props> = ({ photos, initialCount = 6, loadStep 
                   </div>
 
                   <div className="flex items-center gap-2">
-                    <span className="rounded-full border border-white/35 px-2 py-1 font-mono text-[0.7rem] tracking-[0.12em]">
+                    <span className="rounded-full border border-white/28 px-2 py-1 font-mono text-[0.7rem] tracking-[0.12em]">
                       {activePosition} / {photos.length}
                     </span>
                     <button
                       type="button"
                       onClick={closeLightbox}
-                      className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-white/35 bg-[var(--theme-surface-soft)] text-white transition-colors hover:border-[var(--theme-accent)] hover:text-[var(--theme-accent)]"
+                      className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-white/28 bg-[var(--theme-surface-soft)] text-white transition-colors hover:border-[var(--theme-accent)] hover:text-[var(--theme-accent)]"
                       aria-label="关闭"
                     >
                       <span className="icon-[mdi--close] h-5 w-5" />
@@ -209,7 +209,7 @@ const MasonryPhotoFeed: React.FC<Props> = ({ photos, initialCount = 6, loadStep 
                     disabled={!canGoPrevious}
                     className={`absolute left-3 top-1/2 inline-flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-md border transition-all sm:left-4 ${
                       canGoPrevious
-                        ? 'border-white/35 bg-[var(--theme-bg)] text-white hover:border-[var(--theme-accent)] hover:text-[var(--theme-accent)]'
+                        ? 'border-white/28 bg-[var(--theme-bg)] text-white hover:border-[var(--theme-accent)] hover:text-[var(--theme-accent)]'
                         : 'cursor-not-allowed border-white/12 bg-black/40 text-white/30'
                     }`}
                     aria-label="上一张"
@@ -223,7 +223,7 @@ const MasonryPhotoFeed: React.FC<Props> = ({ photos, initialCount = 6, loadStep 
                     disabled={!canGoNext}
                     className={`absolute right-3 top-1/2 inline-flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-md border transition-all sm:right-4 ${
                       canGoNext
-                        ? 'border-white/35 bg-[var(--theme-bg)] text-white hover:border-[var(--theme-accent)] hover:text-[var(--theme-accent)]'
+                        ? 'border-white/28 bg-[var(--theme-bg)] text-white hover:border-[var(--theme-accent)] hover:text-[var(--theme-accent)]'
                         : 'cursor-not-allowed border-white/12 bg-black/40 text-white/30'
                     }`}
                     aria-label="下一张"
@@ -232,7 +232,7 @@ const MasonryPhotoFeed: React.FC<Props> = ({ photos, initialCount = 6, loadStep 
                   </button>
                 </div>
 
-                <div className="border-t border-white/35 px-4 py-4">
+                <div className="border-t border-white/28 px-4 py-4">
                   <p className="text-sm leading-7 text-white/72">{activePhoto.alt}</p>
                 </div>
               </div>

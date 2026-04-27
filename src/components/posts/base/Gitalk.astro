@@ -140,12 +140,12 @@ const { id, title } = Astro.props
   .gt-container a:hover,
   .gt-container .gt-link:hover,
   .gt-container .gt-user-name:hover {
-    color: var(--theme-highlight) !important;
+    color: var(--theme-link-hover) !important;
     border-color: transparent !important;
   }
 
   .gt-container .gt-meta {
-    border-bottom: 1px solid rgb(255 255 255 / 0.35) !important;
+    border-bottom: 1px solid rgb(255 255 255 / 0.28) !important;
     color: rgb(233 233 233 / 0.62) !important;
     font-family: var(--font-geist-mono);
     font-size: 0.78rem;
@@ -183,7 +183,7 @@ const { id, title } = Astro.props
 
   .gt-container .gt-header-textarea {
     min-height: 6rem !important;
-    border: 1px solid rgb(255 255 255 / 0.72) !important;
+    border: 1px solid rgb(255 255 255 / 0.52) !important;
     border-radius: 1.25rem !important;
     background: var(--theme-surface) !important;
     color: #fff !important;
@@ -208,7 +208,7 @@ const { id, title } = Astro.props
 
   .gt-container .gt-header-preview {
     min-height: 6rem !important;
-    border: 1px solid rgb(255 255 255 / 0.72) !important;
+    border: 1px solid rgb(255 255 255 / 0.52) !important;
     border-radius: 1.25rem !important;
     background: var(--theme-surface) !important;
     color: var(--theme-text) !important;
@@ -274,21 +274,21 @@ const { id, title } = Astro.props
 
   .gt-container .gt-btn-public:hover,
   .gt-container .gt-btn-login:hover {
-    border-color: var(--theme-highlight) !important;
-    background: var(--theme-highlight) !important;
-    color: #fff !important;
+    border-color: var(--theme-link-hover) !important;
+    background: var(--theme-link-hover) !important;
+    color: #000 !important;
   }
 
   .gt-container .gt-btn-preview {
-    border: 1px solid rgb(255 255 255 / 0.72) !important;
+    border: 1px solid rgb(255 255 255 / 0.52) !important;
     background: var(--theme-surface-soft) !important;
     color: var(--theme-text) !important;
   }
 
   .gt-container .gt-btn-preview:hover {
-    border-color: var(--theme-highlight) !important;
+    border-color: var(--theme-link-hover) !important;
     background: rgb(255 255 255 / 0.16) !important;
-    color: var(--theme-highlight) !important;
+    color: var(--theme-link-hover) !important;
   }
 
   .gt-container .gt-btn-text {

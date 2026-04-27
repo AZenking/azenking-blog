@@ -21,7 +21,7 @@ const isLinkActive = (linkUrl: string, pathname: string) => {
 const activeLink = navLinks.find((link) => isLinkActive(link.url, Astro.url.pathname))
 ---
 
-<header class="sticky top-0 z-40 border-b border-white/35 bg-[var(--theme-header)] text-white">
+<header class="sticky top-0 z-40 border-b border-white/28 bg-[var(--theme-header)] text-white">
   <div class="grid min-h-[4.75rem] grid-cols-[auto_1fr_auto] items-stretch border-b border-white/18 lg:min-h-[5.75rem]">
     <a
       href="/"
@@ -29,11 +29,11 @@ const activeLink = navLinks.find((link) => isLinkActive(link.url, Astro.url.path
       aria-label={`${SITE.title} 首页`}
       transition:persist
     >
-      <span class="grid size-12 shrink-0 place-items-center overflow-hidden rounded-sm bg-white/10 ring-1 ring-white/25 transition-colors duration-200 group-hover:bg-black/10 group-hover:ring-black/25 lg:size-14">
+      <span class="brand-avatar-frame grid size-12 shrink-0 place-items-center overflow-hidden rounded-sm transition-colors duration-200 group-hover:border-black/35 group-hover:bg-white/85 group-hover:ring-black/25 lg:size-14">
         <img
           src="/avatar.svg"
           alt=""
-          class="themed-svg size-full object-contain !opacity-100 transition duration-200 group-hover:invert-0"
+          class="brand-avatar-image size-full object-contain"
           loading="eager"
           decoding="async"
         />
@@ -42,8 +42,8 @@ const activeLink = navLinks.find((link) => isLinkActive(link.url, Astro.url.path
         <span class="block font-mono text-[0.62rem] font-bold uppercase leading-none tracking-[0.18em] text-white/50 transition-colors duration-200 group-hover:text-black/55">
           Ethan Young
         </span>
-        <span class="verge-display mt-1 block truncate text-[2rem] leading-[0.8] tracking-normal sm:text-[2.5rem] lg:text-[3.15rem]">
-          {'<EY />'}
+        <span class="brand-wordmark verge-display mt-1 block truncate text-[2rem] leading-[0.8] tracking-normal sm:text-[2.5rem] lg:text-[3.15rem]">
+          <span class="brand-wordmark-mark">&lt;</span><span>EY</span><span class="brand-wordmark-slash"> /</span><span class="brand-wordmark-mark">&gt;</span>
         </span>
       </span>
     </a>

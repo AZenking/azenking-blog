@@ -41,7 +41,7 @@ const pageDescription = page.currentPage === 1
 <Layout {title} description={pageDescription} fullWidth>
   <div class="verge-shell">
     <section class="mx-auto w-full max-w-[88rem] px-4 py-8 sm:px-6 sm:py-10 lg:px-8">
-      <div class="border-b border-white/35 pb-5">
+      <div class="border-b border-white/28 pb-5">
         <div class="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
           <p class="verge-kicker">文章 / 随笔 / 技术笔记</p>
           <PostKindTabs active="posts" />
@@ -70,7 +70,7 @@ const pageDescription = page.currentPage === 1
         </div>
       </div>
 
-      <div class="flex flex-wrap gap-2 border-b border-white/35 py-5">
+      <div class="flex flex-wrap gap-2 border-b border-white/28 py-5">
         <a href="/posts" class="verge-pill verge-pill-active">全部文章 ({allPosts.length})</a>
         {topTags.map(([tag, count]) => (
           <a href={`/tags/${encodeURIComponent(tag)}`} class="verge-pill">
@@ -81,10 +81,10 @@ const pageDescription = page.currentPage === 1
       </div>
 
       {featuredPost && (
-        <section class="grid gap-5 border-b border-white/35 py-5 lg:grid-cols-[minmax(0,1.35fr)_minmax(18rem,0.65fr)]">
+        <section class="grid gap-5 border-b border-white/28 py-5 lg:grid-cols-[minmax(0,1.35fr)_minmax(18rem,0.65fr)]">
           <a href={`/posts/${featuredPost.id}`} class="verge-card-link overflow-hidden p-0">
             <article class="grid h-full lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1fr)]">
-              <div class="min-h-72 border-b border-white/35 bg-[var(--theme-surface-soft)] lg:border-b-0 lg:border-r">
+              <div class="min-h-72 border-b border-white/28 bg-[var(--theme-surface-soft)] lg:border-b-0 lg:border-r">
                 {featuredPost.data.cover ? (
                   <LqipImage
                     src={featuredPost.data.cover}
@@ -131,7 +131,7 @@ const pageDescription = page.currentPage === 1
                     <p class="font-mono text-[0.68rem] font-semibold uppercase tracking-[0.14em] text-white/45">
                       {String(index + 2).padStart(2, '0')} / {formatDate(post.data.updatedDate ?? post.data.pubDate, 'dot')}
                     </p>
-                    <h3 class="text-2xl font-black leading-tight tracking-normal transition-colors group-hover:text-[var(--theme-highlight)]">
+                    <h3 class="text-2xl font-black leading-tight tracking-normal transition-colors group-hover:text-[var(--theme-link-hover)]">
                       {post.data.title}
                     </h3>
                   </a>
@@ -172,7 +172,7 @@ const pageDescription = page.currentPage === 1
                   ]}
                 >
                   {post.data.cover && (
-                    <figure class="h-56 border-b border-white/35 bg-[var(--theme-surface-soft)] md:h-full md:min-h-56 md:border-b-0 md:border-r">
+                    <figure class="h-56 border-b border-white/28 bg-[var(--theme-surface-soft)] md:h-full md:min-h-56 md:border-b-0 md:border-r">
                       <LqipImage
                         src={post.data.cover}
                         alt={post.data.title}
