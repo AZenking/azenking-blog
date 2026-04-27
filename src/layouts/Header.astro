@@ -1,6 +1,6 @@
 ---
 import SearchSwitch from '~/components/base/SearchSwitch.astro'
-import { SOCIAL_LINKS, SITE } from '~/config'
+import { SITE } from '~/config'
 
 const navLinks = [
   { name: '首页', url: '/', section: 'Home' },
@@ -18,7 +18,6 @@ const isLinkActive = (linkUrl: string, pathname: string) => {
   return pathname.startsWith(linkUrl)
 }
 
-const githubLink = SOCIAL_LINKS.find((link) => link.name === 'github')
 const activeLink = navLinks.find((link) => isLinkActive(link.url, Astro.url.pathname))
 ---
 

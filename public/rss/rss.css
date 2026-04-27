@@ -29,25 +29,25 @@
   --font-lexend: 'Lexend', 'Geist', 'ShangguSansSC-VF', sans-serif;
   --font-sans: 'Geist', 'ShangguSansSC-VF', sans-serif;
   --font-geist-mono: 'GeistMono', 'Input Mono', 'Fira Code', 'ShangguSansSC-VF', monospace;
-  --background: 255 100% 100%;
-  --foreground: 225 15% 12%;
-  --scrollbar: 220 20% 80%;
-  --scrollbar-bg: 220 25% 95%;
-  --belonging-color: #9ea0a6;
-  --muted-foreground: 225 10% 40%;
-  --border: 220 20% 90%;
-  --accent: 220 25% 94%;
+  --background: 0 0% 7%;
+  --foreground: 0 0% 100%;
+  --scrollbar: 0 0% 58%;
+  --scrollbar-bg: 0 0% 18%;
+  --belonging-color: #949494;
+  --muted-foreground: 0 0% 58%;
+  --border: 168 100% 62%;
+  --accent: 168 100% 62%;
 }
 
 .dark {
-  --background: 240 10% 4%;
-  --foreground: 0 0% 98%;
-  --scrollbar: 240 10% 30%;
-  --scrollbar-bg: 240 10% 15%;
-  --belonging-color: #9ea0a6;
-  --muted-foreground: 240 5% 64.9%;
-  --border: 240 3.7% 15.9%;
-  --accent: 240 3.7% 15.9%;
+  --background: 0 0% 7%;
+  --foreground: 0 0% 100%;
+  --scrollbar: 0 0% 58%;
+  --scrollbar-bg: 0 0% 18%;
+  --belonging-color: #949494;
+  --muted-foreground: 0 0% 58%;
+  --border: 168 100% 62%;
+  --accent: 168 100% 62%;
 }
 
 * {
@@ -55,7 +55,7 @@
 }
 
 html {
-  color-scheme: light;
+  color-scheme: dark;
   background-color: hsl(var(--background));
   font-family: var(--font-sans);
   scroll-behavior: smooth;
