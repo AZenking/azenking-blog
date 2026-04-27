@@ -1,5 +1,5 @@
 ---
-import { FOOTER_LINKS, SITE, SOCIAL_LINKS } from '~/config'
+import { SITE, SOCIAL_LINKS } from '~/config'
 
 const START_YEAR = 2025
 const currentYear = new Date().getFullYear()
@@ -10,16 +10,17 @@ const githubLink = SOCIAL_LINKS.find((item) => item.name === 'github')
 const primaryLinks = [
   { name: '首页', url: '/' },
   { name: '文章', url: '/posts' },
+  { name: '笔记', url: '/notes' },
   { name: '项目', url: '/projects' },
+]
+
+const archiveLinks = [
   { name: '标签', url: '/tags' },
+  { name: '照片', url: '/photos' },
+  { name: '朋友', url: '/friends' },
 ]
 
 const secondaryLinks = [
-  ...FOOTER_LINKS.map((item) => ({
-    name: item.name,
-    url: item.url,
-    external: false,
-  })),
   { name: 'RSS', url: '/atom.xml', external: false },
   ...(githubLink
     ? [
@@ -33,107 +34,127 @@ const secondaryLinks = [
 ]
 ---
 
-<footer class="border-t border-black bg-black text-white dark:border-white/35">
-  <div class="mx-auto flex w-full max-w-[96rem] flex-col justify-between gap-16 px-4 py-16 leading-relaxed sm:px-6 lg:flex-row lg:px-8 lg:py-24">
-    <div class="flex w-full max-w-3xl flex-col gap-14">
-      <div class="flex flex-col gap-7">
-        <p class="max-w-[12ch] text-[2.25rem] leading-[0.98] tracking-[-0.055em] sm:text-[3.75rem]">
-          Build a quieter corner of the internet.
-        </p>
-        <p class="max-w-[42rem] text-base text-white/68 sm:text-lg">
-          {cleanDescription}
-        </p>
+<footer class="border-t border-white/35 bg-[#101010] text-white">
+  <div class="grid border-b border-white/18 lg:grid-cols-[minmax(18rem,0.95fr)_minmax(0,1.45fr)]">
+    <div class="relative overflow-hidden border-b border-white/18 px-4 py-10 sm:px-6 lg:border-b-0 lg:border-r lg:px-8 lg:py-14">
+      <div class="absolute left-0 top-0 h-4 w-28 bg-[#3cffd0]"></div>
+      <div class="absolute right-0 top-0 h-4 w-20 bg-[#5200ff]"></div>
+      <p class="font-mono text-[0.68rem] font-bold uppercase tracking-[0.18em] text-white/45">
+        Personal web dispatch
+      </p>
+      <a href="/" class="verge-display mt-5 block max-w-[8ch] text-[clamp(4.75rem,14vw,9rem)] leading-[0.72] tracking-normal text-white no-underline">
+        {'<EY />'}
+      </a>
+      <p class="mt-6 max-w-[36rem] text-base leading-8 text-white/68">
+        {cleanDescription}
+      </p>
+    </div>
 
-        <div class="flex flex-col gap-3 sm:flex-row sm:items-stretch">
+    <div class="grid lg:grid-rows-[auto_1fr]">
+      <div class="grid border-b border-white/18 md:grid-cols-[1fr_auto]">
+        <div class="px-4 py-8 sm:px-6 lg:px-8">
+          <p class="verge-display max-w-[11ch] text-[2.4rem] leading-[0.86] tracking-normal sm:text-[3.8rem]">
+            为互联网留一处安静角落。
+          </p>
+        </div>
+        <div class="flex items-stretch border-t border-white/18 md:border-l md:border-t-0">
           <a
             href="/atom.xml"
-            class="flex min-h-12 flex-1 items-center justify-between rounded-sm border border-white/20 bg-white px-4 py-3 text-base text-black no-underline transition-colors duration-150 hover:bg-[#f7f7f3]"
+            class="group flex min-w-56 flex-1 items-center justify-between gap-5 bg-[#3cffd0] px-5 py-6 text-black no-underline transition-colors duration-200 hover:bg-white md:flex-none md:px-7"
           >
-            <span class="text-black/55">Subscribe via feed</span>
-            <span class="font-medium">RSS</span>
+            <span>
+              <span class="block font-mono text-[0.66rem] font-bold uppercase tracking-[0.16em] text-black/50">
+                Subscribe
+              </span>
+              <span class="mt-1 block text-lg font-bold leading-none">RSS Feed</span>
+            </span>
+            <span class="icon-[ri--rss-line] size-6 transition-transform duration-200 group-hover:rotate-12"></span>
           </a>
-
-          <div class="group relative inline-block">
-            <div class="absolute inset-0 z-[2] rounded-sm border border-black bg-[#f1f333]"></div>
-            <div class="absolute inset-0 z-[1] rounded-sm border border-black bg-[#dc341e] transition-transform duration-150 group-hover:translate-x-2 group-hover:translate-y-2"></div>
-            <a
-              href={githubLink?.url ?? '/'}
-              target={githubLink ? '_blank' : undefined}
-              rel={githubLink ? 'noreferrer' : undefined}
-              class="relative z-[3] inline-flex h-12 min-w-14 items-center justify-center rounded-sm border border-black bg-[#ff90e8] px-4 text-lg text-black no-underline transition-transform duration-150 group-hover:-translate-x-2 group-hover:-translate-y-2"
-              aria-label="Open GitHub"
-            >
-              →
-            </a>
-          </div>
+          <a
+            href={githubLink?.url ?? '/'}
+            target={githubLink ? '_blank' : undefined}
+            rel={githubLink ? 'noreferrer' : undefined}
+            class="grid min-w-20 place-items-center bg-[#5200ff] px-5 text-white no-underline transition-colors duration-200 hover:bg-white hover:text-black"
+            aria-label="打开 GitHub"
+          >
+            <span class:list={[githubLink?.icon ?? 'icon-[ri--arrow-right-up-line]', 'size-6']}></span>
+          </a>
         </div>
       </div>
 
-      <div class="flex items-center gap-3 text-sm text-white/72">
-        <span class="inline-flex size-7 items-center justify-center rounded-sm border border-white/20 bg-white p-1">
-          <img src="/avatar.svg" alt="" class="themed-svg size-full object-contain" loading="lazy" decoding="async" />
-        </span>
-        <p>© {yearDisplay} {SITE.author}</p>
-      </div>
-    </div>
-
-    <div class="flex w-full max-w-3xl flex-col gap-14">
-      <div class="grid gap-12 sm:grid-cols-2">
-        <div class="flex flex-col gap-4">
-          <p class="text-sm uppercase tracking-[0.14em] text-white/45">Explore</p>
-          <div class="flex flex-col gap-3 text-base">
+      <div class="grid gap-0 md:grid-cols-3">
+        <div class="border-b border-white/18 px-4 py-8 sm:px-6 md:border-b-0 md:border-r lg:px-8">
+          <p class="verge-kicker text-white/45">站内导航</p>
+          <div class="mt-5 grid gap-3">
             {primaryLinks.map((link) => (
-              <a href={link.url} class="text-white no-underline transition-colors duration-150 hover:text-[#ff90e8]">
-                {link.name}
+              <a href={link.url} class="group flex items-center justify-between text-lg font-semibold text-white no-underline transition-colors duration-200 hover:text-[#3cffd0]">
+                <span>{link.name}</span>
+                <span class="icon-[ri--arrow-right-up-line] size-4 opacity-35 transition-opacity duration-200 group-hover:opacity-100"></span>
               </a>
             ))}
           </div>
         </div>
 
-        <div class="flex flex-col gap-4">
-          <p class="text-sm uppercase tracking-[0.14em] text-white/45">Elsewhere</p>
-          <div class="flex flex-col gap-3 text-base">
+        <div class="border-b border-white/18 px-4 py-8 sm:px-6 md:border-b-0 md:border-r lg:px-8">
+          <p class="verge-kicker text-white/45">归档入口</p>
+          <div class="mt-5 grid gap-3">
+            {archiveLinks.map((link) => (
+              <a href={link.url} class="group flex items-center justify-between text-lg font-semibold text-white no-underline transition-colors duration-200 hover:text-[#3cffd0]">
+                <span>{link.name}</span>
+                <span class="icon-[ri--arrow-right-up-line] size-4 opacity-35 transition-opacity duration-200 group-hover:opacity-100"></span>
+              </a>
+            ))}
+          </div>
+        </div>
+
+        <div class="px-4 py-8 sm:px-6 lg:px-8">
+          <p class="verge-kicker text-white/45">订阅与社交</p>
+          <div class="mt-5 grid gap-3">
             {secondaryLinks.map((link) => (
               <a
                 href={link.url}
                 target={link.external ? '_blank' : undefined}
                 rel={link.external ? 'noreferrer' : undefined}
-                class="text-white no-underline transition-colors duration-150 hover:text-[#ff90e8]"
+                class="group flex items-center justify-between text-lg font-semibold text-white no-underline transition-colors duration-200 hover:text-[#3cffd0]"
               >
-                {link.name}
+                <span>{link.name}</span>
+                <span class="icon-[ri--arrow-right-up-line] size-4 opacity-35 transition-opacity duration-200 group-hover:opacity-100"></span>
               </a>
             ))}
           </div>
         </div>
       </div>
+    </div>
+  </div>
 
-      <div class="flex flex-wrap items-center justify-between gap-6">
-        <p class="max-w-[30rem] text-sm text-white/52">
-          Personal writing, selected projects, and notes on building software with less noise.
-        </p>
+  <div class="flex flex-col gap-5 px-4 py-6 text-sm text-white/52 sm:px-6 lg:flex-row lg:items-center lg:justify-between lg:px-8">
+    <div class="flex items-center gap-3">
+      <span class="inline-flex size-8 items-center justify-center rounded-sm border border-white/25 bg-white/8 p-1">
+        <img src="/avatar.svg" alt="" class="themed-svg size-full object-contain" loading="lazy" decoding="async" />
+      </span>
+      <p>© {yearDisplay} {SITE.author}</p>
+    </div>
 
-        <div class="flex flex-wrap items-center gap-3">
-          {SOCIAL_LINKS.map((item) => (
-            <a
-              href={item.url}
-              target="_blank"
-              rel="noreferrer"
-              class="inline-flex size-11 items-center justify-center rounded-sm border border-white/18 text-white no-underline transition-all duration-150 hover:-translate-x-[2px] hover:-translate-y-[2px] hover:border-white hover:bg-white hover:text-black hover:shadow-[2px_2px_0_0_rgba(255,255,255,0.18)]"
-              aria-label={item.name}
-            >
-              <span class:list={[item.icon, 'text-[1.1rem]']}></span>
-            </a>
-          ))}
+    <p class="max-w-[32rem] leading-6 text-white/45">
+      个人写作、项目记录和更少噪音的软件构建笔记。
+    </p>
 
-          <a
-            href="/atom.xml"
-            class="inline-flex size-11 items-center justify-center rounded-sm border border-white/18 text-white no-underline transition-all duration-150 hover:-translate-x-[2px] hover:-translate-y-[2px] hover:border-white hover:bg-white hover:text-black hover:shadow-[2px_2px_0_0_rgba(255,255,255,0.18)]"
-            aria-label="RSS"
-          >
-            <span class="icon-[ri--rss-line] text-[1.1rem]"></span>
-          </a>
-        </div>
-      </div>
+    <div class="flex flex-wrap items-center gap-3">
+      {SOCIAL_LINKS.map((item) => (
+        <a
+          href={item.url}
+          target="_blank"
+          rel="noreferrer"
+          class="verge-icon-button"
+          aria-label={item.name}
+        >
+          <span class:list={[item.icon, 'text-[1.1rem]']}></span>
+        </a>
+      ))}
+
+      <a href="/atom.xml" class="verge-icon-button" aria-label="RSS">
+        <span class="icon-[ri--rss-line] text-[1.1rem]"></span>
+      </a>
     </div>
   </div>
 </footer>
