@@ -13,17 +13,33 @@ type Props = {
   title: string
   description: string
   image?: string
+  ogType?: 'website' | 'article'
+  publishedTime?: string
+  modifiedTime?: string
+  author?: string
+  tags?: string[]
   fullWidth?: boolean
   hideFooter?: boolean
 }
 
-const { title, description, image, fullWidth = false, hideFooter = false }: Props = Astro.props
+const {
+  title,
+  description,
+  image,
+  ogType,
+  publishedTime,
+  modifiedTime,
+  author,
+  tags,
+  fullWidth = false,
+  hideFooter = false,
+}: Props = Astro.props
 ---
 
 <!doctype html>
 <html lang={SITE.lang} transition:name="root" transition:animate={SITE.transition ? 'fade' : 'none'}>
   <head>
-    <Head title={`${title} | ${SITE.title}`} {description} {image} />
+    <Head title={`${title} | ${SITE.title}`} {description} {image} {ogType} {publishedTime} {modifiedTime} {author} {tags} />
   </head>
   <body class="flex flex-col">
     <Header />

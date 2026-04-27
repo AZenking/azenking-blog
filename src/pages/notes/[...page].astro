@@ -42,18 +42,19 @@ const isFirstPage = page.currentPage === 1
 const featuredNote = isFirstPage ? page.data[0] : null
 const compactNotes = isFirstPage ? page.data.slice(1, 4) : []
 const gridNotes = isFirstPage ? page.data.slice(1) : page.data
+const notesDescription = `Ethan Young 的短笔记归档，收录 ${allNotes.length} 条工具配置、前端修复、工程片段、问题排查和日常记录。`
 ---
 
-<Layout title="Notes" description="Short notes and logs" fullWidth>
-  <div class="min-h-screen bg-[#f4f4f0] text-black dark:bg-[#242423] dark:text-white">
-    <section class="w-full px-4 py-14 sm:px-6 sm:py-20 lg:px-8">
-      <div class="border-b border-black pb-8 dark:border-white/35">
+<Layout title="笔记" description={notesDescription} fullWidth>
+  <div class="verge-shell">
+    <section class="verge-container">
+      <div class="border-b pb-8 verge-rule">
         <div class="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
           <div class="max-w-3xl">
-            <p class="text-[0.72rem] uppercase tracking-[0.14em] text-black/48 dark:text-white/45">Quick Notes</p>
-            <h1 class="mt-4 text-[clamp(2.5rem,6vw,4.75rem)] leading-[1.02] tracking-[-0.06em]">Notes</h1>
-            <p class="mt-5 max-w-[48rem] text-base leading-8 text-black/66 sm:text-lg dark:text-white/66">
-              Short notes, small fixes, and working fragments collected in the same archive system as the long-form posts.
+            <p class="verge-kicker">快速笔记</p>
+            <h1 class="verge-display mt-4 text-[clamp(3rem,9vw,7rem)]">笔记</h1>
+            <p class="verge-copy mt-5 max-w-[48rem] text-base sm:text-lg">
+              收集日常修复、工具配置和工程片段，作为长文章之外的轻量记录。
             </p>
           </div>
 
@@ -62,28 +63,28 @@ const gridNotes = isFirstPage ? page.data.slice(1) : page.data
       </div>
 
       <div class="mt-8 flex flex-wrap gap-2">
-        <span class="inline-flex items-center rounded-sm bg-black px-3 py-2 text-sm text-white dark:bg-white dark:text-black">
-          All notes ({allNotes.length})
+        <span class="verge-pill verge-pill-active">
+          全部笔记 ({allNotes.length})
         </span>
         {topTags.map(([tag, count]) => (
-          <span class="inline-flex items-center gap-2 rounded-sm border border-black bg-white px-3 py-2 text-sm text-black dark:border-white/35 dark:bg-black dark:text-white">
+          <span class="verge-pill">
             <span>{tag}</span>
-            <span class="text-black/50 dark:text-white/50">({count})</span>
+            <span class="opacity-60">({count})</span>
           </span>
         ))}
       </div>
 
       <div class="mt-8 grid gap-3 sm:grid-cols-3">
-        <div class="rounded-lg border border-black bg-white px-4 py-4 dark:border-white/35 dark:bg-black">
-          <p class="text-[0.72rem] uppercase tracking-[0.12em] text-black/48 dark:text-white/48">Total</p>
+        <div class="verge-stat">
+          <p class="text-[0.72rem] uppercase tracking-[0.1em] text-white/48">总数</p>
           <p class="mt-2 text-3xl leading-none tracking-[-0.05em]">{allNotes.length}</p>
         </div>
-        <div class="rounded-lg border border-black bg-white px-4 py-4 dark:border-white/35 dark:bg-black">
-          <p class="text-[0.72rem] uppercase tracking-[0.12em] text-black/48 dark:text-white/48">This page</p>
+        <div class="verge-stat">
+          <p class="text-[0.72rem] uppercase tracking-[0.1em] text-white/48">本页</p>
           <p class="mt-2 text-3xl leading-none tracking-[-0.05em]">{page.data.length}</p>
         </div>
-        <div class="rounded-lg border border-black bg-white px-4 py-4 dark:border-white/35 dark:bg-black">
-          <p class="text-[0.72rem] uppercase tracking-[0.12em] text-black/48 dark:text-white/48">Tag mentions</p>
+        <div class="verge-stat">
+          <p class="text-[0.72rem] uppercase tracking-[0.1em] text-white/48">标签</p>
           <p class="mt-2 text-3xl leading-none tracking-[-0.05em]">{totalTagMentions}</p>
         </div>
       </div>
@@ -94,11 +95,11 @@ const gridNotes = isFirstPage ? page.data.slice(1) : page.data
             <article class="h-full">
               <a
                 href={`/notes/${featuredNote.id}`}
-                class="grid h-full overflow-hidden rounded-lg border border-black bg-white text-black no-underline transition-all duration-200 ease-in-out hover:-translate-x-1 hover:-translate-y-1 hover:shadow-[3px_3px_0_0_#000] dark:border-white/35 dark:bg-black dark:text-white dark:hover:shadow-[3px_3px_0_0_rgba(255,255,255,0.35)]"
+                class="verge-card-link grid h-full overflow-hidden"
               >
                 {
                   featuredNote.data.cover ? (
-                    <figure class="aspect-[1200/630] overflow-hidden border-b border-black dark:border-white/35">
+                    <figure class="verge-image-frame aspect-[1200/630] rounded-none border-x-0 border-t-0">
                       <LqipImage
                         src={featuredNote.data.cover}
                         alt={featuredNote.data.title}
@@ -111,7 +112,7 @@ const gridNotes = isFirstPage ? page.data.slice(1) : page.data
                       />
                     </figure>
                   ) : (
-                    <div class="flex aspect-[1200/630] items-center justify-center border-b border-black bg-[#ff90e8] px-8 text-center text-3xl leading-tight dark:border-white/35 dark:text-black">
+                    <div class="verge-accent-mint flex aspect-[1200/630] items-center justify-center border-b border-[var(--theme-accent)] px-5 text-center text-2xl leading-[1.08] sm:px-8 sm:text-3xl">
                       {featuredNote.data.title}
                     </div>
                   )
@@ -120,9 +121,9 @@ const gridNotes = isFirstPage ? page.data.slice(1) : page.data
                 <div class="flex h-full grow flex-col space-y-3 p-6">
                   <h2 class="text-2xl leading-tight md:text-4xl">{featuredNote.data.title}</h2>
                   {featuredNote.data.description && (
-                    <p class="flex-1 text-base leading-8 text-black/72 dark:text-white/68">{featuredNote.data.description}</p>
+                    <p class="flex-1 text-base leading-8 text-white/68">{featuredNote.data.description}</p>
                   )}
-                  <p class="text-base text-black/58 dark:text-white/58">
+                  <p class="text-base text-white/58">
                     {formatDate(featuredNote.data.updatedDate ?? featuredNote.data.pubDate)}
                   </p>
                 </div>
@@ -131,18 +132,18 @@ const gridNotes = isFirstPage ? page.data.slice(1) : page.data
           </section>
 
           <aside class="hidden w-full lg:block lg:w-[calc(33%-0.9375rem)]">
-            <div class="flex h-full flex-col rounded-lg border border-black bg-white p-5 dark:border-white/35 dark:bg-black">
-              <ul class="grow divide-y divide-black/12 overflow-y-auto dark:divide-white/12">
+            <div class="flex h-full flex-col verge-card-soft p-5">
+              <ul class="grow divide-y divide-white/12 overflow-y-auto">
                 {compactNotes.map((note) => (
                   <li class="py-4 first:pt-0 last:pb-0">
-                    <a href={`/notes/${note.id}`} class="group flex items-end justify-between gap-3 text-black no-underline dark:text-white">
+                    <a href={`/notes/${note.id}`} class="group flex items-end justify-between gap-3 text-white no-underline transition-colors hover:text-[var(--theme-highlight)]">
                       <div class="grid grid-cols-1 gap-1">
                         <h3 class="mb-0.5 text-2xl font-normal leading-tight tracking-[-0.04em]">{note.data.title}</h3>
-                        <p class="pb-0.5 text-base text-black/50 dark:text-white/50">
+                        <p class="pb-0.5 text-base opacity-60">
                           {formatDate(note.data.updatedDate ?? note.data.pubDate)}
                         </p>
                       </div>
-                      <div class="mr-1 ml-3 flex size-10 shrink-0 items-center justify-center self-end rounded-md border border-black p-2 transition-all duration-200 ease-in-out group-hover:-translate-x-px group-hover:-translate-y-px group-hover:shadow-[2px_2px_0_0_#000] dark:border-white/35 dark:group-hover:shadow-[2px_2px_0_0_rgba(255,255,255,0.35)]">
+                      <div class="verge-icon-button mr-1 ml-3 flex size-10 shrink-0 self-end p-2">
                         →
                       </div>
                     </a>
@@ -162,12 +163,12 @@ const gridNotes = isFirstPage ? page.data.slice(1) : page.data
                 <a
                   href={`/notes/${note.id}`}
                   class:list={[
-                    'grid h-full overflow-hidden rounded-lg border border-black bg-white text-black no-underline transition-all duration-200 ease-in-out hover:-translate-x-1 hover:-translate-y-1 hover:shadow-[3px_3px_0_0_#000] dark:border-white/35 dark:bg-black dark:text-white dark:hover:shadow-[3px_3px_0_0_rgba(255,255,255,0.35)]',
+                    'verge-card-link grid h-full overflow-hidden',
                     note.data.cover && 'grid-rows-[auto_1fr]',
                   ]}
                 >
                   {note.data.cover ? (
-                    <figure class="aspect-[1200/630] overflow-hidden border-b border-black dark:border-white/35">
+                    <figure class="verge-image-frame aspect-[1200/630] rounded-none border-x-0 border-t-0">
                       <LqipImage
                         src={note.data.cover}
                         alt={note.data.title}
@@ -184,15 +185,15 @@ const gridNotes = isFirstPage ? page.data.slice(1) : page.data
                   <div class="flex h-full grow flex-col space-y-2 p-6">
                     <h3 class="text-2xl leading-tight">{note.data.title}</h3>
                     {note.data.description ? (
-                      <p class="flex-1 overflow-hidden text-base text-black/72 dark:text-white/68">{note.data.description}</p>
+                      <p class="flex-1 overflow-hidden text-base text-white/68">{note.data.description}</p>
                     ) : (
                       <div class="flex-1"></div>
                     )}
-                    <p class="text-base text-black/58 dark:text-white/58">{formatDate(note.data.updatedDate ?? note.data.pubDate)}</p>
+                    <p class="text-base text-white/58">{formatDate(note.data.updatedDate ?? note.data.pubDate)}</p>
                     {note.data.tags && note.data.tags.length > 0 && (
                       <div class="flex flex-wrap gap-2">
                         {note.data.tags.slice(0, 3).map((tag) => (
-                          <span class="inline-flex rounded-sm border border-black px-2 py-1 text-sm leading-none dark:border-white/35">
+                          <span class="inline-flex rounded-full border border-current px-2 py-1 font-mono text-[0.68rem] uppercase tracking-[0.1em] leading-none opacity-75">
                             {tag}
                           </span>
                         ))}
@@ -204,7 +205,7 @@ const gridNotes = isFirstPage ? page.data.slice(1) : page.data
             ))}
           </div>
         ) : (
-          <p class="py-10 text-center text-black/58 dark:text-white/58">No notes found.</p>
+          <p class="py-10 text-center text-white/58">暂无笔记。</p>
         )}
       </section>
 

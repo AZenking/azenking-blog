@@ -485,6 +485,12 @@ image-figure-polaroid {
   }
 }
 
+@media (max-width: 767px) {
+  .markdown a.header-anchor {
+    display: none;
+  }
+}
+
 /* ===== 脚注样式 ===== */
 .markdown .footnotes {
   margin-block-start: var(--space-3xl);

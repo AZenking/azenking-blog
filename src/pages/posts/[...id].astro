@@ -6,6 +6,7 @@ import Comment from '~/components/posts/base/Comment.astro'
 import Prose from '~/components/posts/base/Prose.astro'
 import { POSTS_CONFIG, SITE } from '~/config'
 import { getAllPosts } from '~/lib/data'
+import { getSeoDescription } from '~/lib/seo'
 import { formatDate } from '~/lib/utils'
 import Layout from '~/layouts/Layout.astro'
 
@@ -53,6 +54,13 @@ const publishedDate = formatDate(frontmatter.pubDate)
 const updatedDate = frontmatter.updatedDate ? formatDate(frontmatter.updatedDate) : null
 const canonicalUrl = new URL(`/posts/${post.id}`, SITE.website).toString()
 const licenseLink = frontmatter.license ? LICENSE_LINKS[frontmatter.license] : undefined
+const articleImage = new URL(frontmatter.ogImage?.src ?? frontmatter.cover?.src ?? SITE.ogImage, SITE.website).toString()
+const articleDescription = getSeoDescription({
+  title: frontmatter.title,
+  description: frontmatter.description,
+  tags,
+  contentType: '文章',
+})
 
 const currentTags = new Set(tags)
 const relatedPosts = posts
@@ -77,64 +85,93 @@ const relatedPosts = posts
 
 <Layout
   title={frontmatter.title}
-  description={frontmatter.description || frontmatter.title}
-  image={frontmatter.ogImage?.src ? `${SITE.website}${frontmatter.ogImage.src}` : SITE.ogImage}
+  description={articleDescription}
+  image={articleImage}
+  ogType="article"
+  publishedTime={frontmatter.pubDate.toISOString()}
+  modifiedTime={(frontmatter.updatedDate ?? frontmatter.pubDate).toISOString()}
+  author={displayAuthor}
+  tags={tags}
   fullWidth
 >
   <script is:inline type="application/ld+json" set:html={JSON.stringify({
     "@context": "https://schema.org",
     "@type": "BlogPosting",
+    "mainEntityOfPage": {
+      "@type": "WebPage",
+      "@id": canonicalUrl,
+    },
     "headline": frontmatter.title,
-    "description": frontmatter.description,
+    "description": articleDescription,
     "datePublished": frontmatter.pubDate.toISOString(),
     "dateModified": (frontmatter.updatedDate ?? frontmatter.pubDate).toISOString(),
     "author": { "@type": "Person", "name": displayAuthor },
+    "publisher": {
+      "@type": "Person",
+      "name": SITE.author,
+    },
+    "image": articleImage,
+    "inLanguage": SITE.lang,
+    "keywords": tags.join(', '),
     "url": canonicalUrl,
-    ...(frontmatter.ogImage?.src ? { "image": `${SITE.website}${frontmatter.ogImage.src}` } : {}),
   })} />
-  <div class="gumroad-post min-h-screen bg-[#f4f4f0] text-black dark:bg-[#242423] dark:text-white">
-    <section class="mx-auto w-full max-w-3xl px-4 py-16 sm:px-6 md:py-24 lg:px-8">
+  <div class="verge-article-shell">
+    <section class="verge-article-container">
       <a
         href="/posts"
-        class="inline-flex items-center gap-2 text-base font-medium text-[#d64b2a] no-underline transition-colors hover:text-[#b22f14]"
+        class="verge-article-back verge-focus"
       >
         <span class="icon-[ph--arrow-left] size-5"></span>
-        <span>Back to Blog</span>
+        <span>返回文章</span>
       </a>
 
-      <header class="mt-10">
-        <div class="flex flex-wrap gap-2">
-          {tags.slice(0, 4).map((tag) => (
-            <a
-              href={`/tags/${encodeURIComponent(tag)}`}
-              class="inline-flex rounded-sm border border-black px-2 py-1 text-sm text-black no-underline transition-colors hover:bg-black hover:text-white dark:border-white/35 dark:text-white dark:hover:bg-white dark:hover:text-black"
-            >
-              {tag}
+      <header class="verge-article-header">
+        <div>
+          <div class="flex flex-wrap gap-2">
+            {tags.slice(0, 4).map((tag) => (
+              <a
+                href={`/tags/${encodeURIComponent(tag)}`}
+                class="verge-pill verge-focus"
+              >
+                {tag}
+              </a>
+            ))}
+          </div>
+
+          <h1 class="verge-article-title mt-6">
+            {frontmatter.title}
+          </h1>
+
+          {frontmatter.description && (
+            <p class="verge-article-deck mt-6">
+              {frontmatter.description}
+            </p>
+          )}
+        </div>
+
+        <aside class="grid gap-5">
+          <div class="verge-article-meta">
+            <p>作者 {displayAuthor}</p>
+            <time datetime={frontmatter.pubDate.toISOString()}>{publishedDate}</time>
+            {updatedDate && <p>更新 {updatedDate}</p>}
+            <p>{[minutesRead && `${minutesRead} 分钟阅读`, POSTS_CONFIG.wordCountView && wordCount && `${wordCount} 字`].filter(Boolean).join(' / ')}</p>
+          </div>
+
+          <div class="verge-article-actions">
+            <a class="verge-article-action verge-focus" href={canonicalUrl}>
+              <span class="icon-[ph--link] size-4"></span>
+              <span>链接</span>
             </a>
-          ))}
-        </div>
-
-        <h1 class="mt-6 text-[clamp(2.4rem,6vw,4.2rem)] leading-[1.06] tracking-[-0.06em]">
-          {frontmatter.title}
-        </h1>
-
-        <div class="mt-5 flex flex-wrap items-center gap-x-5 gap-y-2 text-lg text-black/56 dark:text-white/56">
-          <time datetime={frontmatter.pubDate.toISOString()}>{publishedDate}</time>
-          {updatedDate && <span>Updated {updatedDate}</span>}
-          {minutesRead && <span>{minutesRead} min read</span>}
-          {POSTS_CONFIG.wordCountView && wordCount && <span>{wordCount} words</span>}
-          <span>{displayAuthor}</span>
-        </div>
-
-        {frontmatter.description && (
-          <p class="mt-6 max-w-[44rem] text-xl leading-9 text-black/68 dark:text-white/68">
-            {frontmatter.description}
-          </p>
-        )}
+            <button class="verge-article-action verge-focus cursor-pointer" type="button" data-copy-link={canonicalUrl}>
+              <span class="icon-[ph--share-network] size-4"></span>
+              <span>分享</span>
+            </button>
+          </div>
+        </aside>
       </header>
 
       {frontmatter.cover && (
-        <figure class="mt-12 overflow-hidden rounded-lg border border-black bg-white dark:border-white/35 dark:bg-black">
+        <figure class="verge-article-hero">
           <div class="aspect-[1200/630]">
             <LqipImage
               src={frontmatter.cover}
@@ -150,43 +187,51 @@ const relatedPosts = posts
         </figure>
       )}
 
-      <main class="mt-10 border-t border-black py-12 dark:border-white/35">
-        <Prose class="gumroad-post-body">
-          <Content />
-        </Prose>
+      <div class="verge-article-body-grid">
+        <aside class="verge-article-rail" aria-label="文章详情">
+          <p>{tags[0] ?? 'Article'}</p>
+          <p>{publishedDate}</p>
+          {minutesRead && <p>{minutesRead} min read</p>}
+        </aside>
 
-        {frontmatter.license && (
-          <section class="mt-14 border-t border-black/14 pt-8 text-sm text-black/62 dark:border-white/12 dark:text-white/62">
-            <p class="leading-7">
-              Licensed under{' '}
-              {licenseLink ? (
-                <a href={licenseLink} target="_blank" rel="noreferrer" class="underline underline-offset-4 hover:text-black dark:hover:text-white">
-                  {frontmatter.license}
+        <main>
+          <Prose class="verge-article-body">
+            <Content />
+          </Prose>
+
+          {frontmatter.license && (
+            <section class="mt-14 border-t border-white/12 pt-8 text-sm text-white/62">
+              <p class="leading-7">
+                Licensed under{' '}
+                {licenseLink ? (
+                  <a href={licenseLink} target="_blank" rel="noreferrer" class="verge-link underline underline-offset-4">
+                    {frontmatter.license}
+                  </a>
+                ) : (
+                  <span>{frontmatter.license}</span>
+                )}
+                .
+              </p>
+              <p class="mt-2 leading-7">
+                永久链接：{' '}
+                <a href={canonicalUrl} class="verge-link underline underline-offset-4">
+                  {canonicalUrl}
                 </a>
-              ) : (
-                <span>{frontmatter.license}</span>
-              )}
-              .
-            </p>
-            <p class="mt-2 leading-7">
-              Permalink:{' '}
-              <a href={canonicalUrl} class="underline underline-offset-4 hover:text-black dark:hover:text-white">
-                {canonicalUrl}
-              </a>
-            </p>
-          </section>
-        )}
-      </main>
+              </p>
+            </section>
+          )}
+        </main>
+      </div>
 
       {(prev || next) && (
-        <nav class="border-t border-black py-10 dark:border-white/35" aria-label="Post navigation">
+        <nav class="border-t border-white/35 py-10" aria-label="文章导航">
           <div class="grid gap-4 sm:grid-cols-2">
             {next ? (
               <a
                 href={`/posts/${next.id}`}
-                class="group rounded-lg border border-black bg-white px-5 py-4 text-black no-underline transition-all duration-150 hover:-translate-x-[2px] hover:-translate-y-[2px] hover:shadow-[2px_2px_0_0_#000] dark:border-white/35 dark:bg-black dark:text-white dark:hover:shadow-[2px_2px_0_0_rgba(255,255,255,0.35)]"
+                class="verge-card-link px-5 py-4"
               >
-                <p class="text-[0.72rem] uppercase tracking-[0.1em] text-black/52 dark:text-white/52">{POSTS_CONFIG.prevPostText}</p>
+                <p class="text-[0.72rem] uppercase tracking-[0.1em] text-white/52">{POSTS_CONFIG.prevPostText}</p>
                 <p class="mt-2 text-base leading-7">{next.data.title}</p>
               </a>
             ) : (
@@ -196,9 +241,9 @@ const relatedPosts = posts
             {prev ? (
               <a
                 href={`/posts/${prev.id}`}
-                class="group rounded-lg border border-black bg-white px-5 py-4 text-black no-underline transition-all duration-150 hover:-translate-x-[2px] hover:-translate-y-[2px] hover:shadow-[2px_2px_0_0_#000] sm:text-right dark:border-white/35 dark:bg-black dark:text-white dark:hover:shadow-[2px_2px_0_0_rgba(255,255,255,0.35)]"
+                class="verge-card-link px-5 py-4 sm:text-right"
               >
-                <p class="text-[0.72rem] uppercase tracking-[0.1em] text-black/52 dark:text-white/52">{POSTS_CONFIG.nextPostText}</p>
+                <p class="text-[0.72rem] uppercase tracking-[0.1em] text-white/52">{POSTS_CONFIG.nextPostText}</p>
                 <p class="mt-2 text-base leading-7">{prev.data.title}</p>
               </a>
             ) : (
@@ -209,20 +254,20 @@ const relatedPosts = posts
       )}
 
       {relatedPosts.length > 0 && (
-        <section class="border-t border-black py-10 dark:border-white/35">
-          <h2 class="text-[0.78rem] uppercase tracking-[0.14em] text-black/48 dark:text-white/45">Related Articles</h2>
+        <section class="border-t border-white/35 py-10">
+          <h2 class="text-[0.78rem] uppercase tracking-[0.14em] text-white/45">相关文章</h2>
           <div class="mt-5 space-y-4">
             {relatedPosts.map((related) => {
               const relatedDate = related.data.updatedDate ?? related.data.pubDate
               return (
                 <a
                   href={`/posts/${related.id}`}
-                  class="group block rounded-lg border border-black bg-white px-5 py-4 text-black no-underline transition-all duration-150 hover:-translate-x-[2px] hover:-translate-y-[2px] hover:shadow-[2px_2px_0_0_#000] dark:border-white/35 dark:bg-black dark:text-white dark:hover:shadow-[2px_2px_0_0_rgba(255,255,255,0.35)]"
+                  class="verge-card-link block px-5 py-4"
                 >
-                  <p class="text-[0.75rem] text-black/50 dark:text-white/50">{formatDate(relatedDate)}</p>
+                  <p class="text-[0.75rem] opacity-60">{formatDate(relatedDate)}</p>
                   <h3 class="mt-1.5 text-xl leading-tight tracking-[-0.03em]">{related.data.title}</h3>
                   {related.data.description && (
-                    <p class="mt-2 line-clamp-2 text-sm leading-7 text-black/64 dark:text-white/64">
+                    <p class="mt-2 line-clamp-2 text-sm leading-7 text-white/64">
                       {related.data.description}
                     </p>
                   )}
@@ -233,67 +278,24 @@ const relatedPosts = posts
         </section>
       )}
 
-      <section class="border-t border-black pt-12 dark:border-white/35">
+      <section class="border-t border-white/35 pt-12">
         <Comment id={post.id} title={frontmatter.title} />
       </section>
     </section>
   </div>
 
-  <style>
-    :global(.gumroad-post .gumroad-post-body) {
-      color: rgb(0 0 0 / 0.86);
-      font-size: clamp(1.06rem, 1.18vw, 1.16rem);
-      line-height: 1.95;
-      letter-spacing: 0.002em;
-    }
-
-    :global(.dark .gumroad-post .gumroad-post-body) {
-      color: rgb(255 255 255 / 0.86);
-    }
-
-    :global(.gumroad-post .gumroad-post-body p) {
-      margin-block: 1.45em;
-      color: rgb(0 0 0 / 0.74);
-    }
-
-    :global(.dark .gumroad-post .gumroad-post-body p) {
-      color: rgb(255 255 255 / 0.72);
-    }
-
-    :global(.gumroad-post .gumroad-post-body h2) {
-      margin-top: 3.4rem;
-      margin-bottom: 1rem;
-      font-size: clamp(1.65rem, 2.25vw, 2.1rem);
-      line-height: 1.18;
-      letter-spacing: -0.03em;
-    }
-
-    :global(.gumroad-post .gumroad-post-body h3) {
-      margin-top: 2.5rem;
-      margin-bottom: 0.85rem;
-      font-size: clamp(1.28rem, 1.6vw, 1.55rem);
-      line-height: 1.25;
-      letter-spacing: -0.02em;
-    }
-
-    :global(.gumroad-post .gumroad-post-body img) {
-      border-radius: 0.5rem;
-      border: 1px solid rgb(0 0 0 / 0.15);
-    }
-
-    :global(.dark .gumroad-post .gumroad-post-body img) {
-      border-color: rgb(255 255 255 / 0.18);
-    }
-
-    :global(.gumroad-post .gumroad-post-body blockquote) {
-      border-left: 2px solid rgb(0 0 0 / 0.65);
-      padding-left: 1rem;
-      color: rgb(0 0 0 / 0.68);
-    }
-
-    :global(.dark .gumroad-post .gumroad-post-body blockquote) {
-      border-left-color: rgb(255 255 255 / 0.5);
-      color: rgb(255 255 255 / 0.68);
-    }
-  </style>
+  <script>
+    document.querySelectorAll('[data-copy-link]').forEach((button) => {
+      button.addEventListener('click', async () => {
+        const url = button.getAttribute('data-copy-link')
+        if (!url) return
+        try {
+          await navigator.clipboard.writeText(url)
+          button.setAttribute('aria-label', '链接已复制')
+        } catch {
+          window.location.href = url
+        }
+      })
+    })
+  </script>
 </Layout>

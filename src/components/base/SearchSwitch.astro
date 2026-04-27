@@ -7,38 +7,38 @@ interface Props {
 
 const {
   className = '',
-  label = 'Search',
+  label = '搜索',
   labelClass = 'hidden lg:inline',
 }: Props = Astro.props
 ---
 
 <button
-  class:list={['ui-control', className]}
+  class:list={['ui-control verge-focus cursor-pointer', className]}
   id="search-switch"
-  aria-label="Search"
-  title="Search (Ctrl+K)"
+  aria-label="搜索"
+  title="搜索 (Ctrl+K)"
 >
   <span class="icon-[material-symbols--manage-search] size-[17px]"></span>
   <span class:list={[labelClass]}>{label}</span>
 </button>
 
-<div id="search-mask" class="fixed z-200 hidden inset-0 bg-background/80 backdrop-blur-md dark:bg-background/90 transition-opacity duration-200 opacity-0">
+<div id="search-mask" class="fixed inset-0 z-200 hidden bg-black/78 opacity-0 backdrop-blur-sm transition-opacity duration-200">
   <div class="absolute left-1/2 top-20 -translate-x-1/2 transition-transform duration-300 -translate-y-4 search-panel-show">
-      <div id="search-panel" class="grid grid-rows-[auto_1fr] max-h-[80vh] w-[22rem] sm:w-[40rem] bg-background/95 dark:bg-background/95 border border-border shadow-lg dark:shadow-accent/20 overflow-hidden">
-      <div id="search-bar" class="grid grid-cols-[auto_1fr_auto_auto] items-center gap-2 px-4 h-12 border-b border-border">
-        <span class="icon-[material-symbols--manage-search] size-6 text-muted-foreground"></span>
-        <label class="sr-only" for="search-input">Search</label>
+      <div id="search-panel" class="grid max-h-[80vh] w-[22rem] grid-rows-[auto_1fr] overflow-hidden rounded-[1.25rem] border border-white/45 bg-[var(--theme-bg)] text-white sm:w-[40rem]">
+      <div id="search-bar" class="grid h-14 grid-cols-[auto_1fr_auto_auto] items-center gap-2 border-b border-white/28 px-4">
+        <span class="icon-[material-symbols--manage-search] size-6 text-[var(--theme-muted)]"></span>
+        <label class="sr-only" for="search-input">搜索</label>
         <input
           type="search"
           id="search-input"
-          class="w-full h-8 bg-transparent outline-none text-foreground placeholder:text-muted-foreground font-normal leading-8 text-base"
-          placeholder="Search"
+          class="h-9 w-full bg-transparent text-base font-normal leading-9 text-white outline-none placeholder:text-[var(--theme-muted)]"
+          placeholder="搜索"
           autocomplete="off"
         />
-        <button id="search-exact" class="inline-flex items-center gap-1 px-2 py-0.5 text-xs rounded border border-border text-muted-foreground hover:bg-accent select-none" aria-pressed="false" title="Exact Match">
-          Exact
+        <button id="search-exact" class="inline-flex min-h-8 cursor-pointer select-none items-center gap-1 rounded-full border border-white/35 px-3 py-1 font-mono text-xs uppercase tracking-[0.12em] text-[var(--theme-muted)] hover:border-[var(--theme-accent)] hover:text-[var(--theme-accent)]" aria-pressed="false" title="精确匹配">
+          精确
         </button>
-        <kbd class="hidden sm:inline-flex items-center gap-1 px-2 py-0.5 text-xs text-muted-foreground bg-muted rounded">ESC</kbd>
+        <kbd class="hidden items-center gap-1 rounded-full border border-white/25 bg-[var(--theme-surface-soft)] px-2 py-1 font-mono text-xs text-[var(--theme-muted)] sm:inline-flex">ESC</kbd>
       </div>
       <div id="search-results" class="overflow-y-auto no-scrollbar p-1 sm:p-2 overscroll-contain" data-base="/"></div>
     </div>
@@ -144,7 +144,7 @@ const {
       tip.innerHTML = `
         <div class="flex items-center justify-center gap-2 select-none">
           <span class="icon-[material-symbols--keyboard] size-5 text-muted-foreground"></span>
-          <span class="text-muted-foreground">Type to search</span>
+          <span class="text-muted-foreground">输入关键词搜索</span>
         </div>
       `
       searchResults?.appendChild(tip)
@@ -164,7 +164,7 @@ const {
         noResults.innerHTML = `
           <div class="flex items-center justify-center gap-2 select-none">
             <span class="icon-[material-symbols--help-outline] size-5 text-muted-foreground"></span>
-            <span class="text-muted-foreground">No results found</span>
+            <span class="text-muted-foreground">没有找到结果</span>
           </div>
         `
         searchResults?.appendChild(noResults)
@@ -213,7 +213,7 @@ const {
       noResults.innerHTML = `
         <div class="flex items-center justify-center gap-2 select-none">
           <span class="icon-[material-symbols--help-outline] size-5 text-muted-foreground"></span>
-          <span class="text-muted-foreground">No results in development mode</span>
+          <span class="text-muted-foreground">开发模式下暂无搜索结果</span>
         </div>
       `
       searchResults?.appendChild(noResults)

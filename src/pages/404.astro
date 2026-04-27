@@ -2,28 +2,28 @@
 import Layout from '~/layouts/Layout.astro'
 ---
 
-<Layout title="Page Not Found" description="404 Page" fullWidth>
-  <div class="flex min-h-[calc(100svh-10rem)] items-center bg-[#f4f4f0] px-4 py-16 text-black sm:px-6 sm:py-20 lg:px-8 dark:bg-[#242423] dark:text-white">
-    <section class="mx-auto w-full max-w-4xl rounded-lg border border-black bg-white p-8 text-center dark:border-white/35 dark:bg-black sm:p-12">
-      <p class="text-[0.72rem] uppercase tracking-[0.16em] text-black/48 dark:text-white/45">404</p>
-      <h1 class="mt-5 text-[clamp(2.4rem,6vw,4.75rem)] leading-[1.02] tracking-[-0.06em]">Page not found</h1>
-      <p class="mx-auto mt-6 max-w-[36rem] text-base leading-8 text-black/66 sm:text-lg dark:text-white/66">
-        The page you requested may have been moved, unpublished, or removed from the archive.
+<Layout title="页面未找到" description="页面未找到，可能已移动、取消发布或从 Ethan Young 的博客归档中移除。你可以返回首页、文章归档或标签索引继续浏览。" fullWidth>
+  <div class="verge-shell flex min-h-[calc(100svh-10rem)] items-center px-4 py-16 sm:px-6 sm:py-20 lg:px-8">
+    <section class="verge-card mx-auto w-full max-w-4xl p-8 text-center sm:p-12">
+      <p class="verge-kicker">404</p>
+      <h1 class="verge-display mt-5 text-[clamp(3rem,9vw,7rem)]">页面未找到</h1>
+      <p class="verge-copy mx-auto mt-6 max-w-[36rem] text-base sm:text-lg">
+        你访问的页面可能已经移动、取消发布，或从博客归档中移除。
       </p>
 
       <div class="mt-10 flex flex-wrap items-center justify-center gap-3">
         <a
           href="/"
-          class="inline-flex items-center rounded-sm bg-black px-5 py-3 text-sm text-white no-underline transition-all hover:-translate-x-px hover:-translate-y-px hover:shadow-[2px_2px_0_0_#000] dark:bg-white dark:text-black dark:hover:shadow-[2px_2px_0_0_rgba(255,255,255,0.35)]"
+          class="verge-button-primary"
         >
-          Go home
+          返回首页
         </a>
         <button
           type="button"
           onclick="history.back()"
-          class="inline-flex items-center rounded-sm border border-black bg-white px-5 py-3 text-sm text-black transition-all hover:-translate-x-px hover:-translate-y-px hover:shadow-[2px_2px_0_0_#000] dark:border-white/35 dark:bg-black dark:text-white dark:hover:shadow-[2px_2px_0_0_rgba(255,255,255,0.35)]"
+          class="verge-button-secondary cursor-pointer"
         >
-          Go back
+          返回上一页
         </button>
       </div>
     </section>
