@@ -4,22 +4,19 @@
   const prefersDark = window.matchMedia('(prefers-color-scheme: dark)')
   const root = document.documentElement
 
-  function applyTheme(theme) {
-    const isDark = theme === 'dark' || (theme === 'system' && prefersDark.matches)
-
-    root.classList.toggle('dark', isDark)
+  function applyTheme() {
+    root.classList.add('dark')
   }
 
-  const savedTheme = localStorage.getItem(STORAGE_KEY) || 'system'
-  applyTheme(savedTheme)
+  applyTheme()
 
   prefersDark.addEventListener('change', () => {
     if (localStorage.getItem(STORAGE_KEY) === 'system') {
-      applyTheme('system')
+      applyTheme()
     }
   })
 
   document.addEventListener('astro:after-swap', () => {
-    applyTheme(localStorage.getItem(STORAGE_KEY) || 'system')
+    applyTheme()
   })
 })()
