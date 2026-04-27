@@ -16,7 +16,7 @@ const ThemeToggle = ({ className = '' }: ThemeToggleProps) => {
 
     const metaThemeColor = document.querySelector('meta[name="theme-color"]')
     if (metaThemeColor) {
-      metaThemeColor.setAttribute('content', dark ? '#09090b' : '#FFFFFF')
+      metaThemeColor.setAttribute('content', '#101010')
     }
 
     setIsDark(dark)
