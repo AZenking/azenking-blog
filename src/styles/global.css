@@ -80,6 +80,16 @@
       "ShangguSansSC-VF", monospace;
 
     /* Verge-inspired editorial palette */
+    --theme-bg: #101010;
+    --theme-header: #101010;
+    --theme-surface: #131313;
+    --theme-surface-soft: #1b1b1b;
+    --theme-accent: #3cffd0;
+    --theme-secondary: #5200ff;
+    --theme-highlight: #f1f333;
+    --theme-text: #ffffff;
+    --theme-muted: #949494;
+
     --background: 0 0% 7%;
     --foreground: 0 0% 100%;
 
@@ -145,6 +155,16 @@
 
   /* Keep legacy dark toggles visually identical: the redesign has one dark canvas. */
   .dark {
+    --theme-bg: #101010;
+    --theme-header: #101010;
+    --theme-surface: #131313;
+    --theme-surface-soft: #1b1b1b;
+    --theme-accent: #3cffd0;
+    --theme-secondary: #5200ff;
+    --theme-highlight: #f1f333;
+    --theme-text: #ffffff;
+    --theme-muted: #949494;
+
     --background: 0 0% 7%;
     --foreground: 0 0% 100%;
     --accent: 168 100% 62%;
