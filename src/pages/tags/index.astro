@@ -25,7 +25,7 @@ const accentClasses = ['verge-accent-mint', 'verge-accent-purple', 'verge-accent
 <Layout {title} {description} fullWidth>
   <div class="verge-shell">
     <section class="mx-auto w-full max-w-[88rem] px-4 py-8 sm:px-6 sm:py-10 lg:px-8">
-      <div class="border-b border-white/35 pb-5">
+      <div class="border-b border-white/28 pb-5">
         <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <p class="verge-kicker">主题 / 标签 / 文章索引</p>
           <a href="/posts" class="verge-pill">返回文章</a>
@@ -55,13 +55,13 @@ const accentClasses = ['verge-accent-mint', 'verge-accent-purple', 'verge-accent
       </div>
 
       {featuredTags.length > 0 && (
-        <section class="grid gap-5 border-b border-white/35 py-5 lg:grid-cols-[minmax(0,1.35fr)_minmax(18rem,0.65fr)]">
+        <section class="grid gap-5 border-b border-white/28 py-5 lg:grid-cols-[minmax(0,1.35fr)_minmax(18rem,0.65fr)]">
           <div class:list={['verge-card p-5 sm:p-7', accentClasses[0]]}>
             <p class="verge-kicker opacity-65">最常用主题</p>
             <h2 class="mt-4 text-[clamp(3rem,8vw,7rem)] font-black leading-[0.78] tracking-normal">#{featuredTags[0].name}</h2>
             <div class="mt-8 flex flex-wrap gap-2">
               {featuredTags.slice(0, 6).map((tag) => (
-                <a href={`/tags/${encodeURIComponent(tag.name)}`} class="inline-flex min-h-11 items-center rounded-full border border-current px-4 py-2 font-mono text-xs font-semibold uppercase tracking-[0.12em] no-underline transition-colors hover:text-[var(--theme-highlight)]">
+                <a href={`/tags/${encodeURIComponent(tag.name)}`} class="inline-flex min-h-11 items-center rounded-full border border-current px-4 py-2 font-mono text-xs font-semibold uppercase tracking-[0.12em] no-underline transition-colors hover:text-[var(--theme-link-hover)]">
                   <span>{tag.name}</span>
                   <span class="ml-2 opacity-60">({tag.count})</span>
                 </a>
@@ -75,7 +75,7 @@ const accentClasses = ['verge-accent-mint', 'verge-accent-purple', 'verge-accent
               {featuredTags.slice(0, 8).map((tag, index) => (
                 <li class="py-4 first:pt-0 last:pb-0">
                   <a href={`/tags/${encodeURIComponent(tag.name)}`} class="group flex items-center justify-between gap-4 text-white no-underline">
-                    <span class="min-w-0 truncate text-lg font-black leading-tight tracking-normal transition-colors group-hover:text-[var(--theme-highlight)]">
+                    <span class="min-w-0 truncate text-lg font-black leading-tight tracking-normal transition-colors group-hover:text-[var(--theme-link-hover)]">
                       {String(index + 1).padStart(2, '0')} / #{tag.name}
                     </span>
                     <span class="shrink-0 font-mono text-[0.7rem] uppercase tracking-[0.12em] text-white/45">{tag.count}</span>

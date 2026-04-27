@@ -13,7 +13,7 @@ const { page, class: className = '' } = Astro.props
 ---
 
 <nav aria-label="分页" class={cn('mt-14 sm:mt-16 flex justify-center', className)}>
-  <div class="inline-flex items-center gap-2 rounded-full border border-white/35 bg-[var(--theme-bg)] p-1.5 text-white sm:gap-3 sm:p-2">
+  <div class="inline-flex items-center gap-2 rounded-full border border-white/28 bg-[var(--theme-bg)] p-1.5 text-white sm:gap-3 sm:p-2">
     <a
       href={page.url.prev}
       class={`inline-flex min-h-11 items-center gap-1 rounded-full px-3 font-mono text-xs font-semibold uppercase tracking-[0.12em] transition-colors sm:px-4 ${

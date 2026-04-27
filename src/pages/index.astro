@@ -1,108 +1,180 @@
 ---
 import { SITE } from '~/config.ts'
 import { getAllNotes, getAllPosts, getAllProjects } from '~/lib/data'
+import { formatDate } from '~/lib/utils'
 import Layout from '~/layouts/Layout.astro'
-
-import Peep1 from '~/assets/bust/peep-1.svg?url'
-import Peep2 from '~/assets/bust/peep-2.svg?url'
-import Peep8 from '~/assets/bust/peep-8.svg?url'
-import Peep10 from '~/assets/bust/peep-10.svg?url'
-import Peep15 from '~/assets/bust/peep-15.svg?url'
-import Peep17 from '~/assets/bust/peep-17.svg?url'
-import Peep22 from '~/assets/bust/peep-22.svg?url'
-import Peep24 from '~/assets/bust/peep-24.svg?url'
-import Peep29 from '~/assets/bust/peep-29.svg?url'
-import Peep31 from '~/assets/bust/peep-31.svg?url'
-import Peep36 from '~/assets/bust/peep-36.svg?url'
-import Peep38 from '~/assets/bust/peep-38.svg?url'
-import Peep43 from '~/assets/bust/peep-43.svg?url'
-import Peep50 from '~/assets/bust/peep-50.svg?url'
-import Peep57 from '~/assets/bust/peep-57.svg?url'
-import Peep64 from '~/assets/bust/peep-64.svg?url'
-import Peep71 from '~/assets/bust/peep-71.svg?url'
-import Peep78 from '~/assets/bust/peep-78.svg?url'
-import Peep85 from '~/assets/bust/peep-85.svg?url'
-import Peep92 from '~/assets/bust/peep-92.svg?url'
 
 const cleanDescription = SITE.description.replace(/^👋\s*/, '')
 const [posts, notes, projects] = await Promise.all([getAllPosts(), getAllNotes(), getAllProjects()])
-
-const busts = [
-  { src: Peep2, alt: 'Bust portrait 0', height: 'h-[7.5rem] sm:h-[8.5rem] lg:h-[9.5rem]' },
-  { src: Peep1, alt: 'Bust portrait 1', height: 'h-28 sm:h-32 lg:h-36' },
-  { src: Peep8, alt: 'Bust portrait 2', height: 'h-36 sm:h-40 lg:h-44' },
-  { src: Peep10, alt: 'Bust portrait 2b', height: 'h-[8rem] sm:h-[9rem] lg:h-[10rem]' },
-  { src: Peep15, alt: 'Bust portrait 3', height: 'h-[8rem] sm:h-[9rem] lg:h-[10rem]' },
-  { src: Peep17, alt: 'Bust portrait 3b', height: 'h-32 sm:h-36 lg:h-40' },
-  { src: Peep22, alt: 'Bust portrait 4', height: 'h-[7rem] sm:h-[8rem] lg:h-[9rem]' },
-  { src: Peep24, alt: 'Bust portrait 4b', height: 'h-[8.25rem] sm:h-[9.25rem] lg:h-[10.25rem]' },
-  { src: Peep29, alt: 'Bust portrait 5', height: 'h-40 sm:h-44 lg:h-48' },
-  { src: Peep31, alt: 'Bust portrait 5b', height: 'h-[7.75rem] sm:h-[8.75rem] lg:h-[9.75rem]' },
-  { src: Peep36, alt: 'Bust portrait 6', height: 'h-32 sm:h-36 lg:h-40' },
-  { src: Peep38, alt: 'Bust portrait 6b', height: 'h-36 sm:h-40 lg:h-44' },
-  { src: Peep43, alt: 'Bust portrait 7', height: 'h-[8rem] sm:h-[9rem] lg:h-[10rem]' },
-  { src: Peep50, alt: 'Bust portrait 8', height: 'h-36 sm:h-40 lg:h-44' },
-  { src: Peep57, alt: 'Bust portrait 9', height: 'h-28 sm:h-32 lg:h-36' },
-  { src: Peep64, alt: 'Bust portrait 10', height: 'h-32 sm:h-36 lg:h-40' },
-  { src: Peep71, alt: 'Bust portrait 11', height: 'h-[7.75rem] sm:h-[8.75rem] lg:h-[9.75rem]' },
-  { src: Peep78, alt: 'Bust portrait 12', height: 'h-40 sm:h-44 lg:h-48' },
-  { src: Peep85, alt: 'Bust portrait 13', height: 'h-[8rem] sm:h-[9rem] lg:h-[10rem]' },
-  { src: Peep92, alt: 'Bust portrait 14', height: 'h-[8.5rem] sm:h-[9.5rem] lg:h-[10.5rem]' },
-]
+const latestPosts = posts.slice(0, 3)
+const latestNotes = notes.slice(0, 4)
+const featuredProject = projects[0]
 ---
 
-<Layout title="首页" description={SITE.description} fullWidth hideFooter>
-  <section class="relative min-h-[calc(100svh-5rem)] overflow-hidden bg-[var(--theme-bg)] text-white">
-    <div class="pointer-events-none absolute inset-x-0 top-0 h-px bg-white/35"></div>
-    <div class="pointer-events-none absolute left-0 top-0 h-28 w-28 bg-[var(--theme-accent)] sm:h-36 sm:w-36"></div>
-    <div class="pointer-events-none absolute right-0 top-0 h-20 w-32 bg-[var(--theme-secondary)] sm:h-28 sm:w-44"></div>
-    <div class="pointer-events-none absolute inset-x-0 bottom-0 h-1/3 border-t border-white/35 bg-[var(--theme-surface)]"></div>
+<Layout title="首页" description={SITE.description} fullWidth>
+  <div class="verge-shell overflow-x-hidden">
+    <section class="relative overflow-hidden border-b border-white/28 bg-[var(--theme-bg)] text-white">
+      <div class="pointer-events-none absolute inset-x-0 top-0 h-px bg-white/35"></div>
+      <div class="pointer-events-none absolute left-0 top-0 h-24 w-24 bg-[var(--theme-accent)] sm:h-32 sm:w-32"></div>
+      <div class="pointer-events-none absolute right-0 top-0 h-8 w-20 bg-[var(--theme-secondary)] sm:h-24 sm:w-40"></div>
 
-    <div class="relative mx-auto flex min-h-[calc(100svh-5rem)] w-full max-w-[82rem] flex-col items-center justify-center px-4 pb-60 pt-16 text-center sm:px-6 sm:pb-[17rem] lg:px-8 lg:pb-80">
-      <p class="verge-kicker text-white/58">个人归档 / 技术笔记 / 产品实践</p>
+      <div class="relative mx-auto flex min-h-[calc(66svh-5rem)] w-full max-w-[82rem] min-w-0 flex-col items-center justify-center px-4 py-16 text-center sm:min-h-[calc(68svh-5rem)] sm:px-6 sm:py-20 lg:min-h-[calc(70svh-5rem)] lg:px-8 lg:py-24">
+        <p class="verge-kicker text-white/58">个人归档 / 技术笔记 / 产品实践</p>
 
-      <h1 class="verge-display mt-6 max-w-[8ch] text-balance text-[clamp(5rem,18vw,13.5rem)] leading-[0.76] tracking-normal">
-        {'<EY />'}
-      </h1>
+        <h1 class="brand-wordmark brand-wordmark-hero verge-display mt-5 max-w-[8ch] text-balance text-[clamp(4.35rem,17vw,12rem)] leading-[0.76] tracking-normal">
+          <span class="brand-wordmark-mark">&lt;</span><span>EY</span><span class="brand-wordmark-slash"> /</span><span class="brand-wordmark-mark">&gt;</span>
+        </h1>
 
-      <p class="verge-copy mt-5 max-w-[40rem] text-pretty text-base sm:text-lg">
-        {cleanDescription}
-      </p>
+        <p class="verge-copy mt-4 w-full max-w-[38rem] text-pretty text-base sm:text-lg">
+          {cleanDescription}
+        </p>
 
-      <div class="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
-        <a href="/posts" class="verge-button-primary min-w-44">
-          阅读文章
-        </a>
-        <a href="/projects" class="verge-button-secondary min-w-44">
-          查看项目
-        </a>
+        <div class="mt-7 flex flex-col items-center justify-center gap-3 sm:flex-row">
+          <a href="/posts" class="verge-button-primary min-w-44">
+            阅读文章
+          </a>
+          <a href="/projects" class="verge-button-secondary min-w-44">
+            查看项目
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <section class="verge-container">
+      <div class="grid gap-5 border-b pb-8 verge-rule lg:grid-cols-[minmax(0,1fr)_auto] lg:items-end">
+        <div>
+          <p class="verge-kicker">Latest Dispatch</p>
+          <h2 class="verge-display mt-4 text-[clamp(3rem,9vw,7rem)] leading-[0.78] tracking-normal">
+            Dispatch
+          </h2>
+          <p class="verge-copy mt-4 max-w-[46rem] text-base sm:text-lg">
+            从长文章、短笔记到项目构建，首页现在直接承接最近更新，而不只停留在封面。
+          </p>
+        </div>
+
+        <div class="flex flex-wrap gap-2 font-mono text-[0.68rem] font-semibold uppercase tracking-[0.14em] text-white/54">
+          <span class="rounded-full border border-white/30 px-3 py-2">{posts.length} Articles</span>
+          <span class="rounded-full border border-white/30 px-3 py-2">{notes.length} Notes</span>
+          <span class="rounded-full border border-white/30 px-3 py-2">{projects.length} Project</span>
+        </div>
       </div>
 
-      <div class="mt-7 grid w-full max-w-[22rem] grid-cols-2 gap-2 text-sm leading-7 text-white/62 sm:flex sm:max-w-none sm:flex-wrap sm:items-center sm:justify-center">
-        <a href="/posts" class="verge-pill justify-center">文章 {posts.length}</a>
-        <a href="/notes" class="verge-pill justify-center">笔记 {notes.length}</a>
-        <a href="/projects" class="verge-pill justify-center">项目 {projects.length}</a>
-        <a href="/photos" class="verge-pill justify-center">照片</a>
-      </div>
-    </div>
-
-    <div class="pointer-events-none absolute inset-x-0 bottom-0 overflow-hidden">
-      <div class="relative left-1/2 flex w-[112vw] min-w-max -translate-x-1/2 translate-y-3 items-end justify-center -space-x-4 sm:translate-y-4 sm:-space-x-6 lg:translate-y-5 lg:-space-x-8 xl:-space-x-10">
-        {busts.map((bust, index) => (
-          <div class:list={['shrink-0 overflow-hidden opacity-100', bust.height]}>
-            <img
-              src={bust.src}
-              alt={bust.alt}
-              class:list={[
-                'themed-svg h-full w-auto -scale-x-100 object-contain object-bottom',
-                index % 5 === 0 && 'opacity-90',
-              ]}
-              loading="lazy"
-              decoding="async"
-            />
+      <section class="grid gap-5 py-8 lg:grid-cols-[minmax(0,1.35fr)_minmax(18rem,0.65fr)]">
+        <div class="grid gap-5">
+          <div class="flex items-end justify-between gap-4">
+            <div>
+              <p class="verge-kicker">StoryStream</p>
+              <h3 class="mt-2 text-[clamp(2rem,4.6vw,4.2rem)] font-black leading-[0.9] tracking-normal text-white">
+                近期写作
+              </h3>
+            </div>
+            <a href="/posts" class="verge-pill hidden sm:inline-flex">全部文章</a>
           </div>
-        ))}
-      </div>
-    </div>
-  </section>
+
+          <div class="relative grid gap-4 md:pl-16 md:before:absolute md:before:left-7 md:before:top-2 md:before:h-[calc(100%-0.5rem)] md:before:w-px md:before:bg-white/25">
+            {latestPosts.map((post, index) => (
+              <article class="relative grid gap-3 md:grid-cols-[6.5rem_minmax(0,1fr)] md:gap-4">
+                <time
+                  datetime={formatDate(post.data.updatedDate ?? post.data.pubDate, 'iso')}
+                  class="font-mono text-[0.68rem] font-semibold uppercase tracking-[0.14em] text-white/48 md:-ml-16 md:pt-5"
+                >
+                  {formatDate(post.data.updatedDate ?? post.data.pubDate, 'dot')}
+                </time>
+
+                <a
+                  href={`/posts/${post.id}`}
+                  class:list={[
+                    'verge-card-link grid min-h-44 p-5',
+                    index === 0 ? 'verge-accent-mint' : '',
+                  ]}
+                >
+                  <p class:list={['verge-kicker opacity-65', index === 0 ? 'text-black/55' : '']}>
+                    文章 {String(index + 1).padStart(2, '0')}
+                  </p>
+                  <h4 class="verge-heading mt-3 text-[clamp(1.65rem,3vw,2.8rem)]">{post.data.title}</h4>
+                  {post.data.description && <p class="mt-3 line-clamp-2 text-sm leading-6 opacity-72">{post.data.description}</p>}
+                </a>
+              </article>
+            ))}
+          </div>
+        </div>
+
+        <aside class="verge-card-soft p-5">
+          <div class="flex items-center justify-between gap-4">
+            <p class="verge-kicker">Notes Rail</p>
+            <a href="/notes" class="text-sm text-[var(--theme-accent)] no-underline hover:text-[var(--theme-link-hover)]">
+              全部
+            </a>
+          </div>
+
+          <ul class="mt-4 divide-y divide-white/12">
+            {latestNotes.map((note) => (
+              <li class="py-4 first:pt-0 last:pb-0">
+                <a href={`/notes/${note.id}`} class="group grid gap-2 text-white no-underline">
+                  <p class="font-mono text-[0.68rem] font-semibold uppercase tracking-[0.14em] text-white/45">
+                    {formatDate(note.data.updatedDate ?? note.data.pubDate, 'dot')}
+                  </p>
+                  <h4 class="text-xl font-black leading-tight tracking-normal transition-colors group-hover:text-[var(--theme-link-hover)]">
+                    {note.data.title}
+                  </h4>
+                </a>
+              </li>
+            ))}
+          </ul>
+        </aside>
+      </section>
+
+      {featuredProject && (
+        <section class="border-t pt-8 verge-rule">
+          <div class="mb-6 flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
+            <div>
+              <p class="verge-kicker">项目实践</p>
+              <h3 class="mt-3 text-[clamp(1.9rem,4vw,3.15rem)] leading-[1.04] tracking-normal text-white">
+                构建中的东西
+              </h3>
+            </div>
+            <a href="/projects" class="verge-pill w-fit">项目归档</a>
+          </div>
+
+          <article class="verge-card overflow-hidden">
+            <div class="grid lg:grid-cols-[minmax(0,1fr)_auto]">
+              <div class="border-b border-white/28 px-6 py-6 lg:border-b-0 lg:border-r">
+                <p class="verge-kicker text-white/48">精选项目</p>
+                <h4 class="verge-heading mt-3 text-[clamp(2rem,4vw,4rem)]">{featuredProject.data.name}</h4>
+                <p class="verge-copy max-w-3xl text-base">{featuredProject.data.description}</p>
+              </div>
+              <div class="grid content-between gap-5 p-6 lg:min-w-72">
+                <div class="flex flex-wrap gap-2">
+                  <span class="verge-pill">星标 {featuredProject.data.star}</span>
+                  <span class="verge-pill">分叉 {featuredProject.data.fork}</span>
+                </div>
+                <div class="flex flex-wrap gap-3">
+                  {featuredProject.data.website && (
+                    <a
+                      href={featuredProject.data.website}
+                      target="_blank"
+                      rel="noreferrer"
+                      class="verge-button-primary"
+                    >
+                      访问站点
+                    </a>
+                  )}
+                  {featuredProject.data.githubUrl && (
+                    <a
+                      href={featuredProject.data.githubUrl}
+                      target="_blank"
+                      rel="noreferrer"
+                      class="verge-button-secondary"
+                    >
+                      源码
+                    </a>
+                  )}
+                </div>
+              </div>
+            </div>
+          </article>
+        </section>
+      )}
+    </section>
+  </div>
 </Layout>
