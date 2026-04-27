@@ -6,12 +6,17 @@ type Props = {
   title: string
   description: string
   image?: string
+  ogType?: 'website' | 'article'
+  publishedTime?: string
+  modifiedTime?: string
+  author?: string
+  tags?: string[]
 }
 
-const { title, description, image }: Props = Astro.props
+const { title, description, image, ogType = 'website', publishedTime, modifiedTime, author, tags = [] }: Props = Astro.props
 
 const canonicalURL = new URL(Astro.url.pathname, Astro.site)
-const ogImage = new URL(image || SITE.ogImage, Astro.url)
+const ogImage = new URL(image || SITE.ogImage, Astro.site)
 ---
 
 <script is:inline src="/js/theme.js"></script>
@@ -28,9 +33,8 @@ const ogImage = new URL(image || SITE.ogImage, Astro.url)
 <meta name="author" content={SITE.author} />
 
 <!-- color -->
-<meta name="theme-color" content="#f4f4f0" media="(prefers-color-scheme: light)" />
-<meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)" />
-<meta name="color-scheme" content="light dark" />
+<meta name="theme-color" content="var(--theme-bg)" />
+<meta name="color-scheme" content="dark" />
 
 <!-- icon -->
 <link rel="icon" type="image/x-icon" href="/favicon.ico" />
@@ -59,16 +63,20 @@ const ogImage = new URL(image || SITE.ogImage, Astro.url)
 <link rel="sitemap" href="/sitemap-index.xml" />
 
 <!-- Open Graph & Facebook -->
-<meta property="og:type" content="website" />
-<meta property="og:url" content={Astro.url} />
+<meta property="og:type" content={ogType} />
+<meta property="og:url" content={canonicalURL} />
 <meta property="og:title" content={title} />
 <meta property="og:site_name" content={SITE.title} />
 <meta property="og:description" content={description} />
 <meta property="og:image" content={ogImage} />
+{ogType === 'article' && publishedTime && <meta property="article:published_time" content={publishedTime} />}
+{ogType === 'article' && modifiedTime && <meta property="article:modified_time" content={modifiedTime} />}
+{ogType === 'article' && author && <meta property="article:author" content={author} />}
+{ogType === 'article' && tags.map((tag) => <meta property="article:tag" content={tag} />)}
 
 <!-- Twitter -->
 <meta property="twitter:card" content="summary_large_image" />
-<meta property="twitter:url" content={Astro.url} />
+<meta property="twitter:url" content={canonicalURL} />
 <meta property="twitter:title" content={title} />
 <meta property="twitter:description" content={description} />
 <meta property="twitter:image" content={ogImage} />

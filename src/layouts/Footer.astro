@@ -34,11 +34,11 @@ const secondaryLinks = [
 ]
 ---
 
-<footer class="border-t border-white/35 bg-[#101010] text-white">
+<footer class="border-t border-white/35 bg-[var(--theme-header)] text-white">
   <div class="grid border-b border-white/18 lg:grid-cols-[minmax(18rem,0.95fr)_minmax(0,1.45fr)]">
     <div class="relative overflow-hidden border-b border-white/18 px-4 py-10 sm:px-6 lg:border-b-0 lg:border-r lg:px-8 lg:py-14">
-      <div class="absolute left-0 top-0 h-4 w-28 bg-[#3cffd0]"></div>
-      <div class="absolute right-0 top-0 h-4 w-20 bg-[#5200ff]"></div>
+      <div class="absolute left-0 top-0 h-4 w-28 bg-[var(--theme-accent)]"></div>
+      <div class="absolute right-0 top-0 h-4 w-20 bg-[var(--theme-secondary)]"></div>
       <p class="font-mono text-[0.68rem] font-bold uppercase tracking-[0.18em] text-white/45">
         Personal web dispatch
       </p>
@@ -60,7 +60,7 @@ const secondaryLinks = [
         <div class="flex items-stretch border-t border-white/18 md:border-l md:border-t-0">
           <a
             href="/atom.xml"
-            class="group flex min-w-56 flex-1 items-center justify-between gap-5 bg-[#3cffd0] px-5 py-6 text-black no-underline transition-colors duration-200 hover:bg-white md:flex-none md:px-7"
+            class="group flex min-w-56 flex-1 items-center justify-between gap-5 bg-[var(--theme-accent)] px-5 py-6 text-black no-underline transition-colors duration-200 hover:bg-white md:flex-none md:px-7"
           >
             <span>
               <span class="block font-mono text-[0.66rem] font-bold uppercase tracking-[0.16em] text-black/50">
@@ -74,7 +74,7 @@ const secondaryLinks = [
             href={githubLink?.url ?? '/'}
             target={githubLink ? '_blank' : undefined}
             rel={githubLink ? 'noreferrer' : undefined}
-            class="grid min-w-20 place-items-center bg-[#5200ff] px-5 text-white no-underline transition-colors duration-200 hover:bg-white hover:text-black"
+            class="grid min-w-20 place-items-center bg-[var(--theme-secondary)] px-5 text-white no-underline transition-colors duration-200 hover:bg-white hover:text-black"
             aria-label="打开 GitHub"
           >
             <span class:list={[githubLink?.icon ?? 'icon-[ri--arrow-right-up-line]', 'size-6']}></span>
@@ -87,7 +87,7 @@ const secondaryLinks = [
           <p class="verge-kicker text-white/45">站内导航</p>
           <div class="mt-5 grid gap-3">
             {primaryLinks.map((link) => (
-              <a href={link.url} class="group flex items-center justify-between text-lg font-semibold text-white no-underline transition-colors duration-200 hover:text-[#3cffd0]">
+              <a href={link.url} class="group flex items-center justify-between text-lg font-semibold text-white no-underline transition-colors duration-200 hover:text-[var(--theme-accent)]">
                 <span>{link.name}</span>
                 <span class="icon-[ri--arrow-right-up-line] size-4 opacity-35 transition-opacity duration-200 group-hover:opacity-100"></span>
               </a>
@@ -99,7 +99,7 @@ const secondaryLinks = [
           <p class="verge-kicker text-white/45">归档入口</p>
           <div class="mt-5 grid gap-3">
             {archiveLinks.map((link) => (
-              <a href={link.url} class="group flex items-center justify-between text-lg font-semibold text-white no-underline transition-colors duration-200 hover:text-[#3cffd0]">
+              <a href={link.url} class="group flex items-center justify-between text-lg font-semibold text-white no-underline transition-colors duration-200 hover:text-[var(--theme-accent)]">
                 <span>{link.name}</span>
                 <span class="icon-[ri--arrow-right-up-line] size-4 opacity-35 transition-opacity duration-200 group-hover:opacity-100"></span>
               </a>
@@ -115,7 +115,7 @@ const secondaryLinks = [
                 href={link.url}
                 target={link.external ? '_blank' : undefined}
                 rel={link.external ? 'noreferrer' : undefined}
-                class="group flex items-center justify-between text-lg font-semibold text-white no-underline transition-colors duration-200 hover:text-[#3cffd0]"
+                class="group flex items-center justify-between text-lg font-semibold text-white no-underline transition-colors duration-200 hover:text-[var(--theme-accent)]"
               >
                 <span>{link.name}</span>
                 <span class="icon-[ri--arrow-right-up-line] size-4 opacity-35 transition-opacity duration-200 group-hover:opacity-100"></span>

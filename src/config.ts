@@ -15,8 +15,8 @@ import type {
 //--- Readme Page Config ---
 export const SITE: Site = {
   title: 'Ethan Yang',
-  description: '👋 大家好，我是 Ethan Young，一名常驻南京的程序员，也是一位在生活中持续迭代的普通人',
-  website: 'https://ethyoung.me/',
+  description: 'Ethan Young 的个人博客，记录前端开发、工程实践、产品构建、工具配置、生活观察和持续迭代的日常思考。',
+  website: 'https://www.ethyoung.me/',
   lang: 'zh-CN',
   base: '/',
   author: 'Ethan',
@@ -26,38 +26,38 @@ export const SITE: Site = {
 
 export const HEADER_LINKS: Link[] = [
   {
-    name: 'Posts',
+    name: '文章',
     url: '/posts',
   },
   {
-    name: 'Projects',
+    name: '项目',
     url: '/projects',
   },
   {
-    name: 'Photos',
+    name: '照片',
     url: '/photos',
   },
   {
-    name: 'Friends',
+    name: '朋友',
     url: '/friends',
   },
 ]
 
 export const FOOTER_LINKS: Link[] = [
   {
-    name: 'Readme',
+    name: '首页',
     url: '/',
   },
   {
-    name: 'Tags',
+    name: '标签',
     url: '/tags',
   },
   {
-    name: 'Photos',
+    name: '照片',
     url: '/photos',
   },
   {
-    name: 'Friends',
+    name: '朋友',
     url: '/friends',
   },
 ]
@@ -73,8 +73,8 @@ export const SOCIAL_LINKS: SocialLink[] = [
 
 //--- Posts Page Config ---
 export const POSTS_CONFIG: PostConfig = {
-  title: 'Posts',
-  description: 'Ethan Yang',
+  title: '文章',
+  description: 'Ethan Young 的文章归档，收录前端开发、工程实践、工具配置、技术复盘、项目构建和生活总结等长篇内容。',
   introduce: '在这里，我分享了我在编程、技术和生活方面的见解和经验。希望你能在这里找到有价值的内容，并与我一起成长！',
   author: 'Ethan',
   postPageConfig: {
@@ -111,26 +111,26 @@ export const COMMENT_CONFIG: CommentConfig = {
 }
 
 export const TAGS_CONFIG: TagsConfig = {
-  title: 'Tags',
-  description: 'All tags of Posts',
-  introduce: 'All the tags for posts are here, you can click to filter them.',
+  title: '标签',
+  description: 'Ethan Young 博客的主题索引，按标签浏览前端技术文章、工程笔记、工具配置、生活总结和项目记录。',
+  introduce: '按主题浏览文章归档，快速找到前端开发、工程实践、工具配置和生活记录相关内容。',
 }
 
 export const PROJECTS_CONFIG: ProjectConfig = {
-  title: 'Projects',
-  description: '这里展示了我的一些项目示例。',
-  introduce: '这里展示了我的一些项目示例。',
+  title: '项目',
+  description: 'Ethan Young 的项目作品集，展示个人产品、开源工具、前端实验、界面设计和长期维护的构建记录。',
+  introduce: '这里展示了一些个人产品、开源工具、前端实验和持续迭代中的项目记录。',
 }
 
 export const PHOTOS_CONFIG: PhotosConfig = {
-  title: 'Photos',
-  description: '这里记录了我在日常生活中拍摄的一些照片。',
-  introduce: '这里记录了我在日常生活中拍摄的一些照片。',
+  title: '照片',
+  description: 'Ethan Young 的照片日志，记录日常生活、城市片段、旅行观察、空间细节和个人视角下的影像归档。',
+  introduce: '这里记录了我在日常生活中拍摄的一些照片，包括城市片段、旅行观察和个人视角下的影像归档。',
 }
 
 export const FRIENDS_CONFIG: FriendsConfig = {
-  title: 'Friends',
-  description: '这里展示了一些我关注的朋友和博客。',
+  title: '朋友',
+  description: 'Ethan Young 的友链目录，收录持续写作、分享前端技术、设计、生活记录和产品观察的朋友站点。',
   introduce: '一些我常逛并且推荐的朋友站点。如果你想交换友链，欢迎联系我。',
 }
 

@@ -1,8 +1,8 @@
 ---
+import MasonryPhotoFeed from '~/components/photos/MasonryPhotoFeed'
 import { PHOTOS_CONFIG } from '~/config'
 import { PhotosList } from '~/lib/photos'
 import Layout from '~/layouts/Layout.astro'
-import MasonryPhotoFeed from '~/components/photos/MasonryPhotoFeed'
 
 const { title, description, introduce } = PHOTOS_CONFIG
 
@@ -10,7 +10,7 @@ const galleryPhotos = PhotosList.flatMap((album) =>
   album.photos.map((photo, index) => ({
     src: typeof photo.src === 'string' ? photo.src : photo.src.src,
     alt: photo.alt,
-    description: photo.description ?? `${album.title} · 生活片段 ${String(index + 1).padStart(2, '0')}`,
+    description: photo.description ?? `${album.title} / Frame ${String(index + 1).padStart(2, '0')}`,
     album: album.title,
     date: album.date,
     width: photo.width,
@@ -22,54 +22,53 @@ const totalAlbums = PhotosList.length
 const totalPhotos = galleryPhotos.length
 const latestAlbum = PhotosList[0]
 const featuredPhoto = galleryPhotos[0]
+const sidePhotos = galleryPhotos.slice(1, 4)
 ---
 
 <Layout {title} {description} fullWidth>
-  <div class="min-h-screen bg-[#f4f4f0] text-black dark:bg-[#242423] dark:text-white">
-    <section class="w-full px-4 py-14 sm:px-6 sm:py-20 lg:px-8">
-      <div class="border-b border-black pb-8 dark:border-white/35">
-        <div class="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
-          <div class="max-w-3xl">
-            <p class="text-[0.72rem] uppercase tracking-[0.14em] text-black/48 dark:text-white/45">Photo Journal</p>
-            <h1 class="mt-4 text-[clamp(2.5rem,6vw,4.75rem)] leading-[1.02] tracking-[-0.06em]">{title}</h1>
-            <p class="mt-5 max-w-[48rem] text-base leading-8 text-black/66 sm:text-lg dark:text-white/66">
-              {introduce}
-            </p>
+  <div class="verge-shell">
+    <section class="mx-auto w-full max-w-[88rem] px-4 py-8 sm:px-6 sm:py-10 lg:px-8">
+      <div class="border-b border-white/35 pb-5">
+        <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+          <p class="verge-kicker">照片日志 / 日常片段</p>
+          <div class="flex flex-wrap gap-2">
+            <span class="verge-pill verge-pill-active">全部照片 ({totalPhotos})</span>
+            {PhotosList.map((album) => (
+              <span class="verge-pill">
+                <span>{album.title}</span>
+                <span class="opacity-60">({album.photos.length})</span>
+              </span>
+            ))}
+          </div>
+        </div>
+
+        <div class="mt-5 grid gap-5 lg:grid-cols-[minmax(0,1fr)_22rem] lg:items-end">
+          <div>
+            <h1 class="verge-display text-[clamp(5rem,15vw,13rem)] leading-[0.76] tracking-normal">{title}</h1>
+            <p class="verge-copy mt-4 max-w-[52rem] text-base sm:text-lg">{introduce}</p>
           </div>
 
-          <div class="grid w-full max-w-xl grid-cols-1 gap-3 sm:grid-cols-3">
-            <div class="rounded-lg border border-black bg-white px-4 py-4 dark:border-white/35 dark:bg-black">
-              <p class="text-[0.72rem] uppercase tracking-[0.12em] text-black/48 dark:text-white/48">Albums</p>
-              <p class="mt-2 text-3xl leading-none tracking-[-0.05em]">{totalAlbums}</p>
+          <div class="grid grid-cols-3 gap-3">
+            <div class="verge-stat">
+              <p class="verge-kicker text-white/48">相册</p>
+              <p class="mt-2 text-3xl leading-none tracking-normal text-white">{totalAlbums}</p>
             </div>
-            <div class="rounded-lg border border-black bg-white px-4 py-4 dark:border-white/35 dark:bg-black">
-              <p class="text-[0.72rem] uppercase tracking-[0.12em] text-black/48 dark:text-white/48">Frames</p>
-              <p class="mt-2 text-3xl leading-none tracking-[-0.05em]">{totalPhotos}</p>
+            <div class="verge-stat">
+              <p class="verge-kicker text-white/48">照片</p>
+              <p class="mt-2 text-3xl leading-none tracking-normal text-white">{totalPhotos}</p>
             </div>
-            <div class="rounded-lg border border-black bg-white px-4 py-4 dark:border-white/35 dark:bg-black">
-              <p class="text-[0.72rem] uppercase tracking-[0.12em] text-black/48 dark:text-white/48">Updated</p>
-              <p class="mt-2 text-2xl leading-none tracking-[-0.05em]">{latestAlbum?.date ?? 'Soon'}</p>
+            <div class="verge-stat">
+              <p class="verge-kicker text-white/48">最新</p>
+              <p class="mt-2 text-2xl leading-none tracking-normal text-white">{latestAlbum?.date ?? 'Soon'}</p>
             </div>
           </div>
         </div>
       </div>
 
-      <div class="mt-8 flex flex-wrap gap-2">
-        <span class="inline-flex items-center rounded-sm bg-black px-3 py-2 text-sm text-white dark:bg-white dark:text-black">
-          All frames ({totalPhotos})
-        </span>
-        {PhotosList.map((album) => (
-          <span class="inline-flex items-center gap-2 rounded-sm border border-black bg-white px-3 py-2 text-sm text-black dark:border-white/35 dark:bg-black dark:text-white">
-            <span>{album.title}</span>
-            <span class="text-black/50 dark:text-white/50">({album.photos.length})</span>
-          </span>
-        ))}
-      </div>
-
-      <div class="mt-8 grid gap-8 lg:grid-cols-[minmax(0,1.35fr)_24rem]">
-        {featuredPhoto && (
-          <article class="overflow-hidden rounded-lg border border-black bg-white dark:border-white/35 dark:bg-black">
-            <div class="aspect-[4/3] overflow-hidden border-b border-black bg-[#ece9df] dark:border-white/35 dark:bg-[#111]">
+      {featuredPhoto && (
+        <section class="grid gap-5 border-b border-white/35 py-5 lg:grid-cols-[minmax(0,1.4fr)_minmax(18rem,0.6fr)]">
+          <article class="verge-card overflow-hidden">
+            <figure class="aspect-[16/10] overflow-hidden border-b border-white/35 bg-[var(--theme-surface-soft)]">
               <img
                 src={featuredPhoto.src}
                 alt={featuredPhoto.alt}
@@ -79,61 +78,74 @@ const featuredPhoto = galleryPhotos[0]
                 loading="eager"
                 decoding="async"
               />
-            </div>
-            <div class="grid gap-3 p-6">
-              <p class="text-[0.72rem] uppercase tracking-[0.14em] text-black/48 dark:text-white/48">Featured frame</p>
-              <h2 class="text-[clamp(1.8rem,3vw,3rem)] leading-[1.04] tracking-[-0.05em]">
-                {featuredPhoto.description ?? featuredPhoto.alt}
-              </h2>
-              <p class="text-base leading-8 text-black/66 dark:text-white/66">
-                Click any frame below to open the lightbox. The page keeps the same editorial shell as the rest of the site, but
-                lets the photography stay dominant.
-              </p>
-              <p class="text-sm uppercase tracking-[0.12em] text-black/48 dark:text-white/48">
-                {[featuredPhoto.album, featuredPhoto.date].filter(Boolean).join(' · ')}
+            </figure>
+            <div class="grid gap-3 p-5 sm:p-6">
+              <p class="verge-kicker">精选照片</p>
+              <h2 class="verge-heading text-[clamp(1.9rem,3.6vw,3.6rem)]">{featuredPhoto.description}</h2>
+              <p class="font-mono text-sm uppercase tracking-[0.12em] text-white/48">
+                {[featuredPhoto.album, featuredPhoto.date].filter(Boolean).join(' / ')}
               </p>
             </div>
           </article>
-        )}
 
-        <aside class="rounded-lg border border-black bg-white p-5 dark:border-white/35 dark:bg-black">
-          <p class="text-[0.72rem] uppercase tracking-[0.14em] text-black/48 dark:text-white/45">Recent sets</p>
-          <ul class="mt-4 divide-y divide-black/12 dark:divide-white/12">
-            {PhotosList.map((album) => (
-              <li class="py-4 first:pt-0 last:pb-0">
-                <div class="flex items-start justify-between gap-4">
-                  <div>
-                    <h3 class="text-2xl leading-tight tracking-[-0.04em]">{album.title}</h3>
-                    <p class="mt-2 text-sm leading-7 text-black/64 dark:text-white/64">{album.description}</p>
-                  </div>
-                  <div class="rounded-md border border-black px-3 py-2 text-right text-sm dark:border-white/35">
-                    <p>{album.photos.length}</p>
-                    <p class="mt-1 text-[0.68rem] uppercase tracking-[0.12em] text-black/45 dark:text-white/45">frames</p>
-                  </div>
-                </div>
-                <p class="mt-3 text-sm uppercase tracking-[0.12em] text-black/45 dark:text-white/45">{album.date}</p>
-              </li>
-            ))}
-          </ul>
-        </aside>
-      </div>
+          <aside class="grid gap-5">
+            <div class="verge-card-soft p-5">
+              <p class="verge-kicker">最近相册</p>
+              <ul class="mt-4 divide-y divide-white/12">
+                {PhotosList.map((album) => (
+                  <li class="py-4 first:pt-0 last:pb-0">
+                    <div class="flex items-start justify-between gap-4">
+                      <div>
+                        <h3 class="text-2xl font-black leading-tight tracking-normal text-white">{album.title}</h3>
+                        <p class="mt-2 text-sm leading-7 text-white/64">{album.description}</p>
+                      </div>
+                      <div class="rounded-[1.25rem] border border-white/35 px-3 py-2 text-right text-sm text-white">
+                        <p>{album.photos.length}</p>
+                        <p class="mt-1 font-mono text-[0.68rem] uppercase tracking-[0.1em] text-white/45">张</p>
+                      </div>
+                    </div>
+                    <p class="mt-3 font-mono text-sm uppercase tracking-[0.12em] text-white/45">{album.date}</p>
+                  </li>
+                ))}
+              </ul>
+            </div>
 
-      <section class="mt-14 border-t border-black pt-8 dark:border-white/35">
-        <div class="mb-8 flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
+            {sidePhotos.length > 0 && (
+              <div class="grid grid-cols-3 gap-3">
+                {sidePhotos.map((photo) => (
+                  <figure class="aspect-square overflow-hidden rounded-[1.25rem] border border-white/35 bg-[var(--theme-surface-soft)]">
+                    <img
+                      src={photo.src}
+                      alt={photo.alt}
+                      width={photo.width}
+                      height={photo.height}
+                      class="h-full w-full object-cover"
+                      loading="lazy"
+                      decoding="async"
+                    />
+                  </figure>
+                ))}
+              </div>
+            )}
+          </aside>
+        </section>
+      )}
+
+      <section class="py-6">
+        <div class="mb-5 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
           <div>
-            <p class="text-[0.72rem] uppercase tracking-[0.14em] text-black/48 dark:text-white/45">Gallery</p>
-            <h2 class="mt-3 text-[clamp(1.9rem,4vw,3.15rem)] leading-[1.04] tracking-[-0.05em]">Recent Frames</h2>
+            <p class="verge-kicker">图库</p>
+            <h2 class="mt-2 text-[clamp(2rem,4.6vw,4.2rem)] font-black leading-[0.9] tracking-normal text-white">最近照片</h2>
           </div>
-          <p class="max-w-xl text-sm leading-7 text-black/62 dark:text-white/62">
-            A running archive of daily fragments, loaded progressively as you scroll. Open any image to browse the sequence in a
-            dedicated lightbox.
+          <p class="font-mono text-xs font-semibold uppercase tracking-[0.14em] text-white/48">
+            共 {totalPhotos} 张
           </p>
         </div>
 
         {galleryPhotos.length > 0 ? (
           <MasonryPhotoFeed photos={galleryPhotos} initialCount={9} loadStep={6} client:visible />
         ) : (
-          <p class="text-sm text-black/56 dark:text-white/56">No photos yet, wait for me to return.</p>
+          <p class="text-sm text-white/56">暂无照片。</p>
         )}
       </section>
     </section>
