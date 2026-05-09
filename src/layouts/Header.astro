@@ -77,7 +77,7 @@ const activeLink = navLinks.find((link) => isLinkActive(link.url, Astro.url.path
     </div>
 
     <div class="flex items-stretch justify-end border-l border-white/18">
-      <div class="hidden sm:flex" transition:persist="header-search-switch">
+      <div class="flex" transition:persist="header-search-switch">
         <SearchSwitch
           className="h-full min-w-16 rounded-none border-y-0 border-l-0 border-r border-white/18 bg-[var(--theme-header)] px-5 text-white hover:border-[var(--theme-accent)] hover:bg-[var(--theme-accent)] hover:text-black"
           labelClass="hidden xl:inline"
