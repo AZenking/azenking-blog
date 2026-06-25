@@ -19,35 +19,35 @@ const sortedTags = Object.entries(tagsMap)
 
 const totalTaggedMentions = sortedTags.reduce((sum, tag) => sum + tag.count, 0)
 const featuredTags = sortedTags.slice(0, 10)
-const accentClasses = ['verge-accent-mint', 'verge-accent-purple', 'verge-accent-yellow', 'verge-accent-pink', 'verge-accent-orange']
+const accentClasses = ['fly-accent-mint', 'fly-accent-purple', 'fly-accent-yellow', 'fly-accent-pink', 'fly-accent-orange']
 ---
 
 <Layout {title} {description} fullWidth>
-  <div class="verge-shell">
+  <div class="fly-shell">
     <section class="mx-auto w-full max-w-[88rem] px-4 py-8 sm:px-6 sm:py-10 lg:px-8">
-      <div class="border-b border-white/28 pb-5">
+      <div class="fly-hero -mx-4 px-4 pb-8 pt-8 sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8">
         <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-          <p class="verge-kicker">主题 / 标签 / 文章索引</p>
-          <a href="/posts" class="verge-pill">返回文章</a>
+          <p class="fly-hero-kicker">主题 / 标签 / 文章索引</p>
+          <a href="/posts" class="fly-pill">返回文章</a>
         </div>
 
         <div class="mt-5 grid gap-5 lg:grid-cols-[minmax(0,1fr)_22rem] lg:items-end">
           <div>
-            <h1 class="verge-display text-[clamp(5rem,15vw,13rem)] leading-[0.76] tracking-normal">{title}</h1>
-            <p class="verge-copy mt-4 max-w-[52rem] text-base sm:text-lg">{introduce}</p>
+            <h1 class="fly-display text-[clamp(5rem,15vw,13rem)] leading-[0.76] tracking-normal">{title}</h1>
+            <p class="fly-hero-copy mt-4 max-w-[52rem] text-base sm:text-lg">{introduce}</p>
           </div>
 
           <div class="grid grid-cols-3 gap-3">
-            <div class="verge-stat">
-              <p class="verge-kicker text-white/48">标签</p>
+            <div class="fly-stat">
+              <p class="fly-kicker text-white/70">标签</p>
               <p class="mt-2 text-3xl leading-none tracking-normal text-white">{sortedTags.length}</p>
             </div>
-            <div class="verge-stat">
-              <p class="verge-kicker text-white/48">文章</p>
+            <div class="fly-stat">
+              <p class="fly-kicker text-white/70">文章</p>
               <p class="mt-2 text-3xl leading-none tracking-normal text-white">{posts.length}</p>
             </div>
-            <div class="verge-stat">
-              <p class="verge-kicker text-white/48">引用</p>
+            <div class="fly-stat">
+              <p class="fly-kicker text-white/70">引用</p>
               <p class="mt-2 text-3xl leading-none tracking-normal text-white">{totalTaggedMentions}</p>
             </div>
           </div>
@@ -55,9 +55,9 @@ const accentClasses = ['verge-accent-mint', 'verge-accent-purple', 'verge-accent
       </div>
 
       {featuredTags.length > 0 && (
-        <section class="grid gap-5 border-b border-white/28 py-5 lg:grid-cols-[minmax(0,1.35fr)_minmax(18rem,0.65fr)]">
-          <div class:list={['verge-card p-5 sm:p-7', accentClasses[0]]}>
-            <p class="verge-kicker opacity-65">最常用主题</p>
+        <section class="grid gap-5 border-b border-[var(--theme-border)] py-5 lg:grid-cols-[minmax(0,1.35fr)_minmax(18rem,0.65fr)]">
+          <div class:list={['fly-card p-5 sm:p-7', accentClasses[0]]}>
+            <p class="fly-kicker opacity-65">最常用主题</p>
             <h2 class="mt-4 text-[clamp(3rem,8vw,7rem)] font-black leading-[0.78] tracking-normal">#{featuredTags[0].name}</h2>
             <div class="mt-8 flex flex-wrap gap-2">
               {featuredTags.slice(0, 6).map((tag) => (
@@ -69,16 +69,16 @@ const accentClasses = ['verge-accent-mint', 'verge-accent-purple', 'verge-accent
             </div>
           </div>
 
-          <aside class="verge-card-soft p-5">
-            <p class="verge-kicker">热门主题</p>
-            <ul class="mt-4 divide-y divide-white/12">
+          <aside class="fly-card-soft p-5">
+            <p class="fly-kicker">热门主题</p>
+            <ul class="mt-4 divide-y divide-[var(--theme-border)]">
               {featuredTags.slice(0, 8).map((tag, index) => (
                 <li class="py-4 first:pt-0 last:pb-0">
-                  <a href={`/tags/${encodeURIComponent(tag.name)}`} class="group flex items-center justify-between gap-4 text-white no-underline">
+                  <a href={`/tags/${encodeURIComponent(tag.name)}`} class="group flex items-center justify-between gap-4 text-[var(--theme-text)] no-underline">
                     <span class="min-w-0 truncate text-lg font-black leading-tight tracking-normal transition-colors group-hover:text-[var(--theme-link-hover)]">
                       {String(index + 1).padStart(2, '0')} / #{tag.name}
                     </span>
-                    <span class="shrink-0 font-mono text-[0.7rem] uppercase tracking-[0.12em] text-white/45">{tag.count}</span>
+                    <span class="shrink-0 font-mono text-[0.7rem] uppercase tracking-[0.12em] text-[var(--theme-muted)]">{tag.count}</span>
                   </a>
                 </li>
               ))}
@@ -90,10 +90,10 @@ const accentClasses = ['verge-accent-mint', 'verge-accent-purple', 'verge-accent
       <section class="py-6">
         <div class="mb-5 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
           <div>
-            <p class="verge-kicker">索引</p>
-            <h2 class="mt-2 text-[clamp(2rem,4.6vw,4.2rem)] font-black leading-[0.9] tracking-normal text-white">全部主题</h2>
+            <p class="fly-kicker">索引</p>
+            <h2 class="mt-2 text-[clamp(2rem,4.6vw,4.2rem)] font-black leading-[0.9] tracking-normal text-[var(--theme-text)]">全部主题</h2>
           </div>
-          <p class="font-mono text-xs font-semibold uppercase tracking-[0.14em] text-white/48">
+          <p class="font-mono text-xs font-semibold uppercase tracking-[0.14em] text-[var(--theme-muted)]">
             共 {sortedTags.length} 个标签
           </p>
         </div>
@@ -106,7 +106,7 @@ const accentClasses = ['verge-accent-mint', 'verge-accent-purple', 'verge-accent
               return (
                 <a
                   href={`/tags/${encodeURIComponent(tag.name)}`}
-                  class:list={['verge-card-link flex min-h-56 flex-col justify-between p-5', index % 4 === 0 && accentClasses[index % accentClasses.length]]}
+                  class:list={['fly-card-link flex min-h-56 flex-col justify-between p-5', index % 4 === 0 && accentClasses[index % accentClasses.length]]}
                 >
                   <div class="flex items-start justify-between gap-4">
                     <h3 class="min-w-0 break-words text-[clamp(1.75rem,3vw,2.7rem)] font-black leading-[0.9] tracking-normal">#{tag.name}</h3>
@@ -121,10 +121,10 @@ const accentClasses = ['verge-accent-mint', 'verge-accent-purple', 'verge-accent
                     </div>
                     <div class="mt-4 flex items-end justify-between gap-4">
                       <div>
-                        <p class="verge-kicker opacity-60">占比</p>
+                        <p class="fly-kicker opacity-60">占比</p>
                         <p class="mt-2 text-3xl leading-none tracking-normal">{mentionPercent}%</p>
                       </div>
-                      <span class="verge-icon-button size-10">→</span>
+                      <span class="fly-icon-button size-10">→</span>
                     </div>
                   </div>
                 </a>
@@ -132,7 +132,7 @@ const accentClasses = ['verge-accent-mint', 'verge-accent-purple', 'verge-accent
             })}
           </div>
         ) : (
-          <p class="text-sm text-white/56">暂无标签。</p>
+          <p class="text-sm text-[var(--theme-muted)]">暂无标签。</p>
         )}
       </section>
     </section>

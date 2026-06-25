@@ -21,15 +21,15 @@ const isLinkActive = (linkUrl: string, pathname: string) => {
 const activeLink = navLinks.find((link) => isLinkActive(link.url, Astro.url.pathname))
 ---
 
-<header class="sticky top-0 z-40 border-b border-white/28 bg-[var(--theme-header)] text-white">
-  <div class="grid min-h-[4.75rem] grid-cols-[auto_1fr_auto] items-stretch border-b border-white/18 lg:min-h-[5.75rem]">
+<header class="site-header">
+  <div class="site-header-inner">
     <a
       href="/"
-      class="group flex min-w-0 items-center gap-3 border-r border-white/18 px-4 text-white no-underline transition-colors duration-200 hover:bg-[var(--theme-accent)] hover:text-black sm:px-6 lg:min-w-[22rem] lg:px-8"
+      class="site-header-brand"
       aria-label={`${SITE.title} 首页`}
       transition:persist
     >
-      <span class="brand-avatar-frame grid size-12 shrink-0 place-items-center overflow-hidden rounded-sm transition-colors duration-200 group-hover:border-black/35 group-hover:bg-white/85 group-hover:ring-black/25 lg:size-14">
+      <span class="site-header-logo">
         <img
           src="/logo.svg"
           alt=""
@@ -38,89 +38,83 @@ const activeLink = navLinks.find((link) => isLinkActive(link.url, Astro.url.path
           decoding="async"
         />
       </span>
-      <span class="min-w-0">
-        <span class="block font-mono text-[0.62rem] font-bold uppercase leading-none tracking-[0.18em] text-white/50 transition-colors duration-200 group-hover:text-black/55">
-          Ethan Young
-        </span>
-        <span class="brand-wordmark verge-display mt-1 block truncate text-[2rem] leading-[0.8] tracking-normal sm:text-[2.5rem] lg:text-[3.15rem]">
+      <span class="site-header-brand-copy">
+        <span>Ethan Young</span>
+        <span class="site-header-wordmark">
           <span class="brand-wordmark-mark">&lt;</span><span>EY</span><span class="brand-wordmark-slash"> /</span><span class="brand-wordmark-mark">&gt;</span>
         </span>
       </span>
     </a>
 
-    <div class="hidden min-w-0 grid-rows-[1fr_auto] lg:grid">
-      <div class="flex items-center justify-between gap-6 px-6">
-        <p class="max-w-[34rem] truncate font-mono text-[0.68rem] font-semibold uppercase tracking-[0.18em] text-white/45">
-          {activeLink?.section ?? 'Archive'} / quiet notes for the web
-        </p>
-      </div>
-      <nav
-        class="flex min-w-0 items-center overflow-x-auto border-t border-white/18 px-3"
-        aria-label="主导航"
-      >
-        {
-          navLinks.map((link) => (
-            <a
-              href={link.url}
-              class:list={[
-                'group relative flex min-h-11 shrink-0 items-center gap-2 border-l border-white/12 px-4 font-mono text-[0.72rem] font-bold uppercase tracking-[0.13em] text-white/68 no-underline transition-colors duration-200 first:border-l-0 hover:bg-white hover:text-black xl:px-5',
-                isLinkActive(link.url, Astro.url.pathname) ? 'bg-[var(--theme-accent)] text-black' : '',
-              ]}
-              aria-current={isLinkActive(link.url, Astro.url.pathname) ? 'page' : undefined}
-            >
-              <span>{link.name}</span>
-              <span class="text-[0.58rem] text-current/45">{link.section}</span>
-            </a>
-          ))
-        }
-      </nav>
-    </div>
+    <nav class="site-header-nav" aria-label="主导航">
+      {
+        navLinks.map((link) => (
+          <a
+            href={link.url}
+            class:list={[
+              'site-header-link',
+              isLinkActive(link.url, Astro.url.pathname) ? 'is-active' : '',
+            ]}
+            aria-current={isLinkActive(link.url, Astro.url.pathname) ? 'page' : undefined}
+          >
+            <span>{link.name}</span>
+            <span>{link.section}</span>
+          </a>
+        ))
+      }
+    </nav>
 
-    <div class="flex items-stretch justify-end border-l border-white/18">
+    <div class="site-header-actions">
+      <p class="site-header-context">
+        {activeLink?.section ?? 'Archive'}
+      </p>
+
       <div class="flex" transition:persist="header-search-switch">
         <SearchSwitch
-          className="h-full min-w-16 rounded-none border-y-0 border-l-0 border-r border-white/18 bg-[var(--theme-header)] px-5 text-white hover:border-[var(--theme-accent)] hover:bg-[var(--theme-accent)] hover:text-black"
-          labelClass="hidden xl:inline"
+          className="site-header-search"
+          labelClass="hidden 2xl:inline"
         />
       </div>
 
+      <a href="/atom.xml" class="site-header-rss" aria-label="RSS Feed">
+        <span class="icon-[ri--rss-line] size-5"></span>
+      </a>
+
       <button
         id="header-menu-button"
-        class="relative flex min-w-16 cursor-pointer items-center justify-center px-4 text-white transition-colors duration-200 hover:bg-[var(--theme-secondary)] lg:hidden"
+        class="site-header-menu-button"
         type="button"
         aria-expanded="false"
         aria-controls="header-mobile-menu"
         aria-label="切换导航菜单"
       >
-        <span data-header-line="top" class="absolute h-0.5 w-7 -translate-y-[5px] bg-current transition-transform duration-200"></span>
-        <span data-header-line="bottom" class="absolute h-0.5 w-7 translate-y-[5px] bg-current transition-transform duration-200"></span>
+        <span data-header-line="top"></span>
+        <span data-header-line="bottom"></span>
       </button>
     </div>
   </div>
 
   <div
     id="header-mobile-menu"
-    class="hidden border-t border-white/25 bg-[var(--theme-header)]"
+    class="site-header-mobile-menu hidden"
   >
-    <div class="grid gap-0 sm:grid-cols-[1fr_auto]">
-      <nav class="grid border-b border-white/18 sm:grid-cols-2 sm:border-b-0 sm:border-r" aria-label="移动端导航">
-        {
-          navLinks.map((link) => (
-            <a
-              href={link.url}
-              class:list={[
-                'flex min-h-16 items-center justify-between border-b border-white/14 px-5 font-mono text-xs font-bold uppercase tracking-[0.14em] text-white no-underline transition-colors duration-200 hover:bg-[var(--theme-accent)] hover:text-black sm:border-r',
-                isLinkActive(link.url, Astro.url.pathname) ? 'bg-[var(--theme-accent)] text-black' : '',
-              ]}
-              aria-current={isLinkActive(link.url, Astro.url.pathname) ? 'page' : undefined}
-            >
-              <span>{link.name}</span>
-              <span class="text-current/42">{link.section}</span>
-            </a>
-          ))
-        }
-      </nav>
-    </div>
+    <nav aria-label="移动端导航">
+      {
+        navLinks.map((link) => (
+          <a
+            href={link.url}
+            class:list={[
+              'site-header-mobile-link',
+              isLinkActive(link.url, Astro.url.pathname) ? 'is-active' : '',
+            ]}
+            aria-current={isLinkActive(link.url, Astro.url.pathname) ? 'page' : undefined}
+          >
+            <span>{link.name}</span>
+            <span>{link.section}</span>
+          </a>
+        ))
+      }
+    </nav>
   </div>
 </header>
 

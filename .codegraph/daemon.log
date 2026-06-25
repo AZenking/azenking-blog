@@ -4,3 +4,18 @@
 [CodeGraph MCP] Auto-synced 1 file(s) in 95ms
 [CodeGraph MCP] Auto-synced 1 file(s) in 62ms
 [CodeGraph MCP] Auto-synced 1 file(s) in 48ms
+[CodeGraph daemon] Listening on /Users/charles/Devs/10-front/11-web/11.02-blog/Litos/.codegraph/daemon.sock (pid 6040, v0.9.9). Idle timeout 300000ms.
+[CodeGraph MCP] File watcher active — graph will auto-sync on changes
+[CodeGraph daemon] Shutting down (idle timeout; clients=0).
+[CodeGraph daemon] Listening on /Users/charles/Devs/10-front/11-web/11.02-blog/Litos/.codegraph/daemon.sock (pid 34964, v0.9.9). Idle timeout 300000ms.
+[CodeGraph MCP] File watcher active — graph will auto-sync on changes
+[CodeGraph daemon] Shutting down (SIGTERM; clients=4).
+[CodeGraph daemon] Listening on /Users/charles/Devs/10-front/11-web/11.02-blog/Litos/.codegraph/daemon.sock (pid 29948, v0.9.9). Idle timeout 300000ms.
+[CodeGraph MCP] File watcher active — graph will auto-sync on changes
+[CodeGraph daemon] Shutting down (SIGTERM; clients=1).
+[CodeGraph daemon] Listening on /Users/charles/Devs/10-front/11-web/11.02-blog/Litos/.codegraph/daemon.sock (pid 94442, v0.9.9). Idle timeout 300000ms.
+[CodeGraph MCP] File watcher active — graph will auto-sync on changes
+[CodeGraph daemon] Shutting down (idle timeout; clients=0).
+[CodeGraph daemon] Listening on /Users/charles/Devs/10-front/11-web/11.02-blog/Litos/.codegraph/daemon.sock (pid 24938, v0.9.9). Idle timeout 300000ms.
+[CodeGraph MCP] File watcher active — graph will auto-sync on changes
+[CodeGraph MCP] Caught up 22 file(s) changed since last run

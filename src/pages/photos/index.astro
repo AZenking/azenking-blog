@@ -26,15 +26,15 @@ const sidePhotos = galleryPhotos.slice(1, 4)
 ---
 
 <Layout {title} {description} fullWidth>
-  <div class="verge-shell">
+  <div class="fly-shell">
     <section class="mx-auto w-full max-w-[88rem] px-4 py-8 sm:px-6 sm:py-10 lg:px-8">
-      <div class="border-b border-white/28 pb-5">
+      <div class="fly-hero -mx-4 px-4 pb-8 pt-8 sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8">
         <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-          <p class="verge-kicker">照片日志 / 日常片段</p>
+          <p class="fly-hero-kicker">照片日志 / 日常片段</p>
           <div class="flex flex-wrap gap-2">
-            <span class="verge-pill verge-pill-active">全部照片 ({totalPhotos})</span>
+            <span class="fly-pill fly-pill-active">全部照片 ({totalPhotos})</span>
             {PhotosList.map((album) => (
-              <span class="verge-pill">
+              <span class="fly-pill">
                 <span>{album.title}</span>
                 <span class="opacity-60">({album.photos.length})</span>
               </span>
@@ -44,21 +44,21 @@ const sidePhotos = galleryPhotos.slice(1, 4)
 
         <div class="mt-5 grid gap-5 lg:grid-cols-[minmax(0,1fr)_22rem] lg:items-end">
           <div>
-            <h1 class="verge-display text-[clamp(5rem,15vw,13rem)] leading-[0.76] tracking-normal">{title}</h1>
-            <p class="verge-copy mt-4 max-w-[52rem] text-base sm:text-lg">{introduce}</p>
+            <h1 class="fly-display text-[clamp(5rem,15vw,13rem)] leading-[0.76] tracking-normal">{title}</h1>
+            <p class="fly-hero-copy mt-4 max-w-[52rem] text-base sm:text-lg">{introduce}</p>
           </div>
 
           <div class="grid grid-cols-3 gap-3">
-            <div class="verge-stat">
-              <p class="verge-kicker text-white/48">相册</p>
+            <div class="fly-stat">
+              <p class="fly-kicker text-white/70">相册</p>
               <p class="mt-2 text-3xl leading-none tracking-normal text-white">{totalAlbums}</p>
             </div>
-            <div class="verge-stat">
-              <p class="verge-kicker text-white/48">照片</p>
+            <div class="fly-stat">
+              <p class="fly-kicker text-white/70">照片</p>
               <p class="mt-2 text-3xl leading-none tracking-normal text-white">{totalPhotos}</p>
             </div>
-            <div class="verge-stat">
-              <p class="verge-kicker text-white/48">最新</p>
+            <div class="fly-stat">
+              <p class="fly-kicker">最新</p>
               <p class="mt-2 text-2xl leading-none tracking-normal text-white">{latestAlbum?.date ?? 'Soon'}</p>
             </div>
           </div>
@@ -66,9 +66,9 @@ const sidePhotos = galleryPhotos.slice(1, 4)
       </div>
 
       {featuredPhoto && (
-        <section class="grid gap-5 border-b border-white/28 py-5 lg:grid-cols-[minmax(0,1.4fr)_minmax(18rem,0.6fr)]">
-          <article class="verge-card overflow-hidden">
-            <figure class="aspect-[16/10] overflow-hidden border-b border-white/28 bg-[var(--theme-surface-soft)]">
+        <section class="grid gap-5 border-b border-[var(--theme-border)] py-5 lg:grid-cols-[minmax(0,1.4fr)_minmax(18rem,0.6fr)]">
+          <article class="fly-card overflow-hidden">
+            <figure class="aspect-[16/10] overflow-hidden border-b border-[var(--theme-border)] bg-[var(--theme-surface-soft)]">
               <img
                 src={featuredPhoto.src}
                 alt={featuredPhoto.alt}
@@ -80,31 +80,31 @@ const sidePhotos = galleryPhotos.slice(1, 4)
               />
             </figure>
             <div class="grid gap-3 p-5 sm:p-6">
-              <p class="verge-kicker">精选照片</p>
-              <h2 class="verge-heading text-[clamp(1.9rem,3.6vw,3.6rem)]">{featuredPhoto.description}</h2>
-              <p class="font-mono text-sm uppercase tracking-[0.12em] text-white/48">
+              <p class="fly-kicker">精选照片</p>
+              <h2 class="fly-heading text-[clamp(1.9rem,3.6vw,3.6rem)]">{featuredPhoto.description}</h2>
+              <p class="font-mono text-sm uppercase tracking-[0.12em] text-[var(--theme-muted)]">
                 {[featuredPhoto.album, featuredPhoto.date].filter(Boolean).join(' / ')}
               </p>
             </div>
           </article>
 
           <aside class="grid gap-5">
-            <div class="verge-card-soft p-5">
-              <p class="verge-kicker">最近相册</p>
-              <ul class="mt-4 divide-y divide-white/12">
+            <div class="fly-card-soft p-5">
+              <p class="fly-kicker">最近相册</p>
+              <ul class="mt-4 divide-y divide-[var(--theme-border)]">
                 {PhotosList.map((album) => (
                   <li class="py-4 first:pt-0 last:pb-0">
                     <div class="flex items-start justify-between gap-4">
                       <div>
-                        <h3 class="text-2xl font-black leading-tight tracking-normal text-white">{album.title}</h3>
-                        <p class="mt-2 text-sm leading-7 text-white/64">{album.description}</p>
+                        <h3 class="text-2xl font-black leading-tight tracking-normal text-[var(--theme-text)]">{album.title}</h3>
+                        <p class="mt-2 text-sm leading-7 text-[var(--theme-muted)]">{album.description}</p>
                       </div>
-                      <div class="rounded-[1.25rem] border border-white/28 px-3 py-2 text-right text-sm text-white">
+                      <div class="rounded-[1.25rem] border border-[var(--theme-border)] px-3 py-2 text-right text-sm text-[var(--theme-text)]">
                         <p>{album.photos.length}</p>
-                        <p class="mt-1 font-mono text-[0.68rem] uppercase tracking-[0.1em] text-white/45">张</p>
+                        <p class="mt-1 font-mono text-[0.68rem] uppercase tracking-[0.1em] text-[var(--theme-muted)]">张</p>
                       </div>
                     </div>
-                    <p class="mt-3 font-mono text-sm uppercase tracking-[0.12em] text-white/45">{album.date}</p>
+                    <p class="mt-3 font-mono text-sm uppercase tracking-[0.12em] text-[var(--theme-muted)]">{album.date}</p>
                   </li>
                 ))}
               </ul>
@@ -113,7 +113,7 @@ const sidePhotos = galleryPhotos.slice(1, 4)
             {sidePhotos.length > 0 && (
               <div class="grid grid-cols-3 gap-3">
                 {sidePhotos.map((photo) => (
-                  <figure class="aspect-square overflow-hidden rounded-[1.25rem] border border-white/28 bg-[var(--theme-surface-soft)]">
+                  <figure class="aspect-square overflow-hidden rounded-[1.25rem] border border-[var(--theme-border)] bg-[var(--theme-surface-soft)]">
                     <img
                       src={photo.src}
                       alt={photo.alt}
@@ -134,10 +134,10 @@ const sidePhotos = galleryPhotos.slice(1, 4)
       <section class="py-6">
         <div class="mb-5 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
           <div>
-            <p class="verge-kicker">图库</p>
-            <h2 class="mt-2 text-[clamp(2rem,4.6vw,4.2rem)] font-black leading-[0.9] tracking-normal text-white">最近照片</h2>
+            <p class="fly-kicker">图库</p>
+            <h2 class="mt-2 text-[clamp(2rem,4.6vw,4.2rem)] font-black leading-[0.9] tracking-normal text-[var(--theme-text)]">最近照片</h2>
           </div>
-          <p class="font-mono text-xs font-semibold uppercase tracking-[0.14em] text-white/48">
+          <p class="font-mono text-xs font-semibold uppercase tracking-[0.14em] text-[var(--theme-muted)]">
             共 {totalPhotos} 张
           </p>
         </div>
@@ -145,7 +145,7 @@ const sidePhotos = galleryPhotos.slice(1, 4)
         {galleryPhotos.length > 0 ? (
           <MasonryPhotoFeed photos={galleryPhotos} initialCount={9} loadStep={6} client:visible />
         ) : (
-          <p class="text-sm text-white/56">暂无照片。</p>
+          <p class="text-sm text-[var(--theme-muted)]">暂无照片。</p>
         )}
       </section>
     </section>

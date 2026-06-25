@@ -12,50 +12,46 @@ const featuredProject = projects[0]
 ---
 
 <Layout title="首页" description={SITE.description} fullWidth>
-  <div class="verge-shell overflow-x-hidden">
-    <section class="relative overflow-hidden border-b border-white/28 bg-[var(--theme-bg)] text-white">
-      <div class="pointer-events-none absolute inset-x-0 top-0 h-px bg-white/35"></div>
-      <div class="pointer-events-none absolute left-0 top-0 h-14 w-16 bg-[var(--theme-accent)] sm:h-24 sm:w-24 lg:h-32 lg:w-32"></div>
-      <div class="pointer-events-none absolute right-0 top-0 h-4 w-16 bg-[var(--theme-secondary)] sm:h-16 sm:w-32 lg:h-24 lg:w-40"></div>
-
+  <div class="fly-shell overflow-x-hidden">
+    <section class="fly-hero">
       <div class="relative mx-auto flex min-h-[52svh] w-full max-w-[82rem] min-w-0 flex-col items-center justify-center px-4 py-12 text-center sm:min-h-[58svh] sm:px-6 sm:py-16 lg:min-h-[calc(70svh-5rem)] lg:px-8 lg:py-24">
-        <p class="verge-kicker text-white/58">个人归档 / 技术笔记 / 产品实践</p>
+        <p class="fly-hero-kicker">个人归档 / 技术笔记 / 产品实践</p>
 
-        <h1 class="brand-wordmark brand-wordmark-hero verge-display mt-5 max-w-[8ch] text-balance text-[clamp(4.35rem,17vw,12rem)] leading-[0.76] tracking-normal">
+        <h1 class="brand-wordmark brand-wordmark-hero fly-display mt-5 max-w-[8ch] text-balance text-[clamp(4.35rem,17vw,12rem)] leading-[0.76] tracking-normal">
           <span class="brand-wordmark-mark">&lt;</span><span>EY</span><span class="brand-wordmark-slash"> /</span><span class="brand-wordmark-mark">&gt;</span>
         </h1>
 
-        <p class="verge-copy mt-4 w-full max-w-[38rem] text-pretty text-base sm:text-lg">
+        <p class="fly-hero-copy mt-4 w-full max-w-[38rem] text-pretty text-base sm:text-lg">
           {cleanDescription}
         </p>
 
         <div class="mt-7 flex flex-col items-center justify-center gap-3 sm:flex-row">
-          <a href="/posts" class="verge-button-primary min-w-44">
+          <a href="/posts" class="fly-button-primary min-w-44 cursor-pointer">
             阅读文章
           </a>
-          <a href="/projects" class="verge-button-secondary min-w-44">
+          <a href="/projects" class="fly-button-secondary min-w-44 cursor-pointer">
             查看项目
           </a>
         </div>
       </div>
     </section>
 
-    <section class="verge-container">
-      <div class="grid gap-5 border-b pb-8 verge-rule lg:grid-cols-[minmax(0,1fr)_auto] lg:items-end">
+    <section class="fly-container">
+      <div class="grid gap-5 border-b pb-8 fly-rule lg:grid-cols-[minmax(0,1fr)_auto] lg:items-end">
         <div>
-          <p class="verge-kicker">Latest Dispatch</p>
-          <h2 class="verge-display mt-4 text-[clamp(3rem,9vw,7rem)] leading-[0.78] tracking-normal">
+          <p class="fly-kicker">Latest Dispatch</p>
+          <h2 class="fly-display mt-4 text-[clamp(3rem,9vw,7rem)] leading-[0.78] tracking-normal">
             Dispatch
           </h2>
-          <p class="verge-copy mt-4 max-w-[46rem] text-base sm:text-lg">
+          <p class="fly-copy mt-4 max-w-[46rem] text-base sm:text-lg">
             从长文章、短笔记到项目构建，首页现在直接承接最近更新，而不只停留在封面。
           </p>
         </div>
 
-        <div class="flex flex-wrap gap-2 font-mono text-[0.68rem] font-semibold uppercase tracking-[0.14em] text-white/54">
-          <span class="rounded-full border border-white/30 px-3 py-2">{posts.length} Articles</span>
-          <span class="rounded-full border border-white/30 px-3 py-2">{notes.length} Notes</span>
-          <span class="rounded-full border border-white/30 px-3 py-2">{projects.length} Project</span>
+        <div class="flex flex-wrap gap-2 font-mono text-[0.68rem] font-semibold uppercase tracking-[0.14em] text-[var(--theme-muted)]">
+          <span class="rounded-full border border-[var(--theme-border-strong)] px-3 py-2">{posts.length} Articles</span>
+          <span class="rounded-full border border-[var(--theme-border-strong)] px-3 py-2">{notes.length} Notes</span>
+          <span class="rounded-full border border-[var(--theme-border-strong)] px-3 py-2">{projects.length} Project</span>
         </div>
       </div>
 
@@ -63,20 +59,20 @@ const featuredProject = projects[0]
         <div class="grid gap-5">
           <div class="flex items-end justify-between gap-4">
             <div>
-              <p class="verge-kicker">StoryStream</p>
-              <h3 class="mt-2 text-[clamp(2rem,4.6vw,4.2rem)] font-black leading-[0.9] tracking-normal text-white">
+              <p class="fly-kicker">StoryStream</p>
+              <h3 class="mt-2 text-[clamp(2rem,4.6vw,4.2rem)] font-black leading-[0.9] tracking-normal text-[var(--theme-text)]">
                 近期写作
               </h3>
             </div>
-            <a href="/posts" class="verge-pill hidden sm:inline-flex">全部文章</a>
+            <a href="/posts" class="fly-pill hidden sm:inline-flex">全部文章</a>
           </div>
 
-          <div class="relative grid gap-4 md:pl-16 md:before:absolute md:before:left-7 md:before:top-2 md:before:h-[calc(100%-0.5rem)] md:before:w-px md:before:bg-white/25">
+          <div class="relative grid gap-4 md:pl-16 md:before:absolute md:before:left-7 md:before:top-2 md:before:h-[calc(100%-0.5rem)] md:before:w-px md:before:bg-[var(--theme-border-strong)]">
             {latestPosts.map((post, index) => (
               <article class="relative grid gap-3 md:grid-cols-[6.5rem_minmax(0,1fr)] md:gap-4">
                 <time
                   datetime={formatDate(post.data.updatedDate ?? post.data.pubDate, 'iso')}
-                  class="font-mono text-[0.68rem] font-semibold uppercase tracking-[0.14em] text-white/48 md:-ml-16 md:pt-5"
+                  class="font-mono text-[0.68rem] font-semibold uppercase tracking-[0.14em] text-[var(--theme-muted)] md:-ml-16 md:pt-5"
                 >
                   {formatDate(post.data.updatedDate ?? post.data.pubDate, 'dot')}
                 </time>
@@ -84,14 +80,14 @@ const featuredProject = projects[0]
                 <a
                   href={`/posts/${post.id}`}
                   class:list={[
-                    'verge-card-link grid min-h-44 p-5',
-                    index === 0 ? 'verge-accent-mint' : '',
+                    'fly-card-link grid min-h-44 p-5',
+                    index === 0 ? 'fly-accent-mint' : '',
                   ]}
                 >
-                  <p class:list={['verge-kicker opacity-65', index === 0 ? 'text-black/55' : '']}>
+                  <p class:list={['fly-kicker opacity-65', index === 0 ? 'text-black/55' : '']}>
                     文章 {String(index + 1).padStart(2, '0')}
                   </p>
-                  <h4 class="verge-heading mt-3 text-[clamp(1.65rem,3vw,2.8rem)]">{post.data.title}</h4>
+                  <h4 class="fly-heading mt-3 text-[clamp(1.65rem,3vw,2.8rem)]">{post.data.title}</h4>
                   {post.data.description && <p class="mt-3 line-clamp-2 text-sm leading-6 opacity-72">{post.data.description}</p>}
                 </a>
               </article>
@@ -99,19 +95,19 @@ const featuredProject = projects[0]
           </div>
         </div>
 
-        <aside class="verge-card-soft p-5">
+        <aside class="fly-card-soft p-5">
           <div class="flex items-center justify-between gap-4">
-            <p class="verge-kicker">Notes Rail</p>
+            <p class="fly-kicker">Notes Rail</p>
             <a href="/notes" class="text-sm text-[var(--theme-accent)] no-underline hover:text-[var(--theme-link-hover)]">
               全部
             </a>
           </div>
 
-          <ul class="mt-4 divide-y divide-white/12">
+          <ul class="mt-4 divide-y divide-[var(--theme-border)]">
             {latestNotes.map((note) => (
               <li class="py-4 first:pt-0 last:pb-0">
-                <a href={`/notes/${note.id}`} class="group grid gap-2 text-white no-underline">
-                  <p class="font-mono text-[0.68rem] font-semibold uppercase tracking-[0.14em] text-white/45">
+                <a href={`/notes/${note.id}`} class="group grid gap-2 text-[var(--theme-text)] no-underline cursor-pointer">
+                  <p class="font-mono text-[0.68rem] font-semibold uppercase tracking-[0.14em] text-[var(--theme-muted)]">
                     {formatDate(note.data.updatedDate ?? note.data.pubDate, 'dot')}
                   </p>
                   <h4 class="text-xl font-black leading-tight tracking-normal transition-colors group-hover:text-[var(--theme-link-hover)]">
@@ -125,28 +121,28 @@ const featuredProject = projects[0]
       </section>
 
       {featuredProject && (
-        <section class="border-t pt-8 verge-rule">
+        <section class="border-t pt-8 fly-rule">
           <div class="mb-6 flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
             <div>
-              <p class="verge-kicker">项目实践</p>
-              <h3 class="mt-3 text-[clamp(1.9rem,4vw,3.15rem)] leading-[1.04] tracking-normal text-white">
+              <p class="fly-kicker">项目实践</p>
+              <h3 class="mt-3 text-[clamp(1.9rem,4vw,3.15rem)] leading-[1.04] tracking-normal text-[var(--theme-text)]">
                 构建中的东西
               </h3>
             </div>
-            <a href="/projects" class="verge-pill w-fit">项目归档</a>
+            <a href="/projects" class="fly-pill w-fit">项目归档</a>
           </div>
 
-          <article class="verge-card overflow-hidden">
+          <article class="fly-card overflow-hidden">
             <div class="grid lg:grid-cols-[minmax(0,1fr)_auto]">
-              <div class="border-b border-white/28 px-6 py-6 lg:border-b-0 lg:border-r">
-                <p class="verge-kicker text-white/48">精选项目</p>
-                <h4 class="verge-heading mt-3 text-[clamp(2rem,4vw,4rem)]">{featuredProject.data.name}</h4>
-                <p class="verge-copy max-w-3xl text-base">{featuredProject.data.description}</p>
+              <div class="border-b border-[var(--theme-border)] px-6 py-6 lg:border-b-0 lg:border-r">
+                <p class="fly-kicker">精选项目</p>
+                <h4 class="fly-heading mt-3 text-[clamp(2rem,4vw,4rem)]">{featuredProject.data.name}</h4>
+                <p class="fly-copy max-w-3xl text-base">{featuredProject.data.description}</p>
               </div>
               <div class="grid content-between gap-5 p-6 lg:min-w-72">
                 <div class="flex flex-wrap gap-2">
-                  <span class="verge-pill">星标 {featuredProject.data.star}</span>
-                  <span class="verge-pill">分叉 {featuredProject.data.fork}</span>
+                  <span class="fly-pill">星标 {featuredProject.data.star}</span>
+                  <span class="fly-pill">分叉 {featuredProject.data.fork}</span>
                 </div>
                 <div class="flex flex-wrap gap-3">
                   {featuredProject.data.website && (
@@ -154,7 +150,7 @@ const featuredProject = projects[0]
                       href={featuredProject.data.website}
                       target="_blank"
                       rel="noreferrer"
-                      class="verge-button-primary"
+                      class="fly-button-primary"
                     >
                       访问站点
                     </a>
@@ -164,7 +160,7 @@ const featuredProject = projects[0]
                       href={featuredProject.data.githubUrl}
                       target="_blank"
                       rel="noreferrer"
-                      class="verge-button-secondary"
+                      class="fly-button-secondary"
                     >
                       源码
                     </a>

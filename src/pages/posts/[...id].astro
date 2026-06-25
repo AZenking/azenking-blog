@@ -115,64 +115,74 @@ const relatedPosts = posts
     "keywords": tags.join(', '),
     "url": canonicalUrl,
   })} />
-  <div class="verge-article-shell">
-    <section class="verge-article-container">
-      <a
-        href="/posts"
-        class="verge-article-back verge-focus"
-      >
-        <span class="icon-[ph--arrow-left] size-5"></span>
-        <span>返回文章</span>
-      </a>
+  <div class="fly-post-article-shell">
+    <section class="fly-post-article-hero">
+      <div class="fly-post-container">
+        <a href="/posts" class="fly-post-back">
+          <span class="icon-[ph--arrow-left] size-5"></span>
+          <span>返回文章</span>
+        </a>
 
-      <header class="verge-article-header">
-        <div>
-          <div class="flex flex-wrap gap-2">
-            {tags.slice(0, 4).map((tag) => (
-              <a
-                href={`/tags/${encodeURIComponent(tag)}`}
-                class="verge-pill verge-focus"
-              >
-                {tag}
+        <div class="fly-post-article-grid">
+          <header class="fly-post-article-header">
+            <div class="fly-post-meta-line">
+              <span>By {displayAuthor}</span>
+              <time datetime={frontmatter.pubDate.toISOString()}>
+                {[publishedDate, minutesRead && `${minutesRead} min read`].filter(Boolean).join(' / ')}
+              </time>
+            </div>
+
+            <div class="fly-post-tag-row">
+              {tags.slice(0, 4).map((tag) => (
+                <a href={`/tags/${encodeURIComponent(tag)}`}>{tag}</a>
+              ))}
+            </div>
+
+            <h1>{frontmatter.title}</h1>
+
+            {frontmatter.description && <p>{frontmatter.description}</p>}
+
+            <div class="fly-post-article-actions">
+              <a class="fly-post-action" href={canonicalUrl}>
+                <span class="icon-[ph--link] size-4"></span>
+                <span>链接</span>
               </a>
-            ))}
-          </div>
+              <button class="fly-post-action cursor-pointer" type="button" data-copy-link={canonicalUrl}>
+                <span class="icon-[ph--share-network] size-4"></span>
+                <span>分享</span>
+              </button>
+            </div>
+          </header>
 
-          <h1 class="verge-article-title mt-6">
-            {frontmatter.title}
-          </h1>
-
-          {frontmatter.description && (
-            <p class="verge-article-deck mt-6">
-              {frontmatter.description}
-            </p>
-          )}
+          <aside class="fly-post-article-card" aria-label="文章详情">
+            <p>Article details</p>
+            <dl>
+              <div>
+                <dt>Author</dt>
+                <dd>{displayAuthor}</dd>
+              </div>
+              <div>
+                <dt>Published</dt>
+                <dd>{publishedDate}</dd>
+              </div>
+              {updatedDate && (
+                <div>
+                  <dt>Updated</dt>
+                  <dd>{updatedDate}</dd>
+                </div>
+              )}
+              {(minutesRead || wordCount) && (
+                <div>
+                  <dt>Length</dt>
+                  <dd>{[minutesRead && `${minutesRead} 分钟阅读`, POSTS_CONFIG.wordCountView && wordCount && `${wordCount} 字`].filter(Boolean).join(' / ')}</dd>
+                </div>
+              )}
+            </dl>
+          </aside>
         </div>
 
-        <aside class="grid gap-5">
-          <div class="verge-article-meta">
-            <p>作者 {displayAuthor}</p>
-            <time datetime={frontmatter.pubDate.toISOString()}>{publishedDate}</time>
-            {updatedDate && <p>更新 {updatedDate}</p>}
-            <p>{[minutesRead && `${minutesRead} 分钟阅读`, POSTS_CONFIG.wordCountView && wordCount && `${wordCount} 字`].filter(Boolean).join(' / ')}</p>
-          </div>
-
-          <div class="verge-article-actions">
-            <a class="verge-article-action verge-focus" href={canonicalUrl}>
-              <span class="icon-[ph--link] size-4"></span>
-              <span>链接</span>
-            </a>
-            <button class="verge-article-action verge-focus cursor-pointer" type="button" data-copy-link={canonicalUrl}>
-              <span class="icon-[ph--share-network] size-4"></span>
-              <span>分享</span>
-            </button>
-          </div>
-        </aside>
-      </header>
-
-      {frontmatter.cover && (
-        <figure class="verge-article-hero">
-          <div class="aspect-[1200/630]">
+        <figure class="fly-post-article-media">
+          {frontmatter.cover ? (
             <LqipImage
               src={frontmatter.cover}
               alt={frontmatter.title}
@@ -183,104 +193,103 @@ const relatedPosts = posts
               format="webp"
               class="h-full w-full object-cover"
             />
-          </div>
-        </figure>
-      )}
-
-      <div class="verge-article-body-grid">
-        <aside class="verge-article-rail" aria-label="文章详情">
-          <p>{tags[0] ?? 'Article'}</p>
-          <p>{publishedDate}</p>
-          {minutesRead && <p>{minutesRead} min read</p>}
-        </aside>
-
-        <main>
-          <Prose class="verge-article-body">
-            <Content />
-          </Prose>
-
-          {frontmatter.license && (
-            <section class="mt-14 border-t border-white/12 pt-8 text-sm text-white/62">
-              <p class="leading-7">
-                Licensed under{' '}
-                {licenseLink ? (
-                  <a href={licenseLink} target="_blank" rel="noreferrer" class="verge-link underline underline-offset-4">
-                    {frontmatter.license}
-                  </a>
-                ) : (
-                  <span>{frontmatter.license}</span>
-                )}
-                .
-              </p>
-              <p class="mt-2 leading-7">
-                永久链接：{' '}
-                <a href={canonicalUrl} class="verge-link underline underline-offset-4">
-                  {canonicalUrl}
-                </a>
-              </p>
-            </section>
+          ) : (
+            <div class="fly-post-cover-fallback min-h-[24rem]">
+              <img src="/logo.svg" alt="" class="size-24" loading="eager" decoding="async" />
+              <span>{tags[0] ?? 'Post'}</span>
+            </div>
           )}
-        </main>
+        </figure>
       </div>
+    </section>
 
-      {(prev || next) && (
-        <nav class="border-t border-white/28 py-10" aria-label="文章导航">
-          <div class="grid gap-4 sm:grid-cols-2">
+    <section class="fly-post-article-main">
+      <div class="fly-post-container">
+        <div class="fly-post-article-body-grid">
+          <aside class="fly-post-article-rail" aria-label="文章目录信息">
+            <p>{tags[0] ?? 'Article'}</p>
+            <p>{publishedDate}</p>
+            {minutesRead && <p>{minutesRead} min read</p>}
+          </aside>
+
+          <main>
+            <Prose class="fly-post-article-body">
+              <Content />
+            </Prose>
+
+            {frontmatter.license && (
+              <section class="fly-post-license">
+                <p>
+                  Licensed under{' '}
+                  {licenseLink ? (
+                    <a href={licenseLink} target="_blank" rel="noreferrer">
+                      {frontmatter.license}
+                    </a>
+                  ) : (
+                    <span>{frontmatter.license}</span>
+                  )}
+                  .
+                </p>
+                <p>
+                  永久链接：{' '}
+                  <a href={canonicalUrl}>
+                    {canonicalUrl}
+                  </a>
+                </p>
+              </section>
+            )}
+          </main>
+        </div>
+
+        {(prev || next) && (
+          <nav class="fly-post-adjacent" aria-label="文章导航">
             {next ? (
-              <a
-                href={`/posts/${next.id}`}
-                class="verge-card-link px-5 py-4"
-              >
-                <p class="text-[0.72rem] uppercase tracking-[0.1em] text-white/52">{POSTS_CONFIG.prevPostText}</p>
-                <p class="mt-2 text-base leading-7">{next.data.title}</p>
+              <a href={`/posts/${next.id}`}>
+                <span>{POSTS_CONFIG.prevPostText}</span>
+                <strong>{next.data.title}</strong>
               </a>
             ) : (
               <div></div>
             )}
 
             {prev ? (
-              <a
-                href={`/posts/${prev.id}`}
-                class="verge-card-link px-5 py-4 sm:text-right"
-              >
-                <p class="text-[0.72rem] uppercase tracking-[0.1em] text-white/52">{POSTS_CONFIG.nextPostText}</p>
-                <p class="mt-2 text-base leading-7">{prev.data.title}</p>
+              <a href={`/posts/${prev.id}`} class="text-right">
+                <span>{POSTS_CONFIG.nextPostText}</span>
+                <strong>{prev.data.title}</strong>
               </a>
             ) : (
               <div></div>
             )}
-          </div>
-        </nav>
-      )}
+          </nav>
+        )}
 
-      {relatedPosts.length > 0 && (
-        <section class="border-t border-white/28 py-10">
-          <h2 class="text-[0.78rem] uppercase tracking-[0.14em] text-white/45">相关文章</h2>
-          <div class="mt-5 space-y-4">
-            {relatedPosts.map((related) => {
-              const relatedDate = related.data.updatedDate ?? related.data.pubDate
-              return (
-                <a
-                  href={`/posts/${related.id}`}
-                  class="verge-card-link block px-5 py-4"
-                >
-                  <p class="text-[0.75rem] opacity-60">{formatDate(relatedDate)}</p>
-                  <h3 class="mt-1.5 text-xl leading-tight tracking-[-0.03em]">{related.data.title}</h3>
-                  {related.data.description && (
-                    <p class="mt-2 line-clamp-2 text-sm leading-7 text-white/64">
-                      {related.data.description}
-                    </p>
-                  )}
-                </a>
-              )
-            })}
-          </div>
+        {relatedPosts.length > 0 && (
+          <section class="fly-post-related">
+            <div class="fly-post-section-head">
+              <div>
+                <p class="fly-post-section-label">Related reading</p>
+                <h2>相关文章</h2>
+              </div>
+            </div>
+            <div class="fly-post-related-grid">
+              {relatedPosts.map((related) => {
+                const relatedDate = related.data.updatedDate ?? related.data.pubDate
+                return (
+                  <a href={`/posts/${related.id}`}>
+                    <p>{formatDate(relatedDate)}</p>
+                    <h3>{related.data.title}</h3>
+                    {related.data.description && <span>{related.data.description}</span>}
+                  </a>
+                )
+              })}
+            </div>
+          </section>
+        )}
+
+        <section class="fly-post-comments">
+          <Comment id={post.id} title={frontmatter.title} />
         </section>
-      )}
-
-      <section class="border-t border-white/28 pt-12">
-        <Comment id={post.id} title={frontmatter.title} />
-      </section>
+      </div>
     </section>
   </div>
 

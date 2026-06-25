@@ -41,45 +41,45 @@ const relatedTags = Object.entries(allTags)
 const isFirstPage = page.currentPage === 1
 const featuredPost = isFirstPage ? page.data[0] : null
 const streamPosts = isFirstPage ? page.data.slice(1) : page.data
-const tileAccents = ['verge-accent-mint', 'verge-accent-purple', 'verge-accent-yellow', 'verge-accent-pink', 'verge-accent-orange']
+const tileAccents = ['fly-accent-mint', 'fly-accent-purple', 'fly-accent-yellow', 'fly-accent-pink', 'fly-accent-orange']
 ---
 
 <Layout title={`#${tag}`} {description} fullWidth>
-  <div class="verge-shell">
+  <div class="fly-shell">
     <section class="mx-auto w-full max-w-[88rem] px-4 py-8 sm:px-6 sm:py-10 lg:px-8">
-      <div class="border-b border-white/28 pb-5">
-        <a href="/tags" class="verge-pill">← 返回标签</a>
+      <div class="fly-hero -mx-4 px-4 pb-8 pt-8 sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8">
+        <a href="/tags" class="fly-pill">← 返回标签</a>
 
         <div class="mt-5 grid gap-5 lg:grid-cols-[minmax(0,1fr)_22rem] lg:items-end">
           <div>
-            <p class="verge-kicker">标签归档</p>
-            <h1 class="verge-display mt-4 text-[clamp(4.4rem,14vw,12rem)] leading-[0.76] tracking-normal">#{tag}</h1>
-            <p class="verge-copy mt-4 max-w-[52rem] text-base sm:text-lg">
+            <p class="fly-hero-kicker">标签归档</p>
+            <h1 class="fly-display mt-4 text-[clamp(4.4rem,14vw,12rem)] leading-[0.76] tracking-normal">#{tag}</h1>
+            <p class="fly-hero-copy mt-4 max-w-[52rem] text-base sm:text-lg">
               这个主题下共有 {page.total} 篇文章。
             </p>
           </div>
 
           <div class="grid grid-cols-3 gap-3">
-            <div class="verge-stat">
-              <p class="verge-kicker text-white/48">文章</p>
+            <div class="fly-stat">
+              <p class="fly-kicker text-white/70">文章</p>
               <p class="mt-2 text-3xl leading-none tracking-normal text-white">{page.total}</p>
             </div>
-            <div class="verge-stat">
-              <p class="verge-kicker text-white/48">相关</p>
+            <div class="fly-stat">
+              <p class="fly-kicker">相关</p>
               <p class="mt-2 text-3xl leading-none tracking-normal text-white">{relatedTags.length}</p>
             </div>
-            <div class="verge-stat">
-              <p class="verge-kicker text-white/48">页码</p>
+            <div class="fly-stat">
+              <p class="fly-kicker">页码</p>
               <p class="mt-2 text-3xl leading-none tracking-normal text-white">{page.currentPage}</p>
             </div>
           </div>
         </div>
       </div>
 
-      <div class="flex flex-wrap gap-2 border-b border-white/28 py-5">
-        <span class="verge-pill verge-pill-active">#{tag}</span>
+      <div class="flex flex-wrap gap-2 border-b border-[var(--theme-border)] py-5">
+        <span class="fly-pill fly-pill-active">#{tag}</span>
         {relatedTags.map(([name, count]) => (
-          <a href={`/tags/${encodeURIComponent(name)}`} class="verge-pill">
+          <a href={`/tags/${encodeURIComponent(name)}`} class="fly-pill">
             <span>{name}</span>
             <span class="opacity-60">({count})</span>
           </a>
@@ -87,10 +87,10 @@ const tileAccents = ['verge-accent-mint', 'verge-accent-purple', 'verge-accent-y
       </div>
 
       {featuredPost && (
-        <section class="border-b border-white/28 py-5">
-          <a href={`/posts/${featuredPost.id}`} class="verge-card-link overflow-hidden p-0">
+        <section class="border-b border-[var(--theme-border)] py-5">
+          <a href={`/posts/${featuredPost.id}`} class="fly-card-link overflow-hidden p-0">
             <article class="grid h-full lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1fr)]">
-              <div class="min-h-72 border-b border-white/28 bg-[var(--theme-surface-soft)] lg:border-b-0 lg:border-r">
+              <div class="min-h-72 border-b border-[var(--theme-border)] bg-[var(--theme-surface-soft)] lg:border-b-0 lg:border-r">
                 {featuredPost.data.cover ? (
                   <LqipImage
                     src={featuredPost.data.cover}
@@ -103,7 +103,7 @@ const tileAccents = ['verge-accent-mint', 'verge-accent-purple', 'verge-accent-y
                     class="h-full min-h-72 w-full object-cover"
                   />
                 ) : (
-                  <div class="verge-accent-purple flex h-full min-h-72 items-end p-6">
+                  <div class="fly-accent-purple flex h-full min-h-72 items-end p-6">
                     <span class="font-display text-[clamp(4rem,10vw,8rem)] leading-[0.8] tracking-normal">#</span>
                   </div>
                 )}
@@ -111,14 +111,14 @@ const tileAccents = ['verge-accent-mint', 'verge-accent-purple', 'verge-accent-y
 
               <div class="flex min-h-full flex-col justify-between gap-10 p-5 sm:p-7">
                 <div>
-                  <p class="verge-kicker text-white/52">#{tag} 精选</p>
-                  <h2 class="verge-heading mt-4 text-[clamp(2.15rem,4.8vw,5rem)] leading-[0.92]">{featuredPost.data.title}</h2>
+                  <p class="fly-kicker">#{tag} 精选</p>
+                  <h2 class="fly-heading mt-4 text-[clamp(2.15rem,4.8vw,5rem)] leading-[0.92]">{featuredPost.data.title}</h2>
                   {featuredPost.data.description && (
-                    <p class="verge-copy mt-5 text-base sm:text-lg">{featuredPost.data.description}</p>
+                    <p class="fly-copy mt-5 text-base sm:text-lg">{featuredPost.data.description}</p>
                   )}
                 </div>
 
-                <p class="font-mono text-xs font-semibold uppercase tracking-[0.14em] text-white/58">
+                <p class="font-mono text-xs font-semibold uppercase tracking-[0.14em] text-[var(--theme-muted)]">
                   {formatDate(featuredPost.data.updatedDate ?? featuredPost.data.pubDate, 'short')}
                 </p>
               </div>
@@ -130,21 +130,21 @@ const tileAccents = ['verge-accent-mint', 'verge-accent-purple', 'verge-accent-y
       <section class="py-6">
         <div class="mb-5 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
           <div>
-            <p class="verge-kicker">时间线</p>
-            <h2 class="mt-2 text-[clamp(2rem,4.6vw,4.2rem)] font-black leading-[0.9] tracking-normal text-white">主题记录</h2>
+            <p class="fly-kicker">时间线</p>
+            <h2 class="mt-2 text-[clamp(2rem,4.6vw,4.2rem)] font-black leading-[0.9] tracking-normal text-[var(--theme-text)]">主题记录</h2>
           </div>
-          <p class="font-mono text-xs font-semibold uppercase tracking-[0.14em] text-white/48">
+          <p class="font-mono text-xs font-semibold uppercase tracking-[0.14em] text-[var(--theme-muted)]">
             本页 {streamPosts.length} 篇
           </p>
         </div>
 
         {streamPosts.length > 0 ? (
-          <div class="relative grid gap-4 md:pl-16 md:before:absolute md:before:left-7 md:before:top-2 md:before:h-[calc(100%-0.5rem)] md:before:w-px md:before:bg-white/25">
+          <div class="relative grid gap-4 md:pl-16 md:before:absolute md:before:left-7 md:before:top-2 md:before:h-[calc(100%-0.5rem)] md:before:w-px md:before:bg-[var(--theme-border-strong)]">
             {streamPosts.map((post, index) => (
               <article class="relative grid gap-3 md:grid-cols-[7rem_minmax(0,1fr)] md:gap-4">
                 <time
                   datetime={formatDate(post.data.updatedDate ?? post.data.pubDate, 'iso')}
-                  class="font-mono text-[0.68rem] font-semibold uppercase tracking-[0.14em] text-white/48 md:-ml-16 md:pt-5"
+                  class="font-mono text-[0.68rem] font-semibold uppercase tracking-[0.14em] text-[var(--theme-muted)] md:-ml-16 md:pt-5"
                 >
                   {formatDate(post.data.updatedDate ?? post.data.pubDate, 'dot')}
                 </time>
@@ -152,12 +152,12 @@ const tileAccents = ['verge-accent-mint', 'verge-accent-purple', 'verge-accent-y
                 <a
                   href={`/posts/${post.id}`}
                   class:list={[
-                    'verge-card-link grid overflow-hidden p-0',
+                    'fly-card-link grid overflow-hidden p-0',
                     post.data.cover ? 'md:grid-cols-[18rem_minmax(0,1fr)]' : tileAccents[index % tileAccents.length],
                   ]}
                 >
                   {post.data.cover && (
-                    <figure class="h-56 border-b border-white/28 bg-[var(--theme-surface-soft)] md:h-full md:min-h-56 md:border-b-0 md:border-r">
+                    <figure class="h-56 border-b border-[var(--theme-border)] bg-[var(--theme-surface-soft)] md:h-full md:min-h-56 md:border-b-0 md:border-r">
                       <LqipImage
                         src={post.data.cover}
                         alt={post.data.title}
@@ -173,8 +173,8 @@ const tileAccents = ['verge-accent-mint', 'verge-accent-purple', 'verge-accent-y
 
                   <div class="flex min-h-56 flex-col justify-between gap-6 p-5">
                     <div>
-                      <p class="verge-kicker opacity-65">#{tag}</p>
-                      <h3 class="verge-heading mt-3 text-[clamp(1.65rem,3vw,2.8rem)]">{post.data.title}</h3>
+                      <p class="fly-kicker opacity-65">#{tag}</p>
+                      <h3 class="fly-heading mt-3 text-[clamp(1.65rem,3vw,2.8rem)]">{post.data.title}</h3>
                       {post.data.description && <p class="mt-3 line-clamp-2 text-sm leading-6 opacity-72">{post.data.description}</p>}
                     </div>
                   </div>
@@ -183,7 +183,7 @@ const tileAccents = ['verge-accent-mint', 'verge-accent-purple', 'verge-accent-y
             ))}
           </div>
         ) : (
-          <p class="py-10 text-center text-white/58">这个标签下暂无文章。</p>
+          <p class="py-10 text-center text-[var(--theme-muted)]">这个标签下暂无文章。</p>
         )}
       </section>
 
