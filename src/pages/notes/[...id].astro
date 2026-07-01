@@ -1,9 +1,8 @@
 ---
 import type { CollectionEntry } from 'astro:content'
 import { render } from 'astro:content'
-import LqipImage from '~/components/base/LqipImage.astro'
+import Comment from '~/components/posts/base/Comment.astro'
 import Prose from '~/components/posts/base/Prose.astro'
-import PostKindTabs from '~/components/posts/base/PostKindTabs.astro'
 import { SITE } from '~/config'
 import { getAllNotes } from '~/lib/data'
 import { getSeoDescription } from '~/lib/seo'
@@ -16,7 +15,6 @@ export async function getStaticPaths() {
     params: { id: note.id },
     props: {
       note,
-      notes: sortedNotes,
       prev: index + 1 < sortedNotes.length ? sortedNotes[index + 1] : null,
       next: index > 0 ? sortedNotes[index - 1] : null,
     },
@@ -25,12 +23,11 @@ export async function getStaticPaths() {
 
 interface Props {
   note: CollectionEntry<'notes'>
-  notes: CollectionEntry<'notes'>[]
   prev: CollectionEntry<'notes'> | null
   next: CollectionEntry<'notes'> | null
 }
 
-const { note, notes, prev, next }: Props = Astro.props
+const { note, prev, next }: Props = Astro.props
 const { data: frontmatter } = note
 const { Content } = await render(note)
 
@@ -46,26 +43,6 @@ const noteDescription = getSeoDescription({
   tags,
   contentType: '笔记',
 })
-
-const currentTags = new Set(tags)
-const relatedNotes = notes
-  .filter((candidate) => candidate.id !== note.id)
-  .map((candidate) => {
-    const candidateTags = candidate.data.tags ?? []
-    const overlap = candidateTags.filter((tag) => currentTags.has(tag)).length
-    const referenceDate = candidate.data.updatedDate ?? candidate.data.pubDate
-    return {
-      candidate,
-      overlap,
-      timestamp: referenceDate.getTime(),
-    }
-  })
-  .sort((a, b) => {
-    if (b.overlap !== a.overlap) return b.overlap - a.overlap
-    return b.timestamp - a.timestamp
-  })
-  .slice(0, 3)
-  .map((item) => item.candidate)
 ---
 
 <Layout
@@ -82,171 +59,69 @@ const relatedNotes = notes
   <script is:inline type="application/ld+json" set:html={JSON.stringify({
     "@context": "https://schema.org",
     "@type": "BlogPosting",
-    "mainEntityOfPage": {
-      "@type": "WebPage",
-      "@id": canonicalUrl,
-    },
+    "mainEntityOfPage": { "@type": "WebPage", "@id": canonicalUrl },
     "headline": frontmatter.title,
     "description": noteDescription,
     "datePublished": frontmatter.pubDate.toISOString(),
     "dateModified": (frontmatter.updatedDate ?? frontmatter.pubDate).toISOString(),
     "author": { "@type": "Person", "name": displayAuthor },
-    "publisher": {
-      "@type": "Person",
-      "name": SITE.author,
-    },
+    "publisher": { "@type": "Person", "name": SITE.author },
     "image": noteImage,
     "inLanguage": SITE.lang,
     "keywords": tags.join(', '),
     "url": canonicalUrl,
   })} />
-  <div class="fly-post-article-shell">
-    <section class="fly-post-article-hero">
-      <div class="fly-post-container">
-        <a href="/notes" class="fly-post-back">
-          <span class="icon-[ph--arrow-left] size-5"></span>
-          <span>返回笔记</span>
-        </a>
 
-        <div class="mt-6">
-          <PostKindTabs active="notes" />
-        </div>
+  <article class="antfu-article antfu-article-notes">
+    <a href="/notes" class="antfu-back">Notes / Archive</a>
 
-        <div class="fly-post-article-grid">
-          <header class="fly-post-article-header">
-            <div class="fly-post-meta-line">
-              <span>By {displayAuthor}</span>
-              <time datetime={frontmatter.pubDate.toISOString()}>{publishedDate}</time>
-            </div>
-
-            <div class="fly-post-tag-row">
-              {tags.slice(0, 4).map((tag) => (
-                <a href={`/tags/${encodeURIComponent(tag)}`}>{tag}</a>
-              ))}
-            </div>
-
-            <h1>{frontmatter.title}</h1>
-
-            {frontmatter.description && <p>{frontmatter.description}</p>}
-
-            <div class="fly-post-article-actions">
-              <a class="fly-post-action" href={canonicalUrl}>
-                <span class="icon-[ph--link] size-4"></span>
-                <span>链接</span>
-              </a>
-              <button class="fly-post-action cursor-pointer" type="button" data-copy-link={canonicalUrl}>
-                <span class="icon-[ph--share-network] size-4"></span>
-                <span>分享</span>
-              </button>
-            </div>
-          </header>
-
-          <aside class="fly-post-article-card" aria-label="笔记详情">
-            <p>Note details</p>
-            <dl>
-              <div>
-                <dt>Author</dt>
-                <dd>{displayAuthor}</dd>
-              </div>
-              <div>
-                <dt>Published</dt>
-                <dd>{publishedDate}</dd>
-              </div>
-              {updatedDate && (
-                <div>
-                  <dt>Updated</dt>
-                  <dd>{updatedDate}</dd>
-                </div>
-              )}
-            </dl>
-          </aside>
-        </div>
-
-        <figure class="fly-post-article-media">
-          {frontmatter.cover ? (
-            <LqipImage
-              src={frontmatter.cover}
-              alt={frontmatter.title}
-              width={1200}
-              height={630}
-              loading="eager"
-              decoding="async"
-              format="webp"
-              class="h-full w-full object-cover"
-            />
-          ) : (
-            <div class="fly-post-cover-fallback min-h-[24rem]">
-              <img src="/logo.svg" alt="" class="size-24" loading="eager" decoding="async" />
-              <span>{tags[0] ?? 'Note'}</span>
-            </div>
-          )}
-        </figure>
+    <header class="antfu-article-header">
+      <h1 class="antfu-article-title">{frontmatter.title}</h1>
+      {frontmatter.description && (
+        <p class="antfu-article-desc">{frontmatter.description}</p>
+      )}
+      <div class="antfu-article-meta">
+        <span>By {displayAuthor}</span>
+        <span>·</span>
+        <time datetime={frontmatter.pubDate.toISOString()}>{publishedDate}</time>
+        {updatedDate && <><span>·</span><span>Updated {updatedDate}</span></>}
       </div>
-    </section>
-
-    <section class="fly-post-article-main">
-      <div class="fly-post-container">
-        <div class="fly-post-article-body-grid">
-          <aside class="fly-post-article-rail" aria-label="笔记目录信息">
-            <p>{tags[0] ?? 'Note'}</p>
-            <p>{publishedDate}</p>
-            {updatedDate && <p>已更新</p>}
-          </aside>
-
-          <main>
-            <Prose class="fly-post-article-body">
-              <Content />
-            </Prose>
-          </main>
+      {tags.length > 0 && (
+        <div class="antfu-article-tags">
+          {tags.map((tag) => (
+            <a href={`/tags/${encodeURIComponent(tag)}`} class="antfu-article-tag">{tag}</a>
+          ))}
         </div>
+      )}
+    </header>
 
-        {(prev || next) && (
-          <nav class="fly-post-adjacent" aria-label="笔记导航">
-            {next ? (
-              <a href={`/notes/${next.id}`}>
-                <span>上一篇笔记</span>
-                <strong>{next.data.title}</strong>
-              </a>
-            ) : (
-              <div></div>
-            )}
+    <Prose class="antfu-article-body">
+      <Content />
+    </Prose>
 
-            {prev ? (
-              <a href={`/notes/${prev.id}`} class="text-right">
-                <span>下一篇笔记</span>
-                <strong>{prev.data.title}</strong>
-              </a>
-            ) : (
-              <div></div>
-            )}
-          </nav>
-        )}
+    {(prev || next) && (
+      <nav class="antfu-adjacent">
+        {next ? (
+          <a href={`/notes/${next.id}`} class="antfu-adjacent-link">
+            <span class="antfu-adjacent-label">← 上一篇笔记</span>
+            <span class="antfu-adjacent-title">{next.data.title}</span>
+          </a>
+        ) : <span></span>}
+        {prev ? (
+          <a href={`/notes/${prev.id}`} class="antfu-adjacent-link antfu-adjacent-right">
+            <span class="antfu-adjacent-label">下一篇笔记 →</span>
+            <span class="antfu-adjacent-title">{prev.data.title}</span>
+          </a>
+        ) : <span></span>}
+      </nav>
+    )}
 
-        {relatedNotes.length > 0 && (
-          <section class="fly-post-related">
-            <div class="fly-post-section-head">
-              <div>
-                <p class="fly-post-section-label">Related reading</p>
-                <h2>相关笔记</h2>
-              </div>
-            </div>
-            <div class="fly-post-related-grid">
-              {relatedNotes.map((related) => {
-                const relatedDate = related.data.updatedDate ?? related.data.pubDate
-                return (
-                  <a href={`/notes/${related.id}`}>
-                    <p>{formatDate(relatedDate)}</p>
-                    <h3>{related.data.title}</h3>
-                    {related.data.description && <span>{related.data.description}</span>}
-                  </a>
-                )
-              })}
-            </div>
-          </section>
-        )}
-      </div>
-    </section>
-  </div>
+    {frontmatter.comment !== false && (
+      <section class="antfu-comments">
+        <Comment id={note.id} title={frontmatter.title} />
+      </section>
+    )}
+  </article>
 
   <script>
     document.querySelectorAll('[data-copy-link]').forEach((button) => {
@@ -263,3 +138,73 @@ const relatedNotes = notes
     })
   </script>
 </Layout>
+
+<style>
+  /* Notes 详情页复用 .antfu-article 的容器样式（统一在 markdown.css 的
+     "Editorial article container" 段落，由 /posts/[id] 和 /notes/[id] 共享）。
+     此处只补充 notes 特有的克制差异：标题不那么巨大、左对齐、不强制居中 meta。 */
+
+  .antfu-article-notes {
+    padding: clamp(3rem, 6vw, 5rem) 1.25rem 3rem;
+  }
+
+  .antfu-article-notes .antfu-back {
+    margin-bottom: clamp(2rem, 4vw, 2.75rem);
+  }
+
+  .antfu-article-notes .antfu-article-header {
+    width: min(100%, 48rem);
+    margin-inline: auto;
+    margin-bottom: clamp(2.25rem, 4vw, 3rem);
+    text-align: left;
+  }
+
+  .antfu-article-notes .antfu-article-title {
+    color: var(--article-ink);
+    font-size: clamp(1.75rem, 4vw, 2.5rem);
+    font-weight: 700;
+    line-height: 1.15;
+  }
+
+  .antfu-article-notes .antfu-article-desc {
+    margin: clamp(0.85rem, 1.8vw, 1.25rem) 0 0;
+    max-width: none;
+    color: var(--article-soft);
+    font-weight: 400;
+    font-size: clamp(0.95rem, 1.4vw, 1.05rem);
+    line-height: 1.5;
+  }
+
+  .antfu-article-notes .antfu-article-meta {
+    justify-content: flex-start;
+    margin-top: clamp(1.25rem, 2.5vw, 1.75rem);
+    font-family: var(--font-geist-mono);
+    font-size: 0.75rem;
+    letter-spacing: 0.02em;
+  }
+
+  .antfu-article-notes .antfu-article-tags {
+    justify-content: flex-start;
+    margin-top: 0.75rem;
+  }
+
+  .antfu-article-notes .antfu-adjacent {
+    width: min(100%, 42rem);
+    margin: 2.5rem auto 0;
+  }
+
+  @media (max-width: 720px) {
+    .antfu-article-notes {
+      padding-inline: 1rem;
+      padding-top: 2.5rem;
+    }
+
+    .antfu-article-notes .antfu-article-title {
+      font-size: clamp(1.5rem, 6vw, 2rem);
+    }
+
+    .antfu-article-notes .antfu-adjacent {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

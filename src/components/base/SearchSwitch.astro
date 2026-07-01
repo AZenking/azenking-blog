@@ -13,20 +13,20 @@ const {
 ---
 
 <button
-  class:list={['ui-control fly-focus cursor-pointer', className]}
+  class:list={['antfu-header-search cursor-pointer', className]}
   id="search-switch"
   aria-label="搜索"
   title="搜索 (Ctrl+K)"
 >
-  <span class="icon-[material-symbols--manage-search] size-[17px]"></span>
+  <span class="icon-[ri--search-line] antfu-header-search-icon" aria-hidden="true"></span>
   <span class:list={[labelClass]}>{label}</span>
 </button>
 
 <div id="search-mask" class="fixed inset-0 z-200 hidden bg-black/78 opacity-0 backdrop-blur-sm transition-opacity duration-200">
   <div class="absolute left-1/2 top-20 -translate-x-1/2 transition-transform duration-300 -translate-y-4 search-panel-show">
-      <div id="search-panel" class="grid max-h-[80vh] w-[calc(100vw-2rem)] max-w-[40rem] grid-rows-[auto_1fr] overflow-hidden rounded-[0.875rem] border border-white/38 bg-[var(--theme-bg)] text-white sm:w-[40rem]">
+      <div id="search-panel" class="grid max-h-[80vh] w-[calc(100vw-2rem)] max-w-[40rem] grid-rows-[auto_1fr] overflow-hidden  border border-white/38 bg-[var(--theme-bg)] text-white sm:w-[40rem]">
       <div id="search-bar" class="grid h-14 grid-cols-[auto_1fr_auto_auto] items-center gap-2 border-b border-white/28 px-4">
-        <span class="icon-[material-symbols--manage-search] size-6 text-[var(--theme-muted)]"></span>
+        <span class="font-mono text-xs text-[var(--theme-muted)]">Search</span>
         <label class="sr-only" for="search-input">搜索</label>
         <input
           type="search"
@@ -35,10 +35,10 @@ const {
           placeholder="搜索"
           autocomplete="off"
         />
-        <button id="search-exact" class="inline-flex min-h-8 cursor-pointer select-none items-center gap-1 rounded-full border border-white/28 px-3 py-1 font-mono text-xs uppercase tracking-[0.12em] text-[var(--theme-muted)] hover:border-[var(--theme-accent)] hover:text-[var(--theme-accent)]" aria-pressed="false" title="精确匹配">
+        <button id="search-exact" class="inline-flex min-h-8 cursor-pointer select-none items-center gap-1 border border-white/28 px-3 py-1 font-mono text-xs  text-[var(--theme-muted)] hover:border-[var(--theme-accent)] hover:text-[var(--theme-accent)]" aria-pressed="false" title="精确匹配">
           精确
         </button>
-        <kbd class="hidden items-center gap-1 rounded-full border border-white/25 bg-[var(--theme-surface-soft)] px-2 py-1 font-mono text-xs text-[var(--theme-muted)] sm:inline-flex">ESC</kbd>
+        <kbd class="hidden items-center gap-1 border border-white/25 bg-[var(--theme-surface-soft)] px-2 py-1 font-mono text-xs text-[var(--theme-muted)] sm:inline-flex">ESC</kbd>
       </div>
       <div id="search-results" class="overflow-y-auto no-scrollbar p-1 sm:p-2 overscroll-contain" data-base="/"></div>
     </div>

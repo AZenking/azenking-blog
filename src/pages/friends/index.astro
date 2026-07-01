@@ -1,9 +1,8 @@
 ---
-import { FRIEND_LINKS, FRIENDS_CONFIG, SOCIAL_LINKS } from '~/config'
+import { FRIEND_LINKS, FRIENDS_CONFIG } from '~/config'
 import Layout from '~/layouts/Layout.astro'
 
-const { title, description, introduce } = FRIENDS_CONFIG
-const githubUrl = SOCIAL_LINKS.find((social) => social.name.toLowerCase() === 'github')?.url
+const { title, introduce } = FRIENDS_CONFIG
 
 const getHost = (url: string) => {
   try {
@@ -12,160 +11,38 @@ const getHost = (url: string) => {
     return url
   }
 }
-
-const friendItems = FRIEND_LINKS.map((friend) => ({
-  ...friend,
-  host: getHost(friend.url),
-  summary: friend.description?.trim() || '分享技术、设计或日常观察。',
-  initials: friend.name.trim().slice(0, 1).toUpperCase(),
-}))
-
-const totalTags = friendItems.reduce((sum, friend) => sum + (friend.tags?.length ?? 0), 0)
-const featuredFriend = friendItems[0]
-const accentClasses = ['fly-accent-mint', 'fly-accent-purple', 'fly-accent-yellow', 'fly-accent-pink', 'fly-accent-orange']
 ---
 
-<Layout {title} {description} fullWidth>
-  <div class="fly-shell">
-    <section class="mx-auto w-full max-w-[88rem] px-4 py-8 sm:px-6 sm:py-10 lg:px-8">
-      <div class="fly-hero -mx-4 px-4 pb-8 pt-8 sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8">
-        <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-          <p class="fly-hero-kicker">朋友 / 订阅 / 友链交换</p>
-          {githubUrl && (
-            <a href={githubUrl} target="_blank" rel="noreferrer" class="fly-pill">
-              GitHub 联系
-            </a>
-          )}
-        </div>
+<Layout title={title} description={FRIENDS_CONFIG.description}>
+  <div class="antfu-page">
+    <h1>{title}</h1>
+    <p class="antfu-desc">{introduce}</p>
 
-        <div class="mt-5 grid gap-5 lg:grid-cols-[minmax(0,1fr)_22rem] lg:items-end">
-          <div>
-            <h1 class="fly-display text-[clamp(5rem,15vw,13rem)] leading-[0.76] tracking-normal">{title}</h1>
-            <p class="fly-hero-copy mt-4 max-w-[52rem] text-base sm:text-lg">{introduce}</p>
-          </div>
-
-          <div class="grid grid-cols-3 gap-3">
-            <div class="fly-stat">
-              <p class="fly-kicker text-white/70">友链</p>
-              <p class="mt-2 text-3xl leading-none tracking-normal text-white">{friendItems.length}</p>
-            </div>
-            <div class="fly-stat">
-              <p class="fly-kicker text-white/70">标签</p>
-              <p class="mt-2 text-3xl leading-none tracking-normal text-white">{totalTags}</p>
-            </div>
-            <div class="fly-stat">
-              <p class="fly-kicker text-white/70">状态</p>
-              <p class="mt-2 text-2xl leading-none tracking-normal text-white">{githubUrl ? '开放' : '关闭'}</p>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {featuredFriend && (
-        <section class="grid gap-5 border-b border-[var(--theme-border)] py-5 lg:grid-cols-[minmax(0,1.35fr)_minmax(18rem,0.65fr)]">
-          <a href={featuredFriend.url} target="_blank" rel="noreferrer" class="fly-card-link overflow-hidden p-0">
-            <article class="grid h-full lg:grid-cols-[minmax(0,0.75fr)_minmax(0,1fr)]">
-              <div class="fly-accent-mint flex min-h-72 items-end justify-between gap-4 p-6">
-                <div class="inline-flex size-20 shrink-0 items-center justify-center overflow-hidden rounded-[1.75rem] border border-black/35 bg-[var(--theme-surface-soft)] text-2xl">
-                  {featuredFriend.avatar ? (
-                    <img src={featuredFriend.avatar} alt={featuredFriend.name} class="size-full object-cover" loading="lazy" decoding="async" />
-                  ) : (
-                    <span>{featuredFriend.initials}</span>
-                  )}
-                </div>
-                <span class="font-display text-[clamp(4rem,10vw,8rem)] leading-[0.8] tracking-normal">01</span>
-              </div>
-
-              <div class="flex min-h-full flex-col justify-between gap-10 p-5 sm:p-7">
-                <div>
-                  <p class="fly-kicker">精选友链</p>
-                  <h2 class="fly-heading mt-4 text-[clamp(2.2rem,5vw,5rem)] leading-[0.92]">{featuredFriend.name}</h2>
-                  <p class="mt-3 font-mono text-sm uppercase tracking-[0.12em] text-[var(--theme-muted)]">{featuredFriend.host}</p>
-                  <p class="fly-copy mt-5 text-base sm:text-lg">{featuredFriend.summary}</p>
-                </div>
-
-                {featuredFriend.tags && featuredFriend.tags.length > 0 && (
-                  <div class="flex flex-wrap gap-2">
-                    {featuredFriend.tags.map((tag) => (
-                      <span class="fly-pill">{tag}</span>
-                    ))}
-                  </div>
-                )}
-              </div>
-            </article>
+    <ul class="antfu-list">
+      {FRIEND_LINKS.map((friend) => (
+        <li class="antfu-friend">
+          <a href={friend.url} class="antfu-friend-link" target="_blank" rel="noreferrer">
+            <span>{friend.name}</span>
+            <span class="antfu-host">{getHost(friend.url)} ↗</span>
           </a>
+          {friend.description && <p class="antfu-friend-desc">{friend.description}</p>}
+        </li>
+      ))}
+    </ul>
 
-          <aside class="fly-card-soft p-5">
-            <p class="fly-kicker">目录索引</p>
-            <ul class="mt-4 divide-y divide-[var(--theme-border)]">
-              {friendItems.map((friend, index) => (
-                <li class="py-4 first:pt-0 last:pb-0">
-                  <a href={friend.url} target="_blank" rel="noreferrer" class="group flex items-center justify-between gap-4 text-[var(--theme-text)] no-underline">
-                    <span class="min-w-0 truncate text-lg font-black leading-tight tracking-normal transition-colors group-hover:text-[var(--theme-link-hover)]">
-                      {String(index + 1).padStart(2, '0')} / {friend.name}
-                    </span>
-                    <span class="shrink-0 font-mono text-[0.7rem] uppercase tracking-[0.12em] text-[var(--theme-muted)]">{friend.host}</span>
-                  </a>
-                </li>
-              ))}
-            </ul>
-          </aside>
-        </section>
-      )}
-
-      <section class="py-6">
-        <div class="mb-5 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
-          <div>
-            <p class="fly-kicker">友链列表</p>
-            <h2 class="mt-2 text-[clamp(2rem,4.6vw,4.2rem)] font-black leading-[0.9] tracking-normal text-[var(--theme-text)]">朋友和订阅</h2>
-          </div>
-          <p class="font-mono text-xs font-semibold uppercase tracking-[0.14em] text-[var(--theme-muted)]">
-            共 {friendItems.length} 个站点
-          </p>
-        </div>
-
-        {friendItems.length > 0 ? (
-          <div class="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
-            {friendItems.map((friend, index) => (
-              <a
-                href={friend.url}
-                target="_blank"
-                rel="noreferrer"
-                class:list={['fly-card-link flex min-h-72 flex-col justify-between p-5', index % 3 === 1 && accentClasses[index % accentClasses.length]]}
-              >
-                <div class="flex items-start justify-between gap-4">
-                  <div class="inline-flex size-14 shrink-0 items-center justify-center overflow-hidden rounded-[1.25rem] border border-current/35 bg-[var(--theme-surface-soft)] text-lg">
-                    {friend.avatar ? (
-                      <img src={friend.avatar} alt={friend.name} class="size-full object-cover" loading="lazy" decoding="async" />
-                    ) : (
-                      <span>{friend.initials}</span>
-                    )}
-                  </div>
-                  <span class="font-mono text-xs font-semibold uppercase tracking-[0.14em] opacity-60">{String(index + 1).padStart(2, '0')}</span>
-                </div>
-
-                <div class="mt-8">
-                  <p class="font-mono text-[0.7rem] font-semibold uppercase tracking-[0.14em] opacity-60">{friend.host}</p>
-                  <h3 class="mt-3 text-[clamp(1.7rem,3vw,2.6rem)] font-black leading-[0.9] tracking-normal">{friend.name}</h3>
-                  <p class="mt-4 line-clamp-3 text-sm leading-6 opacity-72">{friend.summary}</p>
-                </div>
-
-                {friend.tags && friend.tags.length > 0 && (
-                  <div class="mt-6 flex flex-wrap gap-2">
-                    {friend.tags.map((tag) => (
-                      <span class="inline-flex rounded-full border border-current px-2 py-1 font-mono text-[0.68rem] uppercase leading-none tracking-[0.1em] opacity-75">
-                        {tag}
-                      </span>
-                    ))}
-                  </div>
-                )}
-              </a>
-            ))}
-          </div>
-        ) : (
-          <p class="text-sm text-[var(--theme-muted)]">暂无友链。</p>
-        )}
-      </section>
-    </section>
+    {FRIEND_LINKS.length === 0 && <p>暂无友链。</p>}
   </div>
 </Layout>
+
+<style>
+  .antfu-page { max-width: var(--layout-width); margin-inline: auto; padding: 4rem 1rem 2rem; }
+  .antfu-page h1 { font-size: 1.5rem; font-weight: 600; margin: 0 0 0.5em; }
+  .antfu-desc { opacity: var(--opacity-muted); margin: 0 0 2rem; }
+  .antfu-list { list-style: none; padding: 0; margin: 0; }
+  .antfu-friend { padding: 0.6em 0; }
+  .antfu-friend-link { display: flex; align-items: baseline; justify-content: space-between; gap: 1rem; text-decoration: none; color: var(--theme-text); transition: opacity 200ms ease; }
+  .antfu-friend-link:hover { opacity: var(--opacity-secondary); }
+  .antfu-friend-link span:first-child { font-weight: 600; }
+  .antfu-host { flex-shrink: 0; font-size: 0.8125rem; opacity: var(--opacity-muted); }
+  .antfu-friend-desc { margin: 0.25em 0 0; opacity: var(--opacity-muted); font-size: 0.875rem; }
+</style>

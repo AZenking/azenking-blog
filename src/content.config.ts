@@ -16,6 +16,7 @@ const contentSchema = ({ image }: { image: Function }) =>
       recommend: z.boolean().default(false),
       pinned: z.boolean().default(false),
       draft: z.boolean().default(false),
+      comment: z.boolean().default(true),
       license: z.string().optional(),
     })
     .transform((data) => ({

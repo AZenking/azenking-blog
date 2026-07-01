@@ -1,0 +1,140 @@
+<div class="site-background" aria-hidden="true">
+  <span class="site-background-glow"></span>
+  <span class="site-background-silk"></span>
+  <span class="site-background-grid"></span>
+  <span class="site-background-grain"></span>
+</div>
+
+<style>
+  .site-background {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    overflow: hidden;
+    pointer-events: none;
+  }
+
+  .site-background-glow,
+  .site-background-silk,
+  .site-background-grid,
+  .site-background-grain {
+    position: absolute;
+    inset: 0;
+  }
+
+  .site-background-glow {
+    opacity: 0.72;
+    background:
+      radial-gradient(42rem 28rem at 18% 8%, rgb(255 255 255 / 0.16), transparent 64%),
+      radial-gradient(36rem 24rem at 86% 24%, rgb(255 255 255 / 0.08), transparent 68%),
+      linear-gradient(180deg, rgb(255 255 255 / 0.055), transparent 46%);
+    filter: blur(1px);
+  }
+
+  .site-background-silk {
+    inset: -24vmax;
+    opacity: 0.72;
+    background:
+      repeating-linear-gradient(
+        116deg,
+        transparent 0 34px,
+        rgb(255 255 255 / 0.075) 36px 37px,
+        transparent 40px 76px
+      ),
+      repeating-linear-gradient(
+        34deg,
+        transparent 0 42px,
+        rgb(255 255 255 / 0.055) 44px 45px,
+        transparent 48px 92px
+      );
+    filter: blur(4px);
+    transform: rotate(-7deg) translate3d(0, 0, 0);
+    animation: site-background-drift 28s ease-in-out infinite alternate;
+  }
+
+  .site-background-grid {
+    opacity: 0.18;
+    background-image:
+      linear-gradient(rgb(255 255 255 / 0.16) 1px, transparent 1px),
+      linear-gradient(90deg, rgb(255 255 255 / 0.12) 1px, transparent 1px);
+    background-size: 44px 44px;
+    mask-image: linear-gradient(to bottom, black 0%, black 28%, transparent 82%);
+  }
+
+  .site-background-grain {
+    opacity: 0.32;
+    background-image:
+      repeating-linear-gradient(0deg, rgb(255 255 255 / 0.035) 0 1px, transparent 1px 3px),
+      repeating-linear-gradient(90deg, rgb(255 255 255 / 0.025) 0 1px, transparent 1px 4px);
+    mix-blend-mode: screen;
+  }
+
+  :global(html.light) .site-background-glow {
+    opacity: 0.88;
+    background:
+      radial-gradient(42rem 28rem at 18% 8%, rgb(0 0 0 / 0.095), transparent 64%),
+      radial-gradient(36rem 24rem at 86% 24%, rgb(0 0 0 / 0.055), transparent 68%),
+      linear-gradient(180deg, rgb(0 0 0 / 0.035), transparent 46%);
+  }
+
+  :global(html.light) .site-background-silk {
+    opacity: 0.7;
+    background:
+      repeating-linear-gradient(
+        116deg,
+        transparent 0 34px,
+        rgb(0 0 0 / 0.06) 36px 37px,
+        transparent 40px 76px
+      ),
+      repeating-linear-gradient(
+        34deg,
+        transparent 0 42px,
+        rgb(0 0 0 / 0.045) 44px 45px,
+        transparent 48px 92px
+      );
+  }
+
+  :global(html.light) .site-background-grid {
+    opacity: 0.16;
+    background-image:
+      linear-gradient(rgb(0 0 0 / 0.16) 1px, transparent 1px),
+      linear-gradient(90deg, rgb(0 0 0 / 0.12) 1px, transparent 1px);
+  }
+
+  :global(html.light) .site-background-grain {
+    opacity: 0.22;
+    background-image:
+      repeating-linear-gradient(0deg, rgb(0 0 0 / 0.025) 0 1px, transparent 1px 3px),
+      repeating-linear-gradient(90deg, rgb(0 0 0 / 0.02) 0 1px, transparent 1px 4px);
+    mix-blend-mode: multiply;
+  }
+
+  @keyframes site-background-drift {
+    from {
+      transform: rotate(-7deg) translate3d(-1.5rem, -1rem, 0);
+    }
+    to {
+      transform: rotate(-4deg) translate3d(1.5rem, 1rem, 0);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .site-background-silk {
+      animation: none;
+    }
+  }
+
+  @media (max-width: 640px) {
+    .site-background-glow {
+      opacity: 0.56;
+    }
+
+    .site-background-silk {
+      opacity: 0.44;
+    }
+
+    .site-background-grid {
+      opacity: 0.1;
+    }
+  }
+</style>

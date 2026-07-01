@@ -30,6 +30,10 @@ export const HEADER_LINKS: Link[] = [
     url: '/posts',
   },
   {
+    name: '笔记',
+    url: '/notes',
+  },
+  {
     name: '项目',
     url: '/projects',
   },
@@ -37,28 +41,16 @@ export const HEADER_LINKS: Link[] = [
     name: '照片',
     url: '/photos',
   },
-  {
-    name: '朋友',
-    url: '/friends',
-  },
 ]
 
 export const FOOTER_LINKS: Link[] = [
   {
-    name: '首页',
-    url: '/',
+    name: '朋友',
+    url: '/friends',
   },
   {
     name: '标签',
     url: '/tags',
-  },
-  {
-    name: '照片',
-    url: '/photos',
-  },
-  {
-    name: '朋友',
-    url: '/friends',
   },
 ]
 
@@ -66,7 +58,7 @@ export const FOOTER_LINKS: Link[] = [
 export const SOCIAL_LINKS: SocialLink[] = [
   {
     name: 'github',
-    url: 'https://github.com/yy921010',
+    url: 'https://github.com/AZenking',
     icon: 'icon-[ri--github-fill]',
   },
 ]
@@ -98,9 +90,9 @@ export const COMMENT_CONFIG: CommentConfig = {
   gitalk: {
     clientID: import.meta.env.PUBLIC_GITHUB_CLIENT_ID,
     clientSecret: import.meta.env.PUBLIC_GITHUB_CLIENT_SECRET,
-    repo: 'Sandy',
-    owner: 'yy921010',
-    admin: ['yy921010'],
+    repo: 'azenking-blog',
+    owner: 'AZenking',
+    admin: ['AZenking'],
     language: 'en-US',
     perPage: 5,
     pagerDirection: 'last',

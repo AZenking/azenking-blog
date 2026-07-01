@@ -190,7 +190,7 @@ draft: false
 ---
 name: 'Litos'
 description: 'A Simple & Modern Blog Theme for Astro.'
-githubUrl: 'https://github.com/yy921010/Litos'
+githubUrl: 'https://github.com/AZenking/Litos'
 website: 'https://ethyoung.me/'
 type: 'image'
 icon: 'assets/litos.png'

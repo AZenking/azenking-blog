@@ -1,7 +1,6 @@
 ---
 import type { GetStaticPaths, Page } from 'astro'
 import type { CollectionEntry } from 'astro:content'
-import LqipImage from '~/components/base/LqipImage.astro'
 import Pagination from '~/components/base/Pagination.astro'
 import { POSTS_CONFIG } from '~/config'
 import { getAllPosts, getAllTags } from '~/lib/data'
@@ -29,7 +28,7 @@ interface Props {
 }
 
 const { page, tag } = Astro.props
-const description = `Ethan Young 博客中与 #${tag} 相关的文章归档，共 ${page.total} 篇，涵盖技术实践、工具配置和个人记录。`
+const description = `Ethan Young 博客中与 #${tag} 相关的文章归档，共 ${page.total} 篇。`
 const encodedTag = encodeURIComponent(tag)
 const allTags = await getAllTags()
 
@@ -38,156 +37,68 @@ const relatedTags = Object.entries(allTags)
   .sort(([, countA], [, countB]) => countB - countA)
   .slice(0, 8)
 
-const isFirstPage = page.currentPage === 1
-const featuredPost = isFirstPage ? page.data[0] : null
-const streamPosts = isFirstPage ? page.data.slice(1) : page.data
-const tileAccents = ['fly-accent-mint', 'fly-accent-purple', 'fly-accent-yellow', 'fly-accent-pink', 'fly-accent-orange']
+const postsByYear = new Map<number, CollectionEntry<'posts'>[]>()
+for (const post of page.data) {
+  const year = (post.data.updatedDate ?? post.data.pubDate).getFullYear()
+  if (!postsByYear.has(year)) postsByYear.set(year, [])
+  postsByYear.get(year)!.push(post)
+}
+const yearGroups = [...postsByYear.entries()].sort(([a], [b]) => b - a)
 ---
 
-<Layout title={`#${tag}`} {description} fullWidth>
-  <div class="fly-shell">
-    <section class="mx-auto w-full max-w-[88rem] px-4 py-8 sm:px-6 sm:py-10 lg:px-8">
-      <div class="fly-hero -mx-4 px-4 pb-8 pt-8 sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8">
-        <a href="/tags" class="fly-pill">← 返回标签</a>
+<Layout title={`#${tag}`} description={description}>
+  <div class="antfu-page">
+    <a href="/tags" class="antfu-back">← Back to tags</a>
+    <h1>#{tag}</h1>
+    <p class="antfu-desc">这个主题下共有 {page.total} 篇文章。</p>
 
-        <div class="mt-5 grid gap-5 lg:grid-cols-[minmax(0,1fr)_22rem] lg:items-end">
-          <div>
-            <p class="fly-hero-kicker">标签归档</p>
-            <h1 class="fly-display mt-4 text-[clamp(4.4rem,14vw,12rem)] leading-[0.76] tracking-normal">#{tag}</h1>
-            <p class="fly-hero-copy mt-4 max-w-[52rem] text-base sm:text-lg">
-              这个主题下共有 {page.total} 篇文章。
-            </p>
-          </div>
+    <nav class="antfu-tags">
+      <span class="is-active">#{tag} ({page.total})</span>
+      {relatedTags.map(([name, count]) => (
+        <a href={`/tags/${encodeURIComponent(name)}`}>#{name} ({count})</a>
+      ))}
+    </nav>
 
-          <div class="grid grid-cols-3 gap-3">
-            <div class="fly-stat">
-              <p class="fly-kicker text-white/70">文章</p>
-              <p class="mt-2 text-3xl leading-none tracking-normal text-white">{page.total}</p>
-            </div>
-            <div class="fly-stat">
-              <p class="fly-kicker">相关</p>
-              <p class="mt-2 text-3xl leading-none tracking-normal text-white">{relatedTags.length}</p>
-            </div>
-            <div class="fly-stat">
-              <p class="fly-kicker">页码</p>
-              <p class="mt-2 text-3xl leading-none tracking-normal text-white">{page.currentPage}</p>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="flex flex-wrap gap-2 border-b border-[var(--theme-border)] py-5">
-        <span class="fly-pill fly-pill-active">#{tag}</span>
-        {relatedTags.map(([name, count]) => (
-          <a href={`/tags/${encodeURIComponent(name)}`} class="fly-pill">
-            <span>{name}</span>
-            <span class="opacity-60">({count})</span>
-          </a>
-        ))}
-      </div>
-
-      {featuredPost && (
-        <section class="border-b border-[var(--theme-border)] py-5">
-          <a href={`/posts/${featuredPost.id}`} class="fly-card-link overflow-hidden p-0">
-            <article class="grid h-full lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1fr)]">
-              <div class="min-h-72 border-b border-[var(--theme-border)] bg-[var(--theme-surface-soft)] lg:border-b-0 lg:border-r">
-                {featuredPost.data.cover ? (
-                  <LqipImage
-                    src={featuredPost.data.cover}
-                    alt={featuredPost.data.title}
-                    width={980}
-                    height={720}
-                    loading="eager"
-                    decoding="async"
-                    format="webp"
-                    class="h-full min-h-72 w-full object-cover"
-                  />
-                ) : (
-                  <div class="fly-accent-purple flex h-full min-h-72 items-end p-6">
-                    <span class="font-display text-[clamp(4rem,10vw,8rem)] leading-[0.8] tracking-normal">#</span>
-                  </div>
-                )}
-              </div>
-
-              <div class="flex min-h-full flex-col justify-between gap-10 p-5 sm:p-7">
-                <div>
-                  <p class="fly-kicker">#{tag} 精选</p>
-                  <h2 class="fly-heading mt-4 text-[clamp(2.15rem,4.8vw,5rem)] leading-[0.92]">{featuredPost.data.title}</h2>
-                  {featuredPost.data.description && (
-                    <p class="fly-copy mt-5 text-base sm:text-lg">{featuredPost.data.description}</p>
-                  )}
-                </div>
-
-                <p class="font-mono text-xs font-semibold uppercase tracking-[0.14em] text-[var(--theme-muted)]">
-                  {formatDate(featuredPost.data.updatedDate ?? featuredPost.data.pubDate, 'short')}
-                </p>
-              </div>
-            </article>
-          </a>
-        </section>
-      )}
-
-      <section class="py-6">
-        <div class="mb-5 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
-          <div>
-            <p class="fly-kicker">时间线</p>
-            <h2 class="mt-2 text-[clamp(2rem,4.6vw,4.2rem)] font-black leading-[0.9] tracking-normal text-[var(--theme-text)]">主题记录</h2>
-          </div>
-          <p class="font-mono text-xs font-semibold uppercase tracking-[0.14em] text-[var(--theme-muted)]">
-            本页 {streamPosts.length} 篇
-          </p>
-        </div>
-
-        {streamPosts.length > 0 ? (
-          <div class="relative grid gap-4 md:pl-16 md:before:absolute md:before:left-7 md:before:top-2 md:before:h-[calc(100%-0.5rem)] md:before:w-px md:before:bg-[var(--theme-border-strong)]">
-            {streamPosts.map((post, index) => (
-              <article class="relative grid gap-3 md:grid-cols-[7rem_minmax(0,1fr)] md:gap-4">
-                <time
-                  datetime={formatDate(post.data.updatedDate ?? post.data.pubDate, 'iso')}
-                  class="font-mono text-[0.68rem] font-semibold uppercase tracking-[0.14em] text-[var(--theme-muted)] md:-ml-16 md:pt-5"
-                >
-                  {formatDate(post.data.updatedDate ?? post.data.pubDate, 'dot')}
-                </time>
-
-                <a
-                  href={`/posts/${post.id}`}
-                  class:list={[
-                    'fly-card-link grid overflow-hidden p-0',
-                    post.data.cover ? 'md:grid-cols-[18rem_minmax(0,1fr)]' : tileAccents[index % tileAccents.length],
-                  ]}
-                >
-                  {post.data.cover && (
-                    <figure class="h-56 border-b border-[var(--theme-border)] bg-[var(--theme-surface-soft)] md:h-full md:min-h-56 md:border-b-0 md:border-r">
-                      <LqipImage
-                        src={post.data.cover}
-                        alt={post.data.title}
-                        width={520}
-                        height={390}
-                        loading="lazy"
-                        decoding="async"
-                        format="webp"
-                        class="h-full w-full object-cover"
-                      />
-                    </figure>
-                  )}
-
-                  <div class="flex min-h-56 flex-col justify-between gap-6 p-5">
-                    <div>
-                      <p class="fly-kicker opacity-65">#{tag}</p>
-                      <h3 class="fly-heading mt-3 text-[clamp(1.65rem,3vw,2.8rem)]">{post.data.title}</h3>
-                      {post.data.description && <p class="mt-3 line-clamp-2 text-sm leading-6 opacity-72">{post.data.description}</p>}
-                    </div>
-                  </div>
-                </a>
-              </article>
-            ))}
-          </div>
-        ) : (
-          <p class="py-10 text-center text-[var(--theme-muted)]">这个标签下暂无文章。</p>
-        )}
+    {yearGroups.map(([year, posts]) => (
+      <section class="antfu-year-group">
+        <h2 class="antfu-year">{year}</h2>
+        <ul class="antfu-list">
+          {posts.map((post) => (
+            <li>
+              <a href={`/posts/${post.id}`} class="antfu-list-link">
+                <span>{post.data.title}</span>
+                <time>{formatDate(post.data.updatedDate ?? post.data.pubDate, 'short')}</time>
+              </a>
+            </li>
+          ))}
+        </ul>
       </section>
+    ))}
 
-      <Pagination {page} baseUrl={`/tags/${encodedTag}`} class="mx-auto mt-8 max-w-4xl" />
-    </section>
+    {page.data.length === 0 && <p>这个标签下暂无文章。</p>}
+
+    <Pagination {page} baseUrl={`/tags/${encodedTag}`} />
   </div>
 </Layout>
+
+<style>
+  .antfu-page { max-width: var(--layout-width); margin-inline: auto; padding: 4rem 1rem 2rem; }
+  .antfu-back { display: inline-block; margin-bottom: 1rem; font-size: 0.9375rem; text-decoration: none; opacity: var(--opacity-muted); transition: opacity 200ms ease; }
+  .antfu-back:hover { opacity: 1; }
+  .antfu-page h1 { font-size: 1.5rem; font-weight: 600; margin: 0 0 0.5em; }
+  .antfu-desc { opacity: var(--opacity-muted); margin: 0 0 2rem; }
+  .antfu-tags { display: flex; flex-wrap: wrap; gap: 0.75rem; margin-bottom: 2.5rem; }
+  .antfu-tags a, .antfu-tags span { text-decoration: none; opacity: var(--opacity-muted); transition: opacity 200ms ease; }
+  .antfu-tags a:hover { opacity: 1; }
+  .antfu-tags .is-active { opacity: 1; font-weight: 600; }
+  .antfu-year-group { margin-bottom: 2.5rem; }
+  .antfu-year { font-size: 0.9375rem; font-weight: 600; opacity: var(--opacity-muted); margin: 0 0 0.75rem; }
+  .antfu-list { list-style: none; padding: 0; margin: 0; }
+  .antfu-list li { margin: 0; }
+  .antfu-list-link {
+    display: flex; align-items: baseline; justify-content: space-between; gap: 0.75rem;
+    padding: 0.35em 0; text-decoration: none; color: var(--theme-text); transition: opacity 200ms ease;
+  }
+  .antfu-list-link:hover { opacity: var(--opacity-secondary); }
+  .antfu-list-link time { flex-shrink: 0; font-size: 0.8125rem; opacity: var(--opacity-muted); }
+</style>

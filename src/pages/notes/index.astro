@@ -1,0 +1,286 @@
+---
+import type { CollectionEntry } from 'astro:content'
+import { getAllNotes } from '~/lib/data'
+import { formatDate } from '~/lib/utils'
+import Layout from '~/layouts/Layout.astro'
+
+const allNotes = await getAllNotes()
+
+const notesByYear = new Map<number, CollectionEntry<'notes'>[]>()
+for (const note of allNotes) {
+  const year = (note.data.updatedDate ?? note.data.pubDate).getFullYear()
+  if (!notesByYear.has(year)) notesByYear.set(year, [])
+  notesByYear.get(year)!.push(note)
+}
+const yearGroups = [...notesByYear.entries()].sort(([a], [b]) => b - a)
+---
+
+<Layout title="笔记" description="Ethan Young 的短笔记归档" fullWidth>
+  <div class="notes-page">
+    <header class="notes-header">
+      <h1>笔记</h1>
+      <p class="notes-desc">收集日常修复、工具配置和工程片段，作为长文章之外的轻量记录。</p>
+      <p class="notes-tagline">{allNotes.length} 篇 · 不定期更新</p>
+    </header>
+
+    {yearGroups.map(([year, notes]) => (
+      <section class="notes-year-group">
+        <h2 class="notes-year-heading">{year}</h2>
+        <div class="notes-year-watermark" aria-hidden="true">{year}</div>
+        <ul class="notes-list">
+          {notes.map((note, index) => {
+            const noteDate = note.data.updatedDate ?? note.data.pubDate
+
+            return (
+              <li class="notes-list-item" data-note-reveal style={`--reveal-index: ${index}`}>
+                <a href={`/notes/${note.id}`} class="notes-list-link">
+                  <span class="notes-title">{note.data.title}</span>
+                  {note.data.description && (
+                    <span class="notes-description">{note.data.description}</span>
+                  )}
+                  <span class="notes-meta">
+                    <time datetime={noteDate.toISOString()}>{formatDate(noteDate, 'short')}</time>
+                  </span>
+                </a>
+              </li>
+            )
+          })}
+        </ul>
+      </section>
+    ))}
+
+    {allNotes.length === 0 && <p class="notes-empty">暂无笔记。</p>}
+  </div>
+</Layout>
+
+<style>
+  .notes-page {
+    width: 100%;
+    margin-inline: auto;
+    padding: clamp(3.5rem, 8vw, 6rem) 1.25rem 3rem;
+    color: var(--article-ink);
+    background:
+      linear-gradient(180deg, rgb(128 122 113 / 0.035), transparent 18rem),
+      var(--article-paper);
+  }
+
+  .notes-header {
+    width: min(100%, 48rem);
+    margin-inline: auto;
+    margin-bottom: clamp(2.5rem, 5vw, 3.75rem);
+  }
+
+  .notes-header h1 {
+    margin: 0 0 0.4em;
+    color: var(--article-ink);
+    font-family: var(--font-editorial);
+    font-size: clamp(2rem, 4vw, 2.75rem);
+    font-weight: 700;
+    line-height: 1.1;
+    letter-spacing: 0;
+    text-wrap: balance;
+  }
+
+  .notes-desc {
+    margin: 0 0 1.25rem;
+    color: var(--article-soft);
+    font-family: var(--font-editorial);
+    font-size: clamp(0.95rem, 1.4vw, 1.05rem);
+    line-height: 1.5;
+    text-wrap: balance;
+  }
+
+  .notes-tagline {
+    margin: 0;
+    color: var(--article-soft);
+    font-family: var(--font-geist-mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    opacity: 0.85;
+  }
+
+  .notes-year-group {
+    position: relative;
+    isolation: isolate;
+    width: min(100%, 48rem);
+    margin: 0 auto 3rem;
+    padding-top: 1.25rem;
+  }
+
+  .notes-year-heading {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+  }
+
+  .notes-year-watermark {
+    position: absolute;
+    inset-block-start: 0;
+    inset-inline-start: -0.5rem;
+    z-index: 0;
+    font-family: var(--font-geist-mono);
+    font-size: clamp(4.5rem, 13vw, 8rem);
+    font-weight: 700;
+    line-height: 0.9;
+    letter-spacing: -0.02em;
+    color: transparent;
+    -webkit-text-stroke: 1px rgb(232 228 220 / 0.04);
+    pointer-events: none;
+    user-select: none;
+  }
+
+  :global(.light) .notes-year-watermark {
+    -webkit-text-stroke-color: rgb(31 31 29 / 0.08);
+  }
+
+  .notes-list {
+    position: relative;
+    z-index: 1;
+    list-style: none;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+  }
+
+  .notes-list-item {
+    margin: 0;
+  }
+
+  :global(html.notes-reveal-ready) .notes-list-item {
+    opacity: 0;
+    transform: translateY(0.6rem);
+    transition:
+      opacity 420ms ease,
+      transform 420ms ease;
+    transition-delay: calc(var(--reveal-index, 0) * 50ms);
+  }
+
+  :global(html.notes-reveal-ready) .notes-list-item.is-visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .notes-list-link {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+    padding: 0.85rem 0 1rem;
+    color: var(--article-ink);
+    text-decoration: none;
+    border-block-end: 1px solid var(--article-rule);
+    transition: opacity 200ms ease;
+  }
+
+  .notes-list-link:hover {
+    opacity: 0.72;
+  }
+
+  .notes-list-link:focus-visible {
+    outline: 1px solid var(--article-accent);
+    outline-offset: 0.35rem;
+  }
+
+  .notes-title {
+    color: var(--article-ink);
+    font-family: var(--font-editorial);
+    font-size: clamp(1.05rem, 1.7vw, 1.22rem);
+    font-weight: 500;
+    line-height: 1.3;
+    text-wrap: balance;
+  }
+
+  .notes-description {
+    display: -webkit-box;
+    overflow: hidden;
+    color: var(--article-soft);
+    font-family: var(--font-editorial);
+    font-size: 0.9rem;
+    line-height: 1.55;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+  }
+
+  .notes-meta {
+    color: var(--article-soft);
+    font-family: var(--font-geist-mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.02em;
+    opacity: 0.85;
+  }
+
+  .notes-empty {
+    width: min(100%, 48rem);
+    margin-inline: auto;
+    color: var(--article-soft);
+  }
+
+  @media (max-width: 760px) {
+    .notes-page {
+      padding-top: 3rem;
+    }
+
+    .notes-header {
+      margin-bottom: 2.5rem;
+    }
+
+    .notes-year-group {
+      margin-bottom: 2.5rem;
+      padding-top: 2.5rem;
+    }
+
+    .notes-year-watermark {
+      inset-inline-start: -0.2rem;
+      font-size: clamp(3rem, 20vw, 4.5rem);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .notes-list-item {
+      opacity: 1;
+      transform: none;
+      transition: none;
+    }
+  }
+</style>
+
+<script>
+  const initNotesArchiveReveal = () => {
+    const revealItems = document.querySelectorAll<HTMLElement>('[data-note-reveal]')
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+
+    if (reduceMotion || !('IntersectionObserver' in window)) {
+      document.documentElement.classList.remove('notes-reveal-ready')
+      revealItems.forEach((item) => item.classList.add('is-visible'))
+      return
+    }
+
+    document.documentElement.classList.add('notes-reveal-ready')
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (!entry.isIntersecting) return
+          entry.target.classList.add('is-visible')
+          observer.unobserve(entry.target)
+        })
+      },
+      {
+        rootMargin: '0px 0px -8% 0px',
+        threshold: 0.12,
+      },
+    )
+
+    revealItems.forEach((item) => observer.observe(item))
+  }
+
+  initNotesArchiveReveal()
+  document.addEventListener('astro:page-load', initNotesArchiveReveal)
+</script>

@@ -8,20 +8,17 @@ interface Props {
 }
 
 const { id, title } = Astro.props
-const { enabled, system } = COMMENT_CONFIG
 
-if (!enabled || system === 'none') {
-  return null
-}
+const enabled = COMMENT_CONFIG.enabled !== false && COMMENT_CONFIG.system !== 'none'
+
+const gitalkConfig = COMMENT_CONFIG.gitalk
+const gitalkReady =
+  COMMENT_CONFIG.system === 'gitalk'
+  && !!gitalkConfig
+  && !!gitalkConfig.clientID
+  && !!gitalkConfig.clientSecret
+
+const renderGitalk = enabled && gitalkReady
 ---
 
-<div class="comment-container">
-  <div class="mb-6">
-    <p class="fly-kicker">讨论</p>
-    <h2 class="mt-2 text-[clamp(2rem,4vw,3.75rem)] font-black leading-[0.9] tracking-normal text-[var(--theme-text)]">
-      评论
-    </h2>
-  </div>
-
-  {system === 'gitalk' && <Gitalk id={id} title={title} />}
-</div>
+{renderGitalk && <Gitalk id={id} title={title} />}
