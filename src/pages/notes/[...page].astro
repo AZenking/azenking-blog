@@ -1,0 +1,215 @@
+---
+import type { GetStaticPaths, Page } from 'astro'
+import type { CollectionEntry } from 'astro:content'
+import LqipImage from '~/components/base/LqipImage.astro'
+import Pagination from '~/components/base/Pagination.astro'
+import PostKindTabs from '~/components/posts/base/PostKindTabs.astro'
+import { getAllNotes } from '~/lib/data'
+import { formatDate } from '~/lib/utils'
+import Layout from '~/layouts/Layout.astro'
+
+export const getStaticPaths: GetStaticPaths = async ({ paginate }) => {
+  const sortedNotes = await getAllNotes()
+
+  return paginate(sortedNotes, {
+    pageSize: 10,
+  })
+}
+
+interface Props {
+  page: Page<CollectionEntry<'notes'>>
+}
+
+const { page } = Astro.props
+const allNotes = await getAllNotes()
+
+const noteTagMap = allNotes.reduce(
+  (acc, note) => {
+    for (const tag of note.data.tags ?? []) {
+      acc[tag] = (acc[tag] ?? 0) + 1
+    }
+    return acc
+  },
+  {} as Record<string, number>
+)
+
+const topTags = Object.entries(noteTagMap)
+  .sort(([, countA], [, countB]) => countB - countA)
+  .slice(0, 8)
+
+const totalTagMentions = Object.values(noteTagMap).reduce((sum, count) => sum + count, 0)
+const isFirstPage = page.currentPage === 1
+const featuredNote = isFirstPage ? page.data[0] : null
+const compactNotes = isFirstPage ? page.data.slice(1, 4) : []
+const gridNotes = isFirstPage ? page.data.slice(1) : page.data
+const notesDescription = `Ethan Young 的短笔记归档，收录 ${allNotes.length} 条工具配置、前端修复、工程片段、问题排查和日常记录。`
+---
+
+<Layout title="笔记" description={notesDescription} fullWidth>
+  <div class="verge-shell">
+    <section class="verge-container">
+      <div class="border-b pb-8 verge-rule">
+        <div class="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
+          <div class="max-w-3xl">
+            <p class="verge-kicker">快速笔记</p>
+            <h1 class="verge-display mt-4 text-[clamp(3rem,9vw,7rem)]">笔记</h1>
+            <p class="verge-copy mt-5 max-w-[48rem] text-base sm:text-lg">
+              收集日常修复、工具配置和工程片段，作为长文章之外的轻量记录。
+            </p>
+          </div>
+
+          <PostKindTabs active="notes" />
+        </div>
+      </div>
+
+      <div class="mt-8 flex flex-wrap gap-2">
+        <span class="verge-pill verge-pill-active">
+          全部笔记 ({allNotes.length})
+        </span>
+        {topTags.map(([tag, count]) => (
+          <span class="verge-pill">
+            <span>{tag}</span>
+            <span class="opacity-60">({count})</span>
+          </span>
+        ))}
+      </div>
+
+      <div class="mt-8 grid gap-3 sm:grid-cols-3">
+        <div class="verge-stat">
+          <p class="text-[0.72rem] uppercase tracking-[0.1em] text-white/48">总数</p>
+          <p class="mt-2 text-3xl leading-none tracking-[-0.05em]">{allNotes.length}</p>
+        </div>
+        <div class="verge-stat">
+          <p class="text-[0.72rem] uppercase tracking-[0.1em] text-white/48">本页</p>
+          <p class="mt-2 text-3xl leading-none tracking-[-0.05em]">{page.data.length}</p>
+        </div>
+        <div class="verge-stat">
+          <p class="text-[0.72rem] uppercase tracking-[0.1em] text-white/48">标签</p>
+          <p class="mt-2 text-3xl leading-none tracking-[-0.05em]">{totalTagMentions}</p>
+        </div>
+      </div>
+
+      {featuredNote && (
+        <div class="mt-8 flex flex-col items-start lg:flex-row lg:gap-7.5">
+          <section class="mb-8 w-full lg:mb-0 lg:w-[calc(67%-0.9375rem)]">
+            <article class="h-full">
+              <a
+                href={`/notes/${featuredNote.id}`}
+                class="verge-card-link grid h-full overflow-hidden"
+              >
+                {
+                  featuredNote.data.cover ? (
+                    <figure class="verge-image-frame aspect-[1200/630] rounded-none border-x-0 border-t-0">
+                      <LqipImage
+                        src={featuredNote.data.cover}
+                        alt={featuredNote.data.title}
+                        width={1200}
+                        height={630}
+                        loading="eager"
+                        decoding="async"
+                        format="webp"
+                        class="h-full w-full object-cover"
+                      />
+                    </figure>
+                  ) : (
+                    <div class="verge-accent-mint flex aspect-[1200/630] items-center justify-center border-b border-[var(--theme-accent)] px-5 text-center text-2xl leading-[1.08] sm:px-8 sm:text-3xl">
+                      {featuredNote.data.title}
+                    </div>
+                  )
+                }
+
+                <div class="flex h-full grow flex-col space-y-3 p-6">
+                  <h2 class="text-2xl leading-tight md:text-4xl">{featuredNote.data.title}</h2>
+                  {featuredNote.data.description && (
+                    <p class="flex-1 text-base leading-8 text-white/68">{featuredNote.data.description}</p>
+                  )}
+                  <p class="text-base text-white/58">
+                    {formatDate(featuredNote.data.updatedDate ?? featuredNote.data.pubDate)}
+                  </p>
+                </div>
+              </a>
+            </article>
+          </section>
+
+          <aside class="hidden w-full lg:block lg:w-[calc(33%-0.9375rem)]">
+            <div class="flex h-full flex-col verge-card-soft p-5">
+              <ul class="grow divide-y divide-white/12 overflow-y-auto">
+                {compactNotes.map((note) => (
+                  <li class="py-4 first:pt-0 last:pb-0">
+                    <a href={`/notes/${note.id}`} class="group flex items-end justify-between gap-3 text-white no-underline transition-colors hover:text-[var(--theme-link-hover)]">
+                      <div class="grid grid-cols-1 gap-1">
+                        <h3 class="mb-0.5 text-2xl font-normal leading-tight tracking-[-0.04em]">{note.data.title}</h3>
+                        <p class="pb-0.5 text-base opacity-60">
+                          {formatDate(note.data.updatedDate ?? note.data.pubDate)}
+                        </p>
+                      </div>
+                      <div class="verge-icon-button mr-1 ml-3 flex size-10 shrink-0 self-end p-2">
+                        →
+                      </div>
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </aside>
+        </div>
+      )}
+
+      <section class="mt-8">
+        {gridNotes.length > 0 ? (
+          <div class="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
+            {gridNotes.map((note) => (
+              <article class="h-full">
+                <a
+                  href={`/notes/${note.id}`}
+                  class:list={[
+                    'verge-card-link grid h-full overflow-hidden',
+                    note.data.cover && 'grid-rows-[auto_1fr]',
+                  ]}
+                >
+                  {note.data.cover ? (
+                    <figure class="verge-image-frame aspect-[1200/630] rounded-none border-x-0 border-t-0">
+                      <LqipImage
+                        src={note.data.cover}
+                        alt={note.data.title}
+                        width={1200}
+                        height={630}
+                        loading="lazy"
+                        decoding="async"
+                        format="webp"
+                        class="h-full w-full object-cover"
+                      />
+                    </figure>
+                  ) : null}
+
+                  <div class="flex h-full grow flex-col space-y-2 p-6">
+                    <h3 class="text-2xl leading-tight">{note.data.title}</h3>
+                    {note.data.description ? (
+                      <p class="flex-1 overflow-hidden text-base text-white/68">{note.data.description}</p>
+                    ) : (
+                      <div class="flex-1"></div>
+                    )}
+                    <p class="text-base text-white/58">{formatDate(note.data.updatedDate ?? note.data.pubDate)}</p>
+                    {note.data.tags && note.data.tags.length > 0 && (
+                      <div class="flex flex-wrap gap-2">
+                        {note.data.tags.slice(0, 3).map((tag) => (
+                          <span class="inline-flex rounded-full border border-current px-2 py-1 font-mono text-[0.68rem] uppercase tracking-[0.1em] leading-none opacity-75">
+                            {tag}
+                          </span>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                </a>
+              </article>
+            ))}
+          </div>
+        ) : (
+          <p class="py-10 text-center text-white/58">暂无笔记。</p>
+        )}
+      </section>
+
+      <Pagination {page} baseUrl="/notes" class="mx-auto mt-16 max-w-4xl" />
+    </section>
+  </div>
+</Layout>
