@@ -769,7 +769,6 @@ image-figure-polaroid {
   color: white;
   font-size: 0.75rem;
   line-height: 1rem;
-  text-transform: uppercase;
   background-color: #a8a29e;
 
   &[data-badge='n'] {
@@ -852,4 +851,382 @@ image-figure-polaroid {
   border-top: var(--ec-brdWd) solid var(--ec-brdCol) !important;
   border-top-left-radius: calc(var(--ec-brdRad) + var(--ec-brdWd)) !important;
   border-top-right-radius: calc(var(--ec-brdRad) + var(--ec-brdWd)) !important;
+}
+
+/* ===== Editorial article body (shared by /posts/[id] and /notes/[id]) ===== */
+.antfu-article-body.markdown {
+  width: min(100%, 42rem);
+  margin-inline: auto;
+  color: var(--article-ink);
+  font-family: var(--article-body);
+  font-size: clamp(1rem, 1.35vw, 1.08rem);
+  line-height: 1.72;
+}
+
+.antfu-article-body.markdown p {
+  margin-block: 1.2em;
+}
+
+.antfu-article-body.markdown :where(code):not(:where(pre *, a *)) {
+  background: color-mix(in srgb, var(--article-code-bg) 78%, var(--article-ink) 8%);
+  color: var(--article-code-fg);
+  border: 1px solid color-mix(in srgb, var(--article-code-border) 76%, transparent);
+  border-radius: 2px;
+  padding-block: 0.08rem;
+  padding-inline: 0.32rem;
+}
+
+.antfu-article-body.markdown > p:first-child {
+  margin-block-start: 0;
+}
+
+.antfu-article-body.markdown :is(h1, h2, h3, h4, h5, h6) {
+  color: var(--article-ink);
+  font-family: var(--article-display);
+  font-weight: 700;
+  letter-spacing: 0;
+}
+
+.antfu-article-body.markdown h2 {
+  margin-block: 2.4em 0.75em;
+  font-size: clamp(1.55rem, 3vw, 2rem);
+  line-height: 1.08;
+}
+
+.antfu-article-body.markdown h3 {
+  margin-block: 2em 0.65em;
+  font-size: clamp(1.2rem, 2vw, 1.45rem);
+  line-height: 1.2;
+}
+
+.antfu-article-body.markdown :is(h4, h5, h6) {
+  margin-block: 1.75em 0.5em;
+  font-size: 1.05rem;
+  line-height: 1.25;
+}
+
+.antfu-article-body.markdown a:not(.card-github) {
+  color: inherit;
+  border-block-end-color: var(--article-faint);
+  text-decoration: none;
+}
+
+.antfu-article-body.markdown a:not(.card-github):hover {
+  border-block-end-color: var(--article-ink);
+}
+
+.antfu-article-body.markdown a:not(.card-github):focus-visible {
+  outline: 1px solid var(--article-accent);
+  outline-offset: 0.25rem;
+}
+
+.antfu-article-body.markdown blockquote {
+  margin-block: 2em;
+  border-inline-start-color: var(--article-faint);
+  color: var(--article-soft);
+  font-size: 1.08em;
+}
+
+.antfu-article-body.markdown img {
+  max-width: min(100%, 52rem);
+  margin-block: 2.35rem;
+}
+
+.antfu-article-body.markdown pre,
+.antfu-article-body.markdown table {
+  font-family: var(--font-geist-mono);
+}
+
+.antfu-article-body.markdown pre:not(.expressive-code pre),
+.antfu-article-body.markdown .expressive-code {
+  box-sizing: border-box;
+  width: min(46rem, calc(100vw - 2.5rem));
+  max-width: calc(100vw - 2.5rem);
+  margin-inline-start: 50%;
+  margin-inline-end: 0;
+  transform: translateX(-50%);
+}
+
+.antfu-article-body.markdown pre:not(.expressive-code pre) {
+  margin-block: 1.9rem;
+  padding: 1.15rem 1.35rem;
+  border: 1px solid var(--article-code-border);
+  border-radius: 2px;
+  background: var(--article-code-bg);
+  color: var(--article-code-fg);
+}
+
+.antfu-article-body.markdown .expressive-code {
+  --ec-brdRad: 2px;
+  --ec-brdWd: 1px;
+  --ec-brdCol: var(--article-code-border);
+  --ec-codeBg: var(--article-code-bg);
+  --ec-codeFg: var(--article-code-fg);
+  --ec-codeSelBg: var(--article-code-selection);
+  --ec-codePadBlk: 1.15rem;
+  --ec-codePadInl: 1.35rem;
+  --ec-gtrFg: color-mix(in srgb, var(--article-code-muted) 78%, transparent);
+  --ec-gtrBrdCol: color-mix(in srgb, var(--article-code-border) 72%, transparent);
+  --ec-gtrHlFg: var(--article-accent);
+  --ec-focusBrd: var(--article-accent);
+  --ec-sbThumbCol: color-mix(in srgb, var(--article-code-muted) 34%, transparent);
+  --ec-sbThumbHoverCol: color-mix(in srgb, var(--article-accent) 55%, transparent);
+  --ec-tm-markBg: color-mix(in srgb, var(--article-accent) 16%, transparent);
+  --ec-tm-markBrdCol: color-mix(in srgb, var(--article-accent) 46%, transparent);
+  --ec-tm-insBg: light-dark(rgb(88 118 76 / 0.13), rgb(134 164 112 / 0.16));
+  --ec-tm-insBrdCol: light-dark(rgb(88 118 76 / 0.42), rgb(134 164 112 / 0.44));
+  --ec-tm-delBg: light-dark(rgb(150 78 61 / 0.13), rgb(184 104 82 / 0.17));
+  --ec-tm-delBrdCol: light-dark(rgb(150 78 61 / 0.42), rgb(184 104 82 / 0.45));
+  --ec-frm-edBg: var(--article-code-bg);
+  --ec-frm-trmBg: var(--article-code-bg);
+  --ec-frm-edActTabBg: var(--article-code-bg);
+  --ec-frm-edActTabFg: var(--article-accent);
+  --ec-frm-edActTabBrdCol: var(--article-code-border);
+  --ec-frm-edActTabIndTopCol: var(--article-accent);
+  --ec-frm-edTabBarBg: color-mix(in srgb, var(--article-code-bg) 92%, var(--article-ink) 8%);
+  --ec-frm-edTabBarBrdCol: var(--article-code-border);
+  --ec-frm-edTabBarBrdBtmCol: var(--article-code-border);
+  --ec-frm-trmTtbFg: var(--article-code-muted);
+  --ec-frm-trmTtbDotsFg: var(--article-code-muted);
+  --ec-frm-trmTtbBg: color-mix(in srgb, var(--article-code-bg) 92%, var(--article-ink) 8%);
+  --ec-frm-trmTtbBrdBtmCol: var(--article-code-border);
+  --ec-frm-inlBtnFg: var(--article-code-muted);
+  --ec-frm-inlBtnBg: var(--article-code-fg);
+  --ec-frm-inlBtnBrd: var(--article-code-border);
+  --ec-frm-tooltipSuccessBg: var(--article-accent);
+  --ec-frm-tooltipSuccessFg: var(--article-paper);
+  margin-block: 1.9rem;
+}
+
+.antfu-article-body.markdown .expressive-code pre {
+  border-color: var(--article-code-border);
+  background: var(--article-code-bg);
+}
+
+.antfu-article-body.markdown .expressive-code pre > code {
+  color: var(--article-code-fg);
+}
+
+@media (max-width: 720px) {
+  .antfu-article-body.markdown pre:not(.expressive-code pre) {
+    width: 100%;
+    margin-inline: 0;
+    padding: 1rem;
+    transform: none;
+  }
+
+  .antfu-article-body.markdown .expressive-code {
+    width: 100%;
+    margin-inline: 0;
+    transform: none;
+    --ec-codePadBlk: 1rem;
+    --ec-codePadInl: 1rem;
+  }
+}
+
+/* ===== Editorial article container (shared by /posts/[id] and /notes/[id]) ===== */
+.antfu-article {
+  width: 100%;
+  margin-inline: auto;
+  padding: clamp(3.5rem, 8vw, 6.75rem) 1.25rem 3rem;
+  color: var(--article-ink);
+  background:
+    linear-gradient(180deg, rgb(128 122 113 / 0.035), transparent 18rem),
+    var(--article-paper);
+}
+
+.antfu-back {
+  display: block;
+  width: min(100%, 48rem);
+  margin-inline: auto;
+  margin-bottom: clamp(2.5rem, 6vw, 4.25rem);
+  color: var(--article-soft);
+  font-family: var(--font-geist-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0;
+  text-decoration: none;
+  text-transform: uppercase;
+  transition: color 200ms ease;
+}
+
+.antfu-back:hover {
+  color: var(--article-ink);
+}
+
+.antfu-back:focus-visible,
+.antfu-article-tag:focus-visible,
+.antfu-license a:focus-visible,
+.antfu-adjacent-link:focus-visible {
+  outline: 1px solid var(--article-accent);
+  outline-offset: 0.35rem;
+}
+
+.antfu-article-cover {
+  width: min(100%, 52rem);
+  margin: 0 auto clamp(3rem, 7vw, 4.75rem);
+}
+
+.antfu-article-cover img {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-height: min(62vh, 36rem);
+  object-fit: cover;
+  filter: grayscale(1) contrast(1.04);
+}
+
+.antfu-article-header {
+  width: min(100%, 48rem);
+  margin-inline: auto;
+  margin-bottom: clamp(2.75rem, 6vw, 4rem);
+  text-align: center;
+}
+
+.antfu-article-title {
+  margin: 0;
+  color: var(--article-soft);
+  font-family: var(--article-display);
+  font-size: clamp(3rem, 9vw, 5.95rem);
+  font-weight: 700;
+  line-height: 0.92;
+  letter-spacing: 0;
+  text-wrap: balance;
+}
+
+.antfu-article-desc {
+  max-width: 42rem;
+  margin: clamp(1.35rem, 3vw, 2rem) auto 0;
+  color: var(--article-ink);
+  font-family: var(--article-body);
+  font-size: clamp(1rem, 2vw, 1.2rem);
+  font-weight: 700;
+  line-height: 1.2;
+  text-wrap: balance;
+}
+
+.antfu-article-meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: center;
+  gap: 0.35rem 0.55rem;
+  margin-top: clamp(2.25rem, 5vw, 3.5rem);
+  color: var(--article-soft);
+  font-family: var(--article-body);
+  font-size: 0.86rem;
+  line-height: 1.5;
+}
+
+.antfu-article-tags {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.5rem 0.85rem;
+  margin-top: 0.8rem;
+}
+
+.antfu-article-tag {
+  color: var(--article-soft);
+  font-family: var(--font-geist-mono);
+  font-size: 0.72rem;
+  text-decoration: none;
+  text-transform: uppercase;
+  transition: color 200ms ease;
+}
+
+.antfu-article-tag::before {
+  content: '#';
+}
+
+.antfu-article-tag:hover {
+  color: var(--article-ink);
+}
+
+.antfu-license {
+  width: min(100%, 42rem);
+  margin: 3rem auto 0;
+  color: var(--article-soft);
+  font-size: 0.8125rem;
+}
+
+.antfu-license a {
+  text-decoration: none;
+}
+
+.antfu-license a:hover {
+  color: var(--article-ink);
+}
+
+.antfu-adjacent {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 1rem;
+  width: min(100%, 42rem);
+  margin: 2.5rem auto 0;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--article-rule);
+}
+
+.antfu-adjacent-link {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  color: var(--article-ink);
+  text-decoration: none;
+  transition: color 200ms ease;
+}
+
+.antfu-adjacent-link:hover {
+  color: var(--article-soft);
+}
+
+.antfu-adjacent-right {
+  align-items: flex-end;
+  text-align: right;
+}
+
+.antfu-adjacent-label {
+  color: var(--article-soft);
+  font-family: var(--font-geist-mono);
+  font-size: 0.72rem;
+  text-transform: uppercase;
+}
+
+.antfu-adjacent-title {
+  font-family: var(--article-body);
+  font-size: 0.95rem;
+  line-height: 1.35;
+}
+
+.antfu-comments {
+  width: min(100%, 42rem);
+  margin: 3rem auto 0;
+}
+
+@media (max-width: 720px) {
+  .antfu-article {
+    padding-inline: 1rem;
+    padding-top: 2.75rem;
+  }
+
+  .antfu-back {
+    margin-bottom: 2.25rem;
+  }
+
+  .antfu-article-cover {
+    margin-bottom: 2.5rem;
+  }
+
+  .antfu-article-title {
+    font-size: clamp(2.65rem, 15vw, 4rem);
+    line-height: 0.96;
+  }
+
+  .antfu-article-meta {
+    margin-top: 1.75rem;
+  }
+
+  .antfu-adjacent {
+    grid-template-columns: 1fr;
+  }
 }

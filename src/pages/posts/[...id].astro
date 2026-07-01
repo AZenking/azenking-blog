@@ -1,7 +1,6 @@
 ---
 import type { CollectionEntry } from 'astro:content'
 import { render } from 'astro:content'
-import LqipImage from '~/components/base/LqipImage.astro'
 import Comment from '~/components/posts/base/Comment.astro'
 import Prose from '~/components/posts/base/Prose.astro'
 import { POSTS_CONFIG, SITE } from '~/config'
@@ -28,7 +27,6 @@ export async function getStaticPaths() {
     params: { id: post.id },
     props: {
       post,
-      posts: sortedPosts,
       prev: index + 1 < sortedPosts.length ? sortedPosts[index + 1] : null,
       next: index > 0 ? sortedPosts[index - 1] : null,
     },
@@ -37,23 +35,22 @@ export async function getStaticPaths() {
 
 interface Props {
   post: CollectionEntry<'posts'>
-  posts: CollectionEntry<'posts'>[]
   prev: CollectionEntry<'posts'> | null
   next: CollectionEntry<'posts'> | null
 }
 
-const { post, posts, prev, next }: Props = Astro.props
+const { post, prev, next }: Props = Astro.props
 const { data: frontmatter } = post
 const { Content, remarkPluginFrontmatter } = await render(post)
 
 const tags = frontmatter.tags ?? []
 const displayAuthor = frontmatter.author || SITE.author
 const minutesRead = remarkPluginFrontmatter?.minutesRead
-const wordCount = remarkPluginFrontmatter?.wordCount
 const publishedDate = formatDate(frontmatter.pubDate)
 const updatedDate = frontmatter.updatedDate ? formatDate(frontmatter.updatedDate) : null
 const canonicalUrl = new URL(`/posts/${post.id}`, SITE.website).toString()
 const licenseLink = frontmatter.license ? LICENSE_LINKS[frontmatter.license] : undefined
+const coverImage = frontmatter.cover
 const articleImage = new URL(frontmatter.ogImage?.src ?? frontmatter.cover?.src ?? SITE.ogImage, SITE.website).toString()
 const articleDescription = getSeoDescription({
   title: frontmatter.title,
@@ -61,26 +58,6 @@ const articleDescription = getSeoDescription({
   tags,
   contentType: '文章',
 })
-
-const currentTags = new Set(tags)
-const relatedPosts = posts
-  .filter((candidate) => candidate.id !== post.id)
-  .map((candidate) => {
-    const candidateTags = candidate.data.tags ?? []
-    const overlap = candidateTags.filter((tag) => currentTags.has(tag)).length
-    const referenceDate = candidate.data.updatedDate ?? candidate.data.pubDate
-    return {
-      candidate,
-      overlap,
-      timestamp: referenceDate.getTime(),
-    }
-  })
-  .sort((a, b) => {
-    if (b.overlap !== a.overlap) return b.overlap - a.overlap
-    return b.timestamp - a.timestamp
-  })
-  .slice(0, 3)
-  .map((item) => item.candidate)
 ---
 
 <Layout
@@ -97,192 +74,98 @@ const relatedPosts = posts
   <script is:inline type="application/ld+json" set:html={JSON.stringify({
     "@context": "https://schema.org",
     "@type": "BlogPosting",
-    "mainEntityOfPage": {
-      "@type": "WebPage",
-      "@id": canonicalUrl,
-    },
+    "mainEntityOfPage": { "@type": "WebPage", "@id": canonicalUrl },
     "headline": frontmatter.title,
     "description": articleDescription,
     "datePublished": frontmatter.pubDate.toISOString(),
     "dateModified": (frontmatter.updatedDate ?? frontmatter.pubDate).toISOString(),
     "author": { "@type": "Person", "name": displayAuthor },
-    "publisher": {
-      "@type": "Person",
-      "name": SITE.author,
-    },
+    "publisher": { "@type": "Person", "name": SITE.author },
     "image": articleImage,
     "inLanguage": SITE.lang,
     "keywords": tags.join(', '),
     "url": canonicalUrl,
   })} />
-  <div class="verge-article-shell">
-    <section class="verge-article-container">
-      <a
-        href="/posts"
-        class="verge-article-back verge-focus"
-      >
-        <span class="icon-[ph--arrow-left] size-5"></span>
-        <span>返回文章</span>
-      </a>
 
-      <header class="verge-article-header">
-        <div>
-          <div class="flex flex-wrap gap-2">
-            {tags.slice(0, 4).map((tag) => (
-              <a
-                href={`/tags/${encodeURIComponent(tag)}`}
-                class="verge-pill verge-focus"
-              >
-                {tag}
-              </a>
-            ))}
-          </div>
+  <article class="antfu-article">
+    <a href="/posts" class="antfu-back">Posts / Archive</a>
 
-          <h1 class="verge-article-title mt-6">
-            {frontmatter.title}
-          </h1>
+    {coverImage && (
+      <figure class="antfu-article-cover">
+        <img
+          src={coverImage.src}
+          width={coverImage.width}
+          height={coverImage.height}
+          alt={frontmatter.title}
+          loading="eager"
+          decoding="async"
+        />
+      </figure>
+    )}
 
-          {frontmatter.description && (
-            <p class="verge-article-deck mt-6">
-              {frontmatter.description}
-            </p>
-          )}
-        </div>
-
-        <aside class="grid gap-5">
-          <div class="verge-article-meta">
-            <p>作者 {displayAuthor}</p>
-            <time datetime={frontmatter.pubDate.toISOString()}>{publishedDate}</time>
-            {updatedDate && <p>更新 {updatedDate}</p>}
-            <p>{[minutesRead && `${minutesRead} 分钟阅读`, POSTS_CONFIG.wordCountView && wordCount && `${wordCount} 字`].filter(Boolean).join(' / ')}</p>
-          </div>
-
-          <div class="verge-article-actions">
-            <a class="verge-article-action verge-focus" href={canonicalUrl}>
-              <span class="icon-[ph--link] size-4"></span>
-              <span>链接</span>
-            </a>
-            <button class="verge-article-action verge-focus cursor-pointer" type="button" data-copy-link={canonicalUrl}>
-              <span class="icon-[ph--share-network] size-4"></span>
-              <span>分享</span>
-            </button>
-          </div>
-        </aside>
-      </header>
-
-      {frontmatter.cover && (
-        <figure class="verge-article-hero">
-          <div class="aspect-[1200/630]">
-            <LqipImage
-              src={frontmatter.cover}
-              alt={frontmatter.title}
-              width={1200}
-              height={630}
-              loading="eager"
-              decoding="async"
-              format="webp"
-              class="h-full w-full object-cover"
-            />
-          </div>
-        </figure>
+    <header class="antfu-article-header">
+      <h1 class="antfu-article-title">{frontmatter.title}</h1>
+      {frontmatter.description && (
+        <p class="antfu-article-desc">{frontmatter.description}</p>
       )}
-
-      <div class="verge-article-body-grid">
-        <aside class="verge-article-rail" aria-label="文章详情">
-          <p>{tags[0] ?? 'Article'}</p>
-          <p>{publishedDate}</p>
-          {minutesRead && <p>{minutesRead} min read</p>}
-        </aside>
-
-        <main>
-          <Prose class="verge-article-body">
-            <Content />
-          </Prose>
-
-          {frontmatter.license && (
-            <section class="mt-14 border-t border-white/12 pt-8 text-sm text-white/62">
-              <p class="leading-7">
-                Licensed under{' '}
-                {licenseLink ? (
-                  <a href={licenseLink} target="_blank" rel="noreferrer" class="verge-link underline underline-offset-4">
-                    {frontmatter.license}
-                  </a>
-                ) : (
-                  <span>{frontmatter.license}</span>
-                )}
-                .
-              </p>
-              <p class="mt-2 leading-7">
-                永久链接：{' '}
-                <a href={canonicalUrl} class="verge-link underline underline-offset-4">
-                  {canonicalUrl}
-                </a>
-              </p>
-            </section>
-          )}
-        </main>
+      <div class="antfu-article-meta">
+        <span>By {displayAuthor}</span>
+        <span>·</span>
+        <time datetime={frontmatter.pubDate.toISOString()}>{publishedDate}</time>
+        {minutesRead && <><span>·</span><span>{minutesRead} min read</span></>}
+        {updatedDate && <><span>·</span><span>Updated {updatedDate}</span></>}
       </div>
-
-      {(prev || next) && (
-        <nav class="border-t border-white/28 py-10" aria-label="文章导航">
-          <div class="grid gap-4 sm:grid-cols-2">
-            {next ? (
-              <a
-                href={`/posts/${next.id}`}
-                class="verge-card-link px-5 py-4"
-              >
-                <p class="text-[0.72rem] uppercase tracking-[0.1em] text-white/52">{POSTS_CONFIG.prevPostText}</p>
-                <p class="mt-2 text-base leading-7">{next.data.title}</p>
-              </a>
-            ) : (
-              <div></div>
-            )}
-
-            {prev ? (
-              <a
-                href={`/posts/${prev.id}`}
-                class="verge-card-link px-5 py-4 sm:text-right"
-              >
-                <p class="text-[0.72rem] uppercase tracking-[0.1em] text-white/52">{POSTS_CONFIG.nextPostText}</p>
-                <p class="mt-2 text-base leading-7">{prev.data.title}</p>
-              </a>
-            ) : (
-              <div></div>
-            )}
-          </div>
-        </nav>
+      {tags.length > 0 && (
+        <div class="antfu-article-tags">
+          {tags.map((tag) => (
+            <a href={`/tags/${encodeURIComponent(tag)}`} class="antfu-article-tag">{tag}</a>
+          ))}
+        </div>
       )}
+    </header>
 
-      {relatedPosts.length > 0 && (
-        <section class="border-t border-white/28 py-10">
-          <h2 class="text-[0.78rem] uppercase tracking-[0.14em] text-white/45">相关文章</h2>
-          <div class="mt-5 space-y-4">
-            {relatedPosts.map((related) => {
-              const relatedDate = related.data.updatedDate ?? related.data.pubDate
-              return (
-                <a
-                  href={`/posts/${related.id}`}
-                  class="verge-card-link block px-5 py-4"
-                >
-                  <p class="text-[0.75rem] opacity-60">{formatDate(relatedDate)}</p>
-                  <h3 class="mt-1.5 text-xl leading-tight tracking-[-0.03em]">{related.data.title}</h3>
-                  {related.data.description && (
-                    <p class="mt-2 line-clamp-2 text-sm leading-7 text-white/64">
-                      {related.data.description}
-                    </p>
-                  )}
-                </a>
-              )
-            })}
-          </div>
-        </section>
-      )}
+    <Prose class="antfu-article-body">
+      <Content />
+    </Prose>
 
-      <section class="border-t border-white/28 pt-12">
+    {frontmatter.license && (
+      <section class="antfu-license">
+        <p>
+          Licensed under{' '}
+          {licenseLink ? (
+            <a href={licenseLink} target="_blank" rel="noreferrer">{frontmatter.license}</a>
+          ) : (
+            <span>{frontmatter.license}</span>
+          )}
+          {' · '}
+          <a href={canonicalUrl}>Permalink ↗</a>
+        </p>
+      </section>
+    )}
+
+    {(prev || next) && (
+      <nav class="antfu-adjacent">
+        {next ? (
+          <a href={`/posts/${next.id}`} class="antfu-adjacent-link">
+            <span class="antfu-adjacent-label">← {POSTS_CONFIG.prevPostText}</span>
+            <span class="antfu-adjacent-title">{next.data.title}</span>
+          </a>
+        ) : <span></span>}
+        {prev ? (
+          <a href={`/posts/${prev.id}`} class="antfu-adjacent-link antfu-adjacent-right">
+            <span class="antfu-adjacent-label">{POSTS_CONFIG.nextPostText} →</span>
+            <span class="antfu-adjacent-title">{prev.data.title}</span>
+          </a>
+        ) : <span></span>}
+      </nav>
+    )}
+
+    {frontmatter.comment !== false && (
+      <section class="antfu-comments">
         <Comment id={post.id} title={frontmatter.title} />
       </section>
-    </section>
-  </div>
+    )}
+  </article>
 
   <script>
     document.querySelectorAll('[data-copy-link]').forEach((button) => {
@@ -299,3 +182,9 @@ const relatedPosts = posts
     })
   </script>
 </Layout>
+
+<style>
+  /* .antfu-article 容器、返回链接、标题、meta、tags、license、adjacent nav 的样式
+     全部统一在 markdown.css 的 "Editorial article container" 段落，由 /posts/[id] 和 /notes/[id] 共享。
+     此页不再需要额外的 scoped 样式。 */
+</style>

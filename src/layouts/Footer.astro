@@ -1,230 +1,69 @@
 ---
-import { SITE, SOCIAL_LINKS } from '~/config'
-
-import Peep1 from '~/assets/bust/peep-1.svg?url'
-import Peep2 from '~/assets/bust/peep-2.svg?url'
-import Peep8 from '~/assets/bust/peep-8.svg?url'
-import Peep10 from '~/assets/bust/peep-10.svg?url'
-import Peep15 from '~/assets/bust/peep-15.svg?url'
-import Peep17 from '~/assets/bust/peep-17.svg?url'
-import Peep22 from '~/assets/bust/peep-22.svg?url'
-import Peep24 from '~/assets/bust/peep-24.svg?url'
-import Peep29 from '~/assets/bust/peep-29.svg?url'
-import Peep31 from '~/assets/bust/peep-31.svg?url'
-import Peep36 from '~/assets/bust/peep-36.svg?url'
-import Peep38 from '~/assets/bust/peep-38.svg?url'
-import Peep43 from '~/assets/bust/peep-43.svg?url'
-import Peep50 from '~/assets/bust/peep-50.svg?url'
-import Peep57 from '~/assets/bust/peep-57.svg?url'
-import Peep64 from '~/assets/bust/peep-64.svg?url'
-import Peep71 from '~/assets/bust/peep-71.svg?url'
-import Peep78 from '~/assets/bust/peep-78.svg?url'
-import Peep85 from '~/assets/bust/peep-85.svg?url'
-import Peep92 from '~/assets/bust/peep-92.svg?url'
+import { FOOTER_LINKS, SITE, SOCIAL_LINKS } from '~/config'
 
 const START_YEAR = 2025
 const currentYear = new Date().getFullYear()
 const yearDisplay = currentYear > START_YEAR ? `${START_YEAR}–${currentYear}` : `${START_YEAR}`
-const cleanDescription = SITE.description.replace(/^👋\s*/, '')
 const githubLink = SOCIAL_LINKS.find((item) => item.name === 'github')
-
-const primaryLinks = [
-  { name: '首页', url: '/' },
-  { name: '文章', url: '/posts' },
-  { name: '笔记', url: '/notes' },
-  { name: '项目', url: '/projects' },
-]
-
-const archiveLinks = [
-  { name: '标签', url: '/tags' },
-  { name: '照片', url: '/photos' },
-  { name: '朋友', url: '/friends' },
-]
-
-const secondaryLinks = [
-  { name: 'RSS', url: '/atom.xml', external: false },
-  ...(githubLink
-    ? [
-        {
-          name: 'GitHub',
-          url: githubLink.url,
-          external: true,
-        },
-      ]
-      : []),
-]
-
-const busts = [
-  { src: Peep2, height: 'h-[5.5rem] sm:h-[6.5rem] lg:h-[7.5rem]' },
-  { src: Peep1, height: 'h-20 sm:h-24 lg:h-28' },
-  { src: Peep8, height: 'h-24 sm:h-32 lg:h-36' },
-  { src: Peep10, height: 'h-[6rem] sm:h-[7rem] lg:h-[8rem]' },
-  { src: Peep15, height: 'h-[6rem] sm:h-[7rem] lg:h-[8rem]' },
-  { src: Peep17, height: 'h-24 sm:h-28 lg:h-32' },
-  { src: Peep22, height: 'h-[5.25rem] sm:h-[6.25rem] lg:h-[7.25rem]' },
-  { src: Peep24, height: 'h-[6.25rem] sm:h-[7.25rem] lg:h-[8.25rem]' },
-  { src: Peep29, height: 'h-28 sm:h-36 lg:h-40' },
-  { src: Peep31, height: 'h-[5.75rem] sm:h-[6.75rem] lg:h-[7.75rem]' },
-  { src: Peep36, height: 'h-24 sm:h-28 lg:h-32' },
-  { src: Peep38, height: 'h-24 sm:h-32 lg:h-36' },
-  { src: Peep43, height: 'h-[6rem] sm:h-[7rem] lg:h-[8rem]' },
-  { src: Peep50, height: 'h-24 sm:h-32 lg:h-36' },
-  { src: Peep57, height: 'h-20 sm:h-24 lg:h-28' },
-  { src: Peep64, height: 'h-24 sm:h-28 lg:h-32' },
-  { src: Peep71, height: 'h-[5.75rem] sm:h-[6.75rem] lg:h-[7.75rem]' },
-  { src: Peep78, height: 'h-28 sm:h-36 lg:h-40' },
-  { src: Peep85, height: 'h-[6rem] sm:h-[7rem] lg:h-[8rem]' },
-  { src: Peep92, height: 'h-[6.5rem] sm:h-[7.5rem] lg:h-[8.5rem]' },
-]
 ---
 
-<footer class="border-t border-white/28 bg-[var(--theme-header)] text-white">
-  <div
-    class="relative h-28 overflow-hidden border-b border-white/28 bg-[var(--theme-surface)] sm:h-36 lg:h-44"
-    aria-hidden="true"
-  >
-    <div class="absolute inset-x-0 bottom-0 overflow-hidden">
-      <div class="relative left-1/2 flex w-full min-w-0 -translate-x-1/2 translate-y-2 items-end justify-center -space-x-5 sm:w-[112vw] sm:min-w-max sm:translate-y-3 sm:-space-x-5 lg:translate-y-4 lg:-space-x-7">
-        {busts.map((bust, index) => (
-          <div class:list={['shrink-0 overflow-hidden opacity-100', bust.height]}>
-            <img
-              src={bust.src}
-              alt=""
-              class:list={[
-                'footer-peep-image h-full w-auto -scale-x-100 object-contain object-bottom',
-                index % 6 === 0 && 'footer-peep-image-mint',
-                index % 6 === 2 && 'footer-peep-image-violet',
-                index % 6 === 4 && 'footer-peep-image-paper',
-              ]}
-              loading="lazy"
-              decoding="async"
-            />
-          </div>
-        ))}
-      </div>
-    </div>
-  </div>
-
-  <div class="grid border-b border-white/18 lg:grid-cols-[minmax(18rem,0.95fr)_minmax(0,1.45fr)]">
-    <div class="relative overflow-hidden border-b border-white/18 px-4 py-10 sm:px-6 lg:border-b-0 lg:border-r lg:px-8 lg:py-14">
-      <div class="absolute left-0 top-0 h-4 w-28 bg-[var(--theme-accent)]"></div>
-      <div class="absolute right-0 top-0 h-4 w-20 bg-[var(--theme-secondary)]"></div>
-      <p class="font-mono text-[0.68rem] font-bold uppercase tracking-[0.18em] text-white/45">
-        Personal web dispatch
-      </p>
-      <a href="/" class="brand-wordmark verge-display mt-5 block max-w-[8ch] text-[clamp(4.75rem,14vw,9rem)] leading-[0.72] tracking-normal text-white no-underline">
-        <span class="brand-wordmark-mark">&lt;</span><span>EY</span><span class="brand-wordmark-slash"> /</span><span class="brand-wordmark-mark">&gt;</span>
-      </a>
-      <p class="mt-6 max-w-[36rem] text-base leading-8 text-white/68">
-        {cleanDescription}
-      </p>
-    </div>
-
-    <div class="grid lg:grid-rows-[auto_1fr]">
-      <div class="grid border-b border-white/18 md:grid-cols-[1fr_auto]">
-        <div class="px-4 py-8 sm:px-6 lg:px-8">
-          <p class="verge-display max-w-[11ch] text-[2.4rem] leading-[0.86] tracking-normal sm:text-[3.8rem]">
-            为互联网留一处安静角落。
-          </p>
-        </div>
-        <div class="flex items-stretch border-t border-white/18 md:border-l md:border-t-0">
-          <a
-            href="/atom.xml"
-            class="group flex min-w-56 flex-1 items-center justify-between gap-5 bg-[var(--theme-accent)] px-5 py-6 text-black no-underline transition-colors duration-200 hover:bg-white md:flex-none md:px-7"
-          >
-            <span>
-              <span class="block font-mono text-[0.66rem] font-bold uppercase tracking-[0.16em] text-black/50">
-                Subscribe
-              </span>
-              <span class="mt-1 block text-lg font-bold leading-none">RSS Feed</span>
-            </span>
-            <span class="icon-[ri--rss-line] size-6 transition-transform duration-200 group-hover:rotate-12"></span>
-          </a>
-          <a
-            href={githubLink?.url ?? '/'}
-            target={githubLink ? '_blank' : undefined}
-            rel={githubLink ? 'noreferrer' : undefined}
-            class="grid min-w-20 place-items-center bg-[var(--theme-secondary)] px-5 text-white no-underline transition-colors duration-200 hover:bg-white hover:text-black"
-            aria-label="打开 GitHub"
-          >
-            <span class:list={[githubLink?.icon ?? 'icon-[ri--arrow-right-up-line]', 'size-6']}></span>
-          </a>
-        </div>
-      </div>
-
-      <div class="grid gap-0 md:grid-cols-3">
-        <div class="border-b border-white/18 px-4 py-8 sm:px-6 md:border-b-0 md:border-r lg:px-8">
-          <p class="verge-kicker text-white/45">站内导航</p>
-          <div class="mt-5 grid gap-3">
-            {primaryLinks.map((link) => (
-              <a href={link.url} class="group flex items-center justify-between text-lg font-semibold text-white no-underline transition-colors duration-200 hover:text-[var(--theme-accent)]">
-                <span>{link.name}</span>
-                <span class="icon-[ri--arrow-right-up-line] size-4 opacity-35 transition-opacity duration-200 group-hover:opacity-100"></span>
-              </a>
-            ))}
-          </div>
-        </div>
-
-        <div class="border-b border-white/18 px-4 py-8 sm:px-6 md:border-b-0 md:border-r lg:px-8">
-          <p class="verge-kicker text-white/45">归档入口</p>
-          <div class="mt-5 grid gap-3">
-            {archiveLinks.map((link) => (
-              <a href={link.url} class="group flex items-center justify-between text-lg font-semibold text-white no-underline transition-colors duration-200 hover:text-[var(--theme-accent)]">
-                <span>{link.name}</span>
-                <span class="icon-[ri--arrow-right-up-line] size-4 opacity-35 transition-opacity duration-200 group-hover:opacity-100"></span>
-              </a>
-            ))}
-          </div>
-        </div>
-
-        <div class="px-4 py-8 sm:px-6 lg:px-8">
-          <p class="verge-kicker text-white/45">订阅与社交</p>
-          <div class="mt-5 grid gap-3">
-            {secondaryLinks.map((link) => (
-              <a
-                href={link.url}
-                target={link.external ? '_blank' : undefined}
-                rel={link.external ? 'noreferrer' : undefined}
-                class="group flex items-center justify-between text-lg font-semibold text-white no-underline transition-colors duration-200 hover:text-[var(--theme-accent)]"
-              >
-                <span>{link.name}</span>
-                <span class="icon-[ri--arrow-right-up-line] size-4 opacity-35 transition-opacity duration-200 group-hover:opacity-100"></span>
-              </a>
-            ))}
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div class="flex flex-col gap-5 px-4 py-6 text-sm text-white/52 sm:px-6 lg:flex-row lg:items-center lg:justify-between lg:px-8">
-    <div class="flex items-center gap-3">
-      <span class="inline-flex size-8 items-center justify-center rounded-sm border border-white/25 bg-white/8 p-1">
-        <img src="/logo.svg" alt="" class="brand-avatar-image size-full object-contain" loading="lazy" decoding="async" />
-      </span>
-      <p>© {yearDisplay} {SITE.author}</p>
-    </div>
-
-    <p class="max-w-[32rem] leading-6 text-white/45">
-      个人写作、项目记录和更少噪音的软件构建笔记。
-    </p>
-
-    <div class="flex flex-wrap items-center gap-3">
-      {SOCIAL_LINKS.map((item) => (
-        <a
-          href={item.url}
-          target="_blank"
-          rel="noreferrer"
-          class="verge-icon-button"
-          aria-label={item.name}
-        >
-          <span class:list={[item.icon, 'text-[1.1rem]']}></span>
-        </a>
-      ))}
-
-      <a href="/atom.xml" class="verge-icon-button" aria-label="RSS">
-        <span class="icon-[ri--rss-line] text-[1.1rem]"></span>
-      </a>
-    </div>
+<footer class="antfu-footer">
+  <div class="antfu-footer-inner">
+    <span class="antfu-footer-copy">{yearDisplay} © {SITE.author}</span>
+    <nav class="antfu-footer-links" aria-label="页脚导航">
+      {githubLink && <a href={githubLink.url} target="_blank" rel="noreferrer">GitHub</a>}
+      <a href="/atom.xml">RSS</a>
+      {
+        FOOTER_LINKS.map((link) => (
+          <a href={link.url}>{link.name}</a>
+        ))
+      }
+    </nav>
   </div>
 </footer>
+
+<style>
+  .antfu-footer {
+    width: min(100%, 48rem);
+    margin-inline: auto;
+    padding: 2rem 1.25rem 2.5rem;
+    border-block-start: 1px solid var(--article-rule);
+    color: var(--article-soft);
+    font-family: var(--font-geist-mono);
+    font-size: 0.75rem;
+    letter-spacing: 0.04em;
+  }
+
+  .antfu-footer-inner {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+
+  .antfu-footer-copy {
+    color: var(--article-soft);
+  }
+
+  .antfu-footer-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem 1rem;
+  }
+
+  .antfu-footer-links a {
+    color: var(--article-soft);
+    text-decoration: none;
+    transition: color 200ms ease;
+  }
+
+  .antfu-footer-links a:hover {
+    color: var(--article-ink);
+  }
+
+  .antfu-footer-links a:focus-visible {
+    outline: 1px solid var(--article-accent);
+    outline-offset: 0.35rem;
+  }
+</style>

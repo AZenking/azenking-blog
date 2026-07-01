@@ -20,9 +20,204 @@ const { class: className } = Astro.props
     background: 'rgb(0 0 0 / 0.8)',
   })
 
+  const getMermaidSource = (pre: Element) => {
+    const copyButton = pre.closest('.expressive-code')?.querySelector<HTMLButtonElement>('button[data-code]')
+    const encodedSource = copyButton?.dataset.code
+    if (encodedSource) return encodedSource.replace(/\u007f/g, '\n').trim()
+
+    return Array.from(pre.querySelectorAll('.ec-line .code'))
+      .map((line) => line.textContent ?? '')
+      .join('\n')
+      .trim()
+  }
+
+  let mermaidLightbox: HTMLElement | null = null
+  let previousBodyOverflow = ''
+  let previousBodyPaddingRight = ''
+
+  const MERMAID_ZOOM_MIN = 0.5
+  const MERMAID_ZOOM_MAX = 3
+  const MERMAID_ZOOM_STEP = 0.25
+
+  const clampZoom = (value: number) => Math.min(MERMAID_ZOOM_MAX, Math.max(MERMAID_ZOOM_MIN, value))
+
+  const closeMermaidLightbox = () => {
+    if (!mermaidLightbox) return
+
+    mermaidLightbox.remove()
+    mermaidLightbox = null
+    document.body.style.overflow = previousBodyOverflow
+    document.body.style.paddingRight = previousBodyPaddingRight
+    window.removeEventListener('keydown', handleMermaidLightboxKeydown)
+  }
+
+  function handleMermaidLightboxKeydown(event: KeyboardEvent) {
+    if (event.key === 'Escape') closeMermaidLightbox()
+  }
+
+  const openMermaidLightbox = (sourceDiagram: HTMLElement) => {
+    const sourceSvg = sourceDiagram.querySelector('svg')
+    if (!sourceSvg) return
+
+    closeMermaidLightbox()
+
+    previousBodyOverflow = document.body.style.overflow
+    previousBodyPaddingRight = document.body.style.paddingRight
+
+    const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth
+    document.body.style.overflow = 'hidden'
+    if (scrollbarWidth > 0) document.body.style.paddingRight = `${scrollbarWidth}px`
+
+    const overlay = document.createElement('div')
+    const panel = document.createElement('div')
+    const toolbar = document.createElement('div')
+    const scroller = document.createElement('div')
+    const zoomOutButton = document.createElement('button')
+    const zoomResetButton = document.createElement('button')
+    const zoomInButton = document.createElement('button')
+    const closeButton = document.createElement('button')
+    const clonedSvg = sourceSvg.cloneNode(true) as SVGElement
+
+    overlay.className = 'mermaid-lightbox'
+    overlay.setAttribute('role', 'dialog')
+    overlay.setAttribute('aria-modal', 'true')
+    overlay.setAttribute('aria-label', 'Mermaid 图表预览')
+
+    panel.className = 'mermaid-lightbox-panel'
+    toolbar.className = 'mermaid-lightbox-toolbar'
+    scroller.className = 'mermaid-lightbox-scroller'
+
+    zoomOutButton.className = 'mermaid-lightbox-btn'
+    zoomOutButton.type = 'button'
+    zoomOutButton.setAttribute('aria-label', '缩小图表')
+    zoomOutButton.textContent = '−'
+
+    zoomResetButton.className = 'mermaid-lightbox-btn mermaid-lightbox-reset'
+    zoomResetButton.type = 'button'
+    zoomResetButton.setAttribute('aria-label', '重置缩放')
+    zoomResetButton.textContent = '100%'
+
+    zoomInButton.className = 'mermaid-lightbox-btn'
+    zoomInButton.type = 'button'
+    zoomInButton.setAttribute('aria-label', '放大图表')
+    zoomInButton.textContent = '+'
+
+    closeButton.className = 'mermaid-lightbox-btn mermaid-lightbox-close'
+    closeButton.type = 'button'
+    closeButton.setAttribute('aria-label', '关闭图表预览')
+    closeButton.textContent = '×'
+
+    clonedSvg.setAttribute('aria-hidden', 'true')
+
+    toolbar.append(zoomOutButton, zoomResetButton, zoomInButton, closeButton)
+    scroller.append(clonedSvg)
+    panel.append(toolbar, scroller)
+    overlay.append(panel)
+    document.body.append(overlay)
+    mermaidLightbox = overlay
+
+    let scale = 1
+    const baseWidth =
+      clonedSvg.getBoundingClientRect().width
+      || (clonedSvg as SVGSVGElement).viewBox?.baseVal?.width
+      || 800
+
+    const syncZoomUi = () => {
+      zoomResetButton.textContent = `${Math.round(scale * 100)}%`
+      zoomInButton.disabled = scale >= MERMAID_ZOOM_MAX
+      zoomOutButton.disabled = scale <= MERMAID_ZOOM_MIN
+    }
+
+    const applyZoom = (nextScale: number) => {
+      scale = clampZoom(nextScale)
+      if (scale === 1) {
+        clonedSvg.style.width = ''
+        clonedSvg.style.height = ''
+      } else {
+        clonedSvg.style.width = `${Math.round(baseWidth * scale)}px`
+        clonedSvg.style.height = 'auto'
+      }
+      syncZoomUi()
+    }
+
+    zoomInButton.addEventListener('click', () => applyZoom(scale + MERMAID_ZOOM_STEP))
+    zoomOutButton.addEventListener('click', () => applyZoom(scale - MERMAID_ZOOM_STEP))
+    zoomResetButton.addEventListener('click', () => applyZoom(1))
+
+    closeButton.focus()
+    window.addEventListener('keydown', handleMermaidLightboxKeydown)
+
+    overlay.addEventListener('click', (event) => {
+      if (event.target === overlay) closeMermaidLightbox()
+    })
+    closeButton.addEventListener('click', closeMermaidLightbox)
+  }
+
+  const enableMermaidLightbox = (diagram: HTMLElement) => {
+    diagram.tabIndex = 0
+    diagram.setAttribute('role', 'button')
+    diagram.setAttribute('aria-label', '放大 Mermaid 图表')
+
+    diagram.addEventListener('click', () => openMermaidLightbox(diagram))
+    diagram.addEventListener('keydown', (event) => {
+      if (event.key !== 'Enter' && event.key !== ' ') return
+      event.preventDefault()
+      openMermaidLightbox(diagram)
+    })
+  }
+
+  const renderMermaidBlocks = async () => {
+    const mermaidBlocks = Array.from(
+      document.querySelectorAll<HTMLElement>('.markdown pre[data-language="mermaid"]:not([data-mermaid-processed])'),
+    )
+
+    if (mermaidBlocks.length === 0) return
+
+    const importMermaid = new Function('url', 'return import(url)') as (url: string) => Promise<{ default: any }>
+    const { default: mermaid } = await importMermaid('https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs')
+
+    mermaid.initialize({
+      startOnLoad: false,
+      securityLevel: 'strict',
+      theme: document.documentElement.classList.contains('dark') ? 'dark' : 'default',
+      fontFamily: 'inherit',
+    })
+
+    await Promise.all(
+      mermaidBlocks.map(async (pre, index) => {
+        pre.dataset.mermaidProcessed = 'true'
+
+        const source = getMermaidSource(pre)
+        const expressiveCode = pre.closest('.expressive-code')
+        const diagram = document.createElement('figure')
+        const output = document.createElement('div')
+        const id = `mermaid-${Date.now()}-${index}`
+
+        diagram.className = 'mermaid-diagram'
+        output.className = 'mermaid-diagram-output'
+
+        try {
+          const { svg, bindFunctions } = await mermaid.render(id, source)
+          output.innerHTML = svg
+          bindFunctions?.(output)
+          diagram.append(output)
+          enableMermaidLightbox(diagram)
+          ;(expressiveCode ?? pre).replaceWith(diagram)
+        } catch (error) {
+          diagram.classList.add('mermaid-diagram-error')
+          diagram.textContent = 'Mermaid diagram failed to render. The source code is shown below.'
+          ;(expressiveCode ?? pre).before(diagram)
+          console.warn('[mermaid] Failed to render diagram:', error)
+        }
+      }),
+    )
+  }
+
   document.addEventListener('astro:page-load', () => {
+    closeMermaidLightbox()
     zoom.detach()
     zoom.attach('.markdown img:not(.no-zoom):not(a img)')
+    renderMermaidBlocks()
 
     const lqipImages = document.querySelectorAll('.markdown img[style*="--lqip:"]')
     lqipImages.forEach((img) => {
@@ -42,6 +237,145 @@ const { class: className } = Astro.props
     })
   })
 </script>
+
+<style>
+  :global(.markdown .mermaid-diagram) {
+    margin-block: 2rem;
+    overflow-x: auto;
+    border: 1px solid var(--article-code-border);
+    border-radius: 4px;
+    background: var(--article-code-bg);
+    padding: 1rem;
+    cursor: zoom-in;
+    transition:
+      border-color 180ms ease,
+      opacity 180ms ease;
+  }
+
+  :global(.markdown .mermaid-diagram:hover) {
+    border-color: var(--article-accent);
+  }
+
+  :global(.markdown .mermaid-diagram:focus-visible) {
+    outline: 1px solid var(--article-accent);
+    outline-offset: 0.35rem;
+  }
+
+  :global(.markdown .mermaid-diagram-output) {
+    min-width: min-content;
+  }
+
+  :global(.markdown .mermaid-diagram svg) {
+    display: block;
+    max-width: 100%;
+    height: auto;
+    margin-inline: auto;
+  }
+
+  :global(.markdown .mermaid-diagram-error) {
+    color: var(--article-code-muted);
+    font-family: var(--font-geist-mono);
+    font-size: 0.8125rem;
+    line-height: 1.6;
+    cursor: default;
+  }
+
+  :global(.mermaid-lightbox) {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: clamp(1rem, 3vw, 2rem);
+    background: rgb(0 0 0 / 0.86);
+    backdrop-filter: blur(3px);
+  }
+
+  :global(.mermaid-lightbox-panel) {
+    position: relative;
+    width: min(90vw, 72rem);
+    max-height: 86vh;
+    border: 1px solid var(--article-code-border);
+    border-radius: 4px;
+    background: var(--article-code-bg);
+    color: var(--article-code-fg);
+  }
+
+  :global(.mermaid-lightbox-scroller) {
+    max-height: 86vh;
+    overflow: auto;
+    padding: clamp(1rem, 3vw, 2rem);
+  }
+
+  :global(.mermaid-lightbox-scroller svg) {
+    display: block;
+    width: auto;
+    max-width: none;
+    height: auto;
+    margin-inline: auto;
+  }
+
+  :global(.mermaid-lightbox-toolbar) {
+    position: absolute;
+    inset-block-start: 0.75rem;
+    inset-inline-end: 0.75rem;
+    z-index: 1;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375rem;
+    padding: 0.35rem;
+    border: 1px solid var(--article-code-border);
+    border-radius: 999px;
+    background: var(--article-code-bg);
+  }
+
+  :global(.mermaid-lightbox-btn) {
+    display: inline-flex;
+    height: 2rem;
+    min-width: 2rem;
+    align-items: center;
+    justify-content: center;
+    padding-inline: 0.5rem;
+    border: 1px solid transparent;
+    border-radius: 999px;
+    color: var(--article-code-muted);
+    background: transparent;
+    cursor: pointer;
+    font-family: var(--font-geist-mono);
+    font-size: 0.95rem;
+    line-height: 1;
+    transition:
+      border-color 180ms ease,
+      color 180ms ease,
+      background-color 180ms ease;
+  }
+
+  :global(.mermaid-lightbox-reset) {
+    min-width: 3.25rem;
+    font-size: 0.8125rem;
+    letter-spacing: 0.02em;
+  }
+
+  :global(.mermaid-lightbox-btn:hover:not(:disabled)) {
+    border-color: var(--article-accent);
+    color: var(--article-code-fg);
+  }
+
+  :global(.mermaid-lightbox-btn:focus-visible) {
+    outline: 1px solid var(--article-accent);
+    outline-offset: 0.2rem;
+  }
+
+  :global(.mermaid-lightbox-btn:disabled) {
+    opacity: 0.4;
+    cursor: not-allowed;
+  }
+
+  :global(.mermaid-lightbox-close) {
+    font-size: 1.25rem;
+  }
+</style>
 
 <script define:vars={{ enabled: POSTS_CONFIG.imageDarkenInDark }} is:inline>
   if (enabled) {

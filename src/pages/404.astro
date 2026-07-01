@@ -2,30 +2,101 @@
 import Layout from '~/layouts/Layout.astro'
 ---
 
-<Layout title="页面未找到" description="页面未找到，可能已移动、取消发布或从 Ethan Young 的博客归档中移除。你可以返回首页、文章归档或标签索引继续浏览。" fullWidth>
-  <div class="verge-shell flex min-h-[calc(100svh-10rem)] items-center px-4 py-16 sm:px-6 sm:py-20 lg:px-8">
-    <section class="verge-card mx-auto w-full max-w-4xl p-8 text-center sm:p-12">
-      <p class="verge-kicker">404</p>
-      <h1 class="verge-display mt-5 text-[clamp(3rem,9vw,7rem)]">页面未找到</h1>
-      <p class="verge-copy mx-auto mt-6 max-w-[36rem] text-base sm:text-lg">
-        你访问的页面可能已经移动、取消发布，或从博客归档中移除。
-      </p>
-
-      <div class="mt-10 flex flex-wrap items-center justify-center gap-3">
-        <a
-          href="/"
-          class="verge-button-primary"
-        >
-          返回首页
-        </a>
-        <button
-          type="button"
-          onclick="history.back()"
-          class="verge-button-secondary cursor-pointer"
-        >
-          返回上一页
-        </button>
-      </div>
-    </section>
+<Layout title="页面未找到" description="页面未找到">
+  <div class="antfu-404">
+    <div class="terminal-screen">
+      <p class="terminal-line terminal-error">[ERROR] 404 — PAGE_NOT_FOUND</p>
+      <p class="terminal-line">> Requested URL: {Astro.url.pathname}</p>
+      <p class="terminal-line">> The page you are looking for may have been moved, unpublished, or removed from the archive.</p>
+      <p class="terminal-line terminal-cursor">> <a href="/">cd /</a> <span class="blink">_</span></p>
+      <p class="terminal-line">> <a href="javascript:history.back()">cd ..</a></p>
+    </div>
   </div>
 </Layout>
+
+<style>
+  .antfu-404 {
+    max-width: var(--layout-width);
+    margin-inline: auto;
+    padding: 5rem 1rem 2rem;
+  }
+
+  .terminal-screen {
+    border: 1px solid var(--color-border);
+    padding: 1.5rem;
+    background: rgba(255 255 255 / 0.02);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .terminal-screen::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 2px,
+      rgba(229 229 229 / 0.02) 2px,
+      rgba(229 229 229 / 0.02) 4px
+    );
+    pointer-events: none;
+  }
+
+  .terminal-screen::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, transparent 50%, rgba(229 229 229 / 0.03) 50%);
+    background-size: 100% 4px;
+    pointer-events: none;
+    animation: scanline 8s linear infinite;
+  }
+
+  @keyframes scanline {
+    0% { transform: translateY(-100%); }
+    100% { transform: translateY(100%); }
+  }
+
+  .terminal-line {
+    margin: 0.5em 0;
+    font-family: var(--font-geist-mono);
+    font-size: 0.875rem;
+    opacity: var(--opacity-secondary);
+    position: relative;
+  }
+
+  .terminal-error {
+    color: var(--theme-text);
+    opacity: 1;
+    font-weight: 600;
+    animation: glitch 3s infinite;
+  }
+
+  @keyframes glitch {
+    0%, 90%, 100% { transform: translateX(0); text-shadow: none; }
+    92% { transform: translateX(-2px); text-shadow: 1px 0 rgba(229 229 229 / 0.5), -1px 0 rgba(229 229 229 / 0.3); }
+    94% { transform: translateX(2px); text-shadow: -1px 0 rgba(229 229 229 / 0.5), 1px 0 rgba(229 229 229 / 0.3); }
+    96% { transform: translateX(-1px); text-shadow: none; }
+  }
+
+  .terminal-line a {
+    text-decoration: none;
+    opacity: var(--opacity-muted);
+    transition: opacity 200ms ease;
+  }
+
+  .terminal-line a:hover { opacity: 1; }
+
+  .terminal-cursor { display: flex; align-items: baseline; gap: 0.25rem; }
+
+  .blink {
+    animation: blink 1s step-end infinite;
+    font-weight: 600;
+  }
+
+  @keyframes blink {
+    0%, 50% { opacity: 1; }
+    51%, 100% { opacity: 0; }
+  }
+</style>

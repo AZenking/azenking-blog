@@ -1,0 +1,294 @@
+---
+import type { CollectionEntry } from 'astro:content'
+import { POSTS_CONFIG } from '~/config'
+import { getAllPosts } from '~/lib/data'
+import { formatDate } from '~/lib/utils'
+import Layout from '~/layouts/Layout.astro'
+
+const { title, introduce } = POSTS_CONFIG
+const allPosts = await getAllPosts()
+
+const postsByYear = new Map<number, CollectionEntry<'posts'>[]>()
+for (const post of allPosts) {
+  const year = (post.data.updatedDate ?? post.data.pubDate).getFullYear()
+  if (!postsByYear.has(year)) postsByYear.set(year, [])
+  postsByYear.get(year)!.push(post)
+}
+const yearGroups = [...postsByYear.entries()].sort(([a], [b]) => b - a)
+---
+
+<Layout title={title} description={POSTS_CONFIG.description} fullWidth>
+  <div class="posts-page">
+    <header class="posts-header">
+      <h1>{title}</h1>
+      <p class="posts-desc">{introduce}</p>
+      <a class="posts-tags-link" href="/tags">浏览标签 →</a>
+    </header>
+
+    {yearGroups.map(([year, posts]) => (
+      <section class="posts-year-group">
+        <h2 class="posts-year-heading">{year}</h2>
+        <div class="posts-year-watermark" aria-hidden="true">{year}</div>
+        <ul class="posts-list">
+          {posts.map((post, index) => {
+            const postDate = post.data.updatedDate ?? post.data.pubDate
+
+            return (
+              <li class="posts-list-item" data-post-reveal style={`--reveal-index: ${index}`}>
+                <a href={`/posts/${post.id}`} class="posts-list-link">
+                  <span class="posts-title">{post.data.title}</span>
+                  {post.data.description && (
+                    <span class="posts-description">{post.data.description}</span>
+                  )}
+                  <span class="posts-meta">
+                    <time datetime={postDate.toISOString()}>{formatDate(postDate, 'short')}</time>
+                  </span>
+                </a>
+              </li>
+            )
+          })}
+        </ul>
+      </section>
+    ))}
+
+    {allPosts.length === 0 && <p class="posts-empty">暂无文章。</p>}
+  </div>
+</Layout>
+
+<style>
+  .posts-page {
+    width: 100%;
+    margin-inline: auto;
+    padding: clamp(3.5rem, 8vw, 6rem) 1.25rem 3rem;
+    color: var(--article-ink);
+    background:
+      linear-gradient(180deg, rgb(128 122 113 / 0.035), transparent 18rem),
+      var(--article-paper);
+  }
+
+  .posts-header {
+    width: min(100%, 48rem);
+    margin-inline: auto;
+    margin-bottom: clamp(3rem, 6vw, 4.5rem);
+  }
+
+  .posts-header h1 {
+    margin: 0 0 0.4em;
+    color: var(--article-ink);
+    font-family: var(--font-editorial);
+    font-size: clamp(2.5rem, 5vw, 3.25rem);
+    font-weight: 700;
+    line-height: 1.05;
+    letter-spacing: 0;
+    text-wrap: balance;
+  }
+
+  .posts-desc {
+    margin: 0 0 2rem;
+    color: var(--article-soft);
+    font-family: var(--font-editorial);
+    font-size: clamp(1rem, 1.6vw, 1.1rem);
+    line-height: 1.5;
+    text-wrap: balance;
+  }
+
+  .posts-tags-link {
+    display: inline-block;
+    color: var(--article-soft);
+    font-family: var(--font-geist-mono);
+    font-size: 0.75rem;
+    letter-spacing: 0.04em;
+    text-decoration: none;
+    text-transform: uppercase;
+    transition: color 200ms ease;
+  }
+
+  .posts-tags-link:hover {
+    color: var(--article-ink);
+  }
+
+  .posts-tags-link:focus-visible,
+  .posts-list-link:focus-visible {
+    outline: 1px solid var(--article-accent);
+    outline-offset: 0.35rem;
+  }
+
+  .posts-year-group {
+    position: relative;
+    isolation: isolate;
+    width: min(100%, 48rem);
+    margin: 0 auto 3.5rem;
+    padding-top: 1.5rem;
+  }
+
+  .posts-year-heading {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+  }
+
+  .posts-year-watermark {
+    position: absolute;
+    inset-block-start: 0;
+    inset-inline-start: -0.5rem;
+    z-index: 0;
+    font-family: var(--font-geist-mono);
+    font-size: clamp(5.5rem, 16vw, 10rem);
+    font-weight: 700;
+    line-height: 0.9;
+    letter-spacing: -0.02em;
+    color: transparent;
+    -webkit-text-stroke: 1px rgb(232 228 220 / 0.04);
+    pointer-events: none;
+    user-select: none;
+  }
+
+  :global(.light) .posts-year-watermark {
+    -webkit-text-stroke-color: rgb(31 31 29 / 0.08);
+  }
+
+  .posts-list {
+    position: relative;
+    z-index: 1;
+    list-style: none;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+  }
+
+  .posts-list-item {
+    margin: 0;
+  }
+
+  :global(html.posts-reveal-ready) .posts-list-item {
+    opacity: 0;
+    transform: translateY(0.75rem);
+    transition:
+      opacity 480ms ease,
+      transform 480ms ease;
+    transition-delay: calc(var(--reveal-index, 0) * 55ms);
+  }
+
+  :global(html.posts-reveal-ready) .posts-list-item.is-visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .posts-list-link {
+    display: flex;
+    flex-direction: column;
+    gap: 0.45rem;
+    padding: 1rem 0 1.15rem;
+    color: var(--article-ink);
+    text-decoration: none;
+    border-block-end: 1px solid var(--article-rule);
+    transition: opacity 200ms ease;
+  }
+
+  .posts-list-link:hover {
+    opacity: 0.72;
+  }
+
+  .posts-title {
+    color: var(--article-ink);
+    font-family: var(--font-editorial);
+    font-size: clamp(1.2rem, 2.2vw, 1.4rem);
+    font-weight: 500;
+    line-height: 1.3;
+    text-wrap: balance;
+  }
+
+  .posts-description {
+    display: -webkit-box;
+    overflow: hidden;
+    color: var(--article-soft);
+    font-family: var(--font-editorial);
+    font-size: 0.95rem;
+    line-height: 1.6;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+  }
+
+  .posts-meta {
+    color: var(--article-soft);
+    font-family: var(--font-geist-mono);
+    font-size: 0.75rem;
+    letter-spacing: 0.02em;
+    opacity: 0.85;
+  }
+
+  .posts-empty {
+    width: min(100%, 48rem);
+    margin-inline: auto;
+    color: var(--article-soft);
+  }
+
+  @media (max-width: 760px) {
+    .posts-page {
+      padding-top: 3rem;
+    }
+
+    .posts-header {
+      margin-bottom: 3rem;
+    }
+
+    .posts-year-group {
+      margin-bottom: 3rem;
+      padding-top: 2.75rem;
+    }
+
+    .posts-year-watermark {
+      inset-inline-start: -0.2rem;
+      font-size: clamp(3.5rem, 22vw, 5.5rem);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .posts-list-item {
+      opacity: 1;
+      transform: none;
+      transition: none;
+    }
+  }
+</style>
+
+<script>
+  const initPostArchiveReveal = () => {
+    const revealItems = document.querySelectorAll<HTMLElement>('[data-post-reveal]')
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+
+    if (reduceMotion || !('IntersectionObserver' in window)) {
+      document.documentElement.classList.remove('posts-reveal-ready')
+      revealItems.forEach((item) => item.classList.add('is-visible'))
+      return
+    }
+
+    document.documentElement.classList.add('posts-reveal-ready')
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (!entry.isIntersecting) return
+          entry.target.classList.add('is-visible')
+          observer.unobserve(entry.target)
+        })
+      },
+      {
+        rootMargin: '0px 0px -8% 0px',
+        threshold: 0.12,
+      },
+    )
+
+    revealItems.forEach((item) => observer.observe(item))
+  }
+
+  initPostArchiveReveal()
+  document.addEventListener('astro:page-load', initPostArchiveReveal)
+</script>

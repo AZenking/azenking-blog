@@ -14,7 +14,7 @@ const tabs = [
 
 <nav
   class:list={[
-    'inline-flex items-center rounded-full border border-white/28 bg-[var(--theme-bg)] p-1 text-white',
+    'inline-flex items-center border border-white/28 bg-[var(--theme-bg)] p-1 text-white',
     className,
   ]}
   aria-label="内容类型切换"
@@ -26,7 +26,7 @@ const tabs = [
         <a
           href={tab.href}
           class:list={[
-            'inline-flex min-h-11 items-center rounded-full px-[1.125rem] py-2 font-mono text-xs font-semibold uppercase tracking-[0.12em] transition-colors',
+            'inline-flex min-h-11 items-center px-[1.125rem] py-2 font-mono text-xs font-semibold  transition-colors',
             isActive
               ? 'bg-[var(--theme-accent)] text-black'
               : 'text-white/62 hover:bg-[var(--theme-surface-soft)] hover:text-[var(--theme-link-hover)]',

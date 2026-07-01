@@ -121,36 +121,33 @@ const MasonryPhotoFeed: React.FC<Props> = ({ photos, initialCount = 6, loadStep 
                 className="group block w-full cursor-pointer text-left"
                 aria-label={`查看图片 ${globalIndex + 1}`}
               >
-                <div className="overflow-hidden rounded-[1.25rem] border border-white/28 bg-[var(--theme-bg)] text-white transition-colors duration-200 ease-out group-hover:border-[var(--theme-accent)]">
-                  <div className="relative overflow-hidden border-b border-white/28 bg-[var(--theme-surface-soft)]">
-                    <img
-                      src={photo.src}
-                      alt={photo.alt}
-                      loading="lazy"
-                      decoding="async"
-                      width={photo.width}
-                      height={photo.height}
-                      className="h-auto w-full object-cover"
-                    />
-
-                    <span className="absolute left-3 top-3 inline-flex items-center rounded-full border border-[var(--theme-accent)] bg-[var(--theme-accent)] px-2 py-1 font-mono text-[0.68rem] font-semibold leading-none tracking-[0.12em] text-black">
-                      {sequence}
-                    </span>
-                  </div>
-
-                  <div className="flex items-start justify-between gap-4 px-4 py-4">
-                    <div className="min-w-0">
-                      <p className="text-sm leading-7 text-white/72">{caption}</p>
-                      {meta ? (
-                        <p className="mt-1 font-mono text-[0.68rem] uppercase tracking-[0.12em] text-white/48">{meta}</p>
-                      ) : null}
-                    </div>
-
-                    <span className="mt-0.5 inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-white/28 text-base transition-colors duration-200 group-hover:border-[var(--theme-accent)] group-hover:text-[var(--theme-accent)]">
-                      ↗
-                    </span>
-                  </div>
+                <div className="overflow-hidden border border-[var(--article-rule)] bg-[var(--article-paper)] transition-opacity duration-200 ease-out group-hover:opacity-90">
+                  <img
+                    src={photo.src}
+                    alt={photo.alt}
+                    loading="lazy"
+                    decoding="async"
+                    width={photo.width}
+                    height={photo.height}
+                    className="h-auto w-full object-cover"
+                  />
                 </div>
+
+                <figcaption className="mt-2 flex items-baseline gap-2">
+                  <span className="font-mono text-[0.68rem] leading-none text-[var(--article-soft)] opacity-70">
+                    {sequence}
+                  </span>
+                  <span className="min-w-0 flex-1">
+                    <span className="block text-[0.8rem] leading-5 text-[var(--article-soft)]">
+                      {caption}
+                    </span>
+                    {meta && (
+                      <span className="mt-0.5 block font-mono text-[0.68rem] leading-none text-[var(--article-soft)] opacity-70">
+                        {meta}
+                      </span>
+                    )}
+                  </span>
+                </figcaption>
               </button>
             </figure>
           )
@@ -159,9 +156,11 @@ const MasonryPhotoFeed: React.FC<Props> = ({ photos, initialCount = 6, loadStep 
 
       <div ref={sentinelRef} className="mt-8 flex min-h-10 items-center justify-center">
         {hasMore ? (
-          <p className="font-mono text-xs uppercase tracking-[0.14em] text-white/48">继续下滑，加载更多照片</p>
+          <p className="font-mono text-xs text-[var(--article-soft)] opacity-70">继续下滑，加载更多照片</p>
         ) : (
-          <p className="font-mono text-xs uppercase tracking-[0.14em] text-white/48">已加载全部 {photos.length} 张照片</p>
+          <p className="font-mono text-xs text-[var(--article-soft)] opacity-70">
+            已加载全部 {photos.length} 张照片
+          </p>
         )}
       </div>
 
@@ -169,73 +168,77 @@ const MasonryPhotoFeed: React.FC<Props> = ({ photos, initialCount = 6, loadStep 
         typeof document !== 'undefined' &&
         createPortal(
           <div
-            className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/72 px-4 py-6 backdrop-blur-[3px] sm:px-8"
+            className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/85 px-4 py-6 backdrop-blur-[3px] sm:px-8"
             onClick={closeLightbox}
             role="dialog"
             aria-modal="true"
             aria-label="照片预览"
           >
             <div className="w-full max-w-5xl" onClick={(event) => event.stopPropagation()}>
-              <div className="overflow-hidden rounded-[1.25rem] border border-white/28 bg-[var(--theme-bg)] text-white">
-                <div className="flex items-center justify-between gap-4 border-b border-white/28 px-4 py-3">
-                  <div className="min-w-0">
-                    <p className="truncate font-mono text-[0.72rem] uppercase tracking-[0.12em] text-white/48">
-                      {[activePhoto.album, activePhoto.date].filter(Boolean).join(' · ') || '照片详情'}
-                    </p>
-                    <p className="mt-1 truncate text-base leading-7">{activePhoto.description ?? activePhoto.alt}</p>
-                  </div>
-
-                  <div className="flex items-center gap-2">
-                    <span className="rounded-full border border-white/28 px-2 py-1 font-mono text-[0.7rem] tracking-[0.12em]">
-                      {activePosition} / {photos.length}
-                    </span>
-                    <button
-                      type="button"
-                      onClick={closeLightbox}
-                      className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-white/28 bg-[var(--theme-surface-soft)] text-white transition-colors hover:border-[var(--theme-accent)] hover:text-[var(--theme-accent)]"
-                      aria-label="关闭"
-                    >
-                      <span className="icon-[mdi--close] h-5 w-5" />
-                    </button>
-                  </div>
+              <div className="mb-3 flex items-start justify-between gap-4">
+                <div className="min-w-0">
+                  <p className="truncate font-mono text-[0.72rem] text-[var(--article-soft)] opacity-70">
+                    {[activePhoto.album, activePhoto.date].filter(Boolean).join(' · ') || '照片详情'}
+                  </p>
+                  <p className="mt-1 truncate font-[var(--font-editorial)] text-base leading-7 text-[var(--article-ink)]">
+                    {activePhoto.description ?? activePhoto.alt}
+                  </p>
                 </div>
 
-                <div className="relative bg-[var(--theme-surface-soft)] px-4 py-4 sm:px-6 sm:py-6">
-                  <img src={activePhoto.src} alt={activePhoto.alt} className="mx-auto max-h-[74vh] w-auto max-w-full object-contain" />
-
+                <div className="flex items-center gap-3">
+                  <span className="font-mono text-[0.7rem] text-[var(--article-soft)] opacity-70">
+                    {String(activePosition).padStart(2, '0')} / {String(photos.length).padStart(2, '0')}
+                  </span>
                   <button
                     type="button"
-                    onClick={showPrevious}
-                    disabled={!canGoPrevious}
-                    className={`absolute left-3 top-1/2 inline-flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-md border transition-all sm:left-4 ${
-                      canGoPrevious
-                        ? 'border-white/28 bg-[var(--theme-bg)] text-white hover:border-[var(--theme-accent)] hover:text-[var(--theme-accent)]'
-                        : 'cursor-not-allowed border-white/12 bg-black/40 text-white/30'
-                    }`}
-                    aria-label="上一张"
+                    onClick={closeLightbox}
+                    className="inline-flex h-9 w-9 items-center justify-center text-[var(--article-soft)] transition-colors hover:text-[var(--article-ink)] focus-visible:text-[var(--article-ink)] focus-visible:outline focus-visible:outline-1 focus-visible:outline-[var(--article-accent)] focus-visible:outline-offset-2"
+                    aria-label="关闭"
                   >
-                    <span className="icon-[mdi--chevron-left] h-5 w-5" />
+                    <span className="icon-[mdi--close] h-5 w-5" />
                   </button>
-
-                  <button
-                    type="button"
-                    onClick={showNext}
-                    disabled={!canGoNext}
-                    className={`absolute right-3 top-1/2 inline-flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-md border transition-all sm:right-4 ${
-                      canGoNext
-                        ? 'border-white/28 bg-[var(--theme-bg)] text-white hover:border-[var(--theme-accent)] hover:text-[var(--theme-accent)]'
-                        : 'cursor-not-allowed border-white/12 bg-black/40 text-white/30'
-                    }`}
-                    aria-label="下一张"
-                  >
-                    <span className="icon-[mdi--chevron-right] h-5 w-5" />
-                  </button>
-                </div>
-
-                <div className="border-t border-white/28 px-4 py-4">
-                  <p className="text-sm leading-7 text-white/72">{activePhoto.alt}</p>
                 </div>
               </div>
+
+              <div className="relative">
+                <img
+                  src={activePhoto.src}
+                  alt={activePhoto.alt}
+                  className="mx-auto max-h-[74vh] w-auto max-w-full object-contain border border-[var(--article-rule)]"
+                />
+
+                <button
+                  type="button"
+                  onClick={showPrevious}
+                  disabled={!canGoPrevious}
+                  className={`absolute left-2 top-1/2 inline-flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-sm transition-opacity sm:left-4 ${
+                    canGoPrevious
+                      ? 'text-[var(--article-soft)] opacity-80 hover:opacity-100 focus-visible:opacity-100 focus-visible:outline focus-visible:outline-1 focus-visible:outline-[var(--article-accent)] focus-visible:outline-offset-2'
+                      : 'cursor-not-allowed text-[var(--article-soft)] opacity-30'
+                  }`}
+                  aria-label="上一张"
+                >
+                  <span className="icon-[mdi--chevron-left] h-6 w-6" />
+                </button>
+
+                <button
+                  type="button"
+                  onClick={showNext}
+                  disabled={!canGoNext}
+                  className={`absolute right-2 top-1/2 inline-flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-sm transition-opacity sm:right-4 ${
+                    canGoNext
+                      ? 'text-[var(--article-soft)] opacity-80 hover:opacity-100 focus-visible:opacity-100 focus-visible:outline focus-visible:outline-1 focus-visible:outline-[var(--article-accent)] focus-visible:outline-offset-2'
+                      : 'cursor-not-allowed text-[var(--article-soft)] opacity-30'
+                  }`}
+                  aria-label="下一张"
+                >
+                  <span className="icon-[mdi--chevron-right] h-6 w-6" />
+                </button>
+              </div>
+
+              <p className="mt-3 text-[0.8rem] leading-6 text-[var(--article-soft)]">
+                {activePhoto.alt}
+              </p>
             </div>
           </div>,
           document.body,

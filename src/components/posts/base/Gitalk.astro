@@ -14,37 +14,50 @@ const { id, title } = Astro.props
   const { gitalk } = COMMENT_CONFIG
 
   let observer: IntersectionObserver | null = null
-  let isInitialized = false
+  let initializedForId: string | null = null
+  let pendingToken = 0
 
   function initGitalk() {
-    if (!gitalk || isInitialized) return
-    isInitialized = true
+    if (!gitalk) return
 
-    import('gitalk/dist/gitalk.css')
-    import('gitalk').then(({ default: Gitalk }) => {
-      const container = document.getElementById('gitalk-container')
-      if (!container) return
+    const container = document.getElementById('gitalk-container')
+    if (!container) return
 
-      const id = container.dataset.id || ''
-      const title = container.dataset.title || ''
+    const targetId = container.dataset.id || ''
+    if (initializedForId === targetId) return
+    initializedForId = targetId
 
-      const gitalkComment = new Gitalk({
-        clientID: gitalk.clientID,
-        clientSecret: gitalk.clientSecret,
-        repo: gitalk.repo,
-        owner: gitalk.owner,
-        admin: gitalk.admin,
-        language: gitalk.language || 'zh-CN',
-        perPage: gitalk.perPage || 5,
-        pagerDirection: gitalk.pagerDirection || 'last',
-        createIssueManually: gitalk.createIssueManually || false,
-        distractionFreeMode: gitalk.distractionFreeMode || false,
-        enableHotKey: gitalk.enableHotKey !== false,
-        id: id,
-        title: title,
+    const token = ++pendingToken
+
+    Promise.all([import('gitalk'), import('gitalk/dist/gitalk.css') as Promise<unknown>])
+      .then(([{ default: Gitalk }]) => {
+        if (token !== pendingToken) return
+        const current = document.getElementById('gitalk-container')
+        if (!current || current !== container) return
+
+        const id = current.dataset.id || ''
+        const title = current.dataset.title || ''
+
+        const gitalkComment = new Gitalk({
+          clientID: gitalk.clientID,
+          clientSecret: gitalk.clientSecret,
+          repo: gitalk.repo,
+          owner: gitalk.owner,
+          admin: gitalk.admin,
+          language: gitalk.language || 'zh-CN',
+          perPage: gitalk.perPage ?? 5,
+          pagerDirection: gitalk.pagerDirection || 'last',
+          createIssueManually: gitalk.createIssueManually ?? false,
+          distractionFreeMode: gitalk.distractionFreeMode ?? false,
+          enableHotKey: gitalk.enableHotKey !== false,
+          id,
+          title,
+        })
+        gitalkComment.render('gitalk-container')
       })
-      gitalkComment.render('gitalk-container')
-    })
+      .catch((error) => {
+        console.warn('[gitalk] Failed to load:', error)
+      })
   }
 
   function isElementInViewport(element: Element) {
@@ -57,20 +70,17 @@ const { id, title } = Astro.props
     const container = document.getElementById('gitalk-container')
     if (!container) return
 
-    // 清理之前的观察器
     cleanup()
 
-    // 检查是否已经在可视区域内
     if (isElementInViewport(container)) {
       initGitalk()
       return
     }
 
-    // 设置观察器监听
     observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
-          if (entry.isIntersecting && !isInitialized) {
+          if (entry.isIntersecting) {
             initGitalk()
             cleanup()
           }
@@ -79,7 +89,7 @@ const { id, title } = Astro.props
       {
         rootMargin: '3000px',
         threshold: 0,
-      }
+      },
     )
 
     observer.observe(container)
@@ -90,16 +100,15 @@ const { id, title } = Astro.props
       observer.disconnect()
       observer = null
     }
+    pendingToken++
   }
 
-  // 重置函数，在页面切换时调用
   function resetAndInitialize() {
-    isInitialized = false // 关键：重置初始化状态
+    initializedForId = null
     cleanup()
     setupObserver()
   }
 
-  // 初始设置
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', setupObserver)
   } else {
@@ -107,24 +116,19 @@ const { id, title } = Astro.props
   }
 
   document.addEventListener('astro:page-load', resetAndInitialize)
-
   document.addEventListener('astro:before-preparation', cleanup)
   window.addEventListener('beforeunload', cleanup)
 </script>
 
 <style is:global>
   #gitalk-container {
-    min-height: 10px;
-    color: #fff;
+    min-height: 1rem;
+    color: var(--theme-text);
     overflow-wrap: anywhere;
   }
 
-  .comment-container {
-    color: #fff;
-  }
-
   .gt-container {
-    color: #fff !important;
+    color: var(--theme-text) !important;
     font-family: var(--font-geist), var(--font-sans), ui-sans-serif, system-ui, sans-serif !important;
   }
 
@@ -145,8 +149,8 @@ const { id, title } = Astro.props
   }
 
   .gt-container .gt-meta {
-    border-bottom: 1px solid rgb(255 255 255 / 0.28) !important;
-    color: rgb(233 233 233 / 0.62) !important;
+    border-bottom: 1px solid var(--article-rule) !important;
+    color: var(--theme-muted) !important;
     font-family: var(--font-geist-mono);
     font-size: 0.78rem;
     letter-spacing: 0.08em;
@@ -183,10 +187,10 @@ const { id, title } = Astro.props
 
   .gt-container .gt-header-textarea {
     min-height: 6rem !important;
-    border: 1px solid rgb(255 255 255 / 0.52) !important;
+    border: 1px solid color-mix(in srgb, var(--theme-text) 32%, transparent) !important;
     border-radius: 1.25rem !important;
     background: var(--theme-surface) !important;
-    color: #fff !important;
+    color: var(--theme-text) !important;
     font-family: var(--font-geist), var(--font-sans), ui-sans-serif, system-ui, sans-serif !important;
     font-size: 0.95rem !important;
     line-height: 1.7 !important;
@@ -198,7 +202,7 @@ const { id, title } = Astro.props
   }
 
   .gt-container .gt-header-textarea::placeholder {
-    color: rgb(233 233 233 / 0.52) !important;
+    color: var(--theme-muted) !important;
   }
 
   .gt-container .gt-header-textarea:focus {
@@ -208,7 +212,7 @@ const { id, title } = Astro.props
 
   .gt-container .gt-header-preview {
     min-height: 6rem !important;
-    border: 1px solid rgb(255 255 255 / 0.52) !important;
+    border: 1px solid color-mix(in srgb, var(--theme-text) 32%, transparent) !important;
     border-radius: 1.25rem !important;
     background: var(--theme-surface) !important;
     color: var(--theme-text) !important;
@@ -222,7 +226,7 @@ const { id, title } = Astro.props
   .gt-container .gt-header-controls::before,
   .gt-container .gt-header-controls::after {
     display: table;
-    content: "";
+    content: '';
   }
 
   .gt-container .gt-header-controls::after {
@@ -253,41 +257,35 @@ const { id, title } = Astro.props
     font-weight: 700 !important;
     letter-spacing: 0.1em !important;
     line-height: 1 !important;
-    text-transform: uppercase !important;
     transition:
       background-color 180ms ease,
       border-color 180ms ease,
       color 180ms ease !important;
   }
 
-  .gt-container .gt-btn-public {
-    border: 1px solid var(--theme-accent) !important;
-    background: var(--theme-accent) !important;
-    color: #000 !important;
-  }
-
+  .gt-container .gt-btn-public,
   .gt-container .gt-btn-login {
     border: 1px solid var(--theme-accent) !important;
     background: var(--theme-accent) !important;
-    color: #000 !important;
+    color: var(--theme-bg) !important;
   }
 
   .gt-container .gt-btn-public:hover,
   .gt-container .gt-btn-login:hover {
     border-color: var(--theme-link-hover) !important;
     background: var(--theme-link-hover) !important;
-    color: #000 !important;
+    color: var(--theme-bg) !important;
   }
 
   .gt-container .gt-btn-preview {
-    border: 1px solid rgb(255 255 255 / 0.52) !important;
+    border: 1px solid color-mix(in srgb, var(--theme-text) 32%, transparent) !important;
     background: var(--theme-surface-soft) !important;
     color: var(--theme-text) !important;
   }
 
   .gt-container .gt-btn-preview:hover {
     border-color: var(--theme-link-hover) !important;
-    background: rgb(255 255 255 / 0.16) !important;
+    background: color-mix(in srgb, var(--theme-text) 12%, transparent) !important;
     color: var(--theme-link-hover) !important;
   }
 
@@ -296,15 +294,15 @@ const { id, title } = Astro.props
   }
 
   .gt-container .gt-popup {
-    border: 1px solid rgb(255 255 255 / 0.32) !important;
+    border: 1px solid color-mix(in srgb, var(--theme-text) 28%, transparent) !important;
     border-radius: 1.25rem !important;
     background: var(--theme-surface-soft) !important;
-    color: #fff !important;
+    color: var(--theme-text) !important;
     box-shadow: none !important;
   }
 
   .gt-container .gt-svg {
-    fill: rgb(233 233 233 / 0.72) !important;
+    fill: var(--theme-muted) !important;
   }
 
   .gt-container .gt-comments {
@@ -312,12 +310,12 @@ const { id, title } = Astro.props
   }
 
   .gt-container .gt-comment {
-    border-top: 1px solid rgb(255 255 255 / 0.14) !important;
+    border-top: 1px solid var(--article-rule) !important;
     padding-block: 1.25rem !important;
   }
 
   .gt-container .gt-comment-content {
-    border: 1px solid rgb(255 255 255 / 0.32) !important;
+    border: 1px solid color-mix(in srgb, var(--theme-text) 22%, transparent) !important;
     border-radius: 1.25rem !important;
     background: var(--theme-surface-soft) !important;
     color: var(--theme-text) !important;
@@ -333,14 +331,14 @@ const { id, title } = Astro.props
   }
 
   .gt-container .gt-comment-header {
-    color: rgb(233 233 233 / 0.62) !important;
+    color: var(--theme-muted) !important;
   }
 
   .gt-container .gt-comment-date,
   .gt-container .gt-comment-like,
   .gt-container .gt-comment-edit,
   .gt-container .gt-comment-reply {
-    color: rgb(233 233 233 / 0.52) !important;
+    color: var(--theme-muted) !important;
   }
 
   .gt-container .gt-comment-body {
@@ -349,8 +347,8 @@ const { id, title } = Astro.props
 
   .gt-container .gt-footer,
   .gt-container .gt-copyright {
-    border-color: rgb(255 255 255 / 0.16) !important;
-    color: rgb(233 233 233 / 0.44) !important;
+    border-color: var(--article-rule) !important;
+    color: var(--theme-muted) !important;
   }
 
   .gt-container pre,
@@ -373,7 +371,7 @@ const { id, title } = Astro.props
 
   .gt-container .markdown-body blockquote {
     border-color: var(--theme-accent) !important;
-    color: rgb(233 233 233 / 0.72) !important;
+    color: var(--theme-muted) !important;
   }
 
   .gt-comments-null {

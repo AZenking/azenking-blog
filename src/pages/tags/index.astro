@@ -1,140 +1,49 @@
 ---
 import { TAGS_CONFIG } from '~/config'
-import { getAllPosts, getAllTags } from '~/lib/data'
+import { getAllTags } from '~/lib/data'
 import Layout from '~/layouts/Layout.astro'
 
-const { title, description, introduce } = TAGS_CONFIG
-
-const [tagsMap, posts] = await Promise.all([getAllTags(), getAllPosts()])
+const { title, introduce } = TAGS_CONFIG
+const tagsMap = await getAllTags()
 
 const sortedTags = Object.entries(tagsMap)
-  .map(([tag, count]) => ({
-    name: tag,
-    count,
-  }))
+  .map(([tag, count]) => ({ name: tag, count }))
   .sort((a, b) => {
     if (b.count !== a.count) return b.count - a.count
     return a.name.localeCompare(b.name)
   })
-
-const totalTaggedMentions = sortedTags.reduce((sum, tag) => sum + tag.count, 0)
-const featuredTags = sortedTags.slice(0, 10)
-const accentClasses = ['verge-accent-mint', 'verge-accent-purple', 'verge-accent-yellow', 'verge-accent-pink', 'verge-accent-orange']
 ---
 
-<Layout {title} {description} fullWidth>
-  <div class="verge-shell">
-    <section class="mx-auto w-full max-w-[88rem] px-4 py-8 sm:px-6 sm:py-10 lg:px-8">
-      <div class="border-b border-white/28 pb-5">
-        <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-          <p class="verge-kicker">主题 / 标签 / 文章索引</p>
-          <a href="/posts" class="verge-pill">返回文章</a>
-        </div>
+<Layout title={title} description={TAGS_CONFIG.description}>
+  <div class="antfu-page">
+    <h1>{title}</h1>
+    <p class="antfu-desc">{introduce}</p>
 
-        <div class="mt-5 grid gap-5 lg:grid-cols-[minmax(0,1fr)_22rem] lg:items-end">
-          <div>
-            <h1 class="verge-display text-[clamp(5rem,15vw,13rem)] leading-[0.76] tracking-normal">{title}</h1>
-            <p class="verge-copy mt-4 max-w-[52rem] text-base sm:text-lg">{introduce}</p>
-          </div>
+    <ul class="antfu-list">
+      {sortedTags.map((tag) => (
+        <li>
+          <a href={`/tags/${encodeURIComponent(tag.name)}`} class="antfu-list-link">
+            <span>{tag.name}</span>
+            <span class="antfu-count">{tag.count}</span>
+          </a>
+        </li>
+      ))}
+    </ul>
 
-          <div class="grid grid-cols-3 gap-3">
-            <div class="verge-stat">
-              <p class="verge-kicker text-white/48">标签</p>
-              <p class="mt-2 text-3xl leading-none tracking-normal text-white">{sortedTags.length}</p>
-            </div>
-            <div class="verge-stat">
-              <p class="verge-kicker text-white/48">文章</p>
-              <p class="mt-2 text-3xl leading-none tracking-normal text-white">{posts.length}</p>
-            </div>
-            <div class="verge-stat">
-              <p class="verge-kicker text-white/48">引用</p>
-              <p class="mt-2 text-3xl leading-none tracking-normal text-white">{totalTaggedMentions}</p>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {featuredTags.length > 0 && (
-        <section class="grid gap-5 border-b border-white/28 py-5 lg:grid-cols-[minmax(0,1.35fr)_minmax(18rem,0.65fr)]">
-          <div class:list={['verge-card p-5 sm:p-7', accentClasses[0]]}>
-            <p class="verge-kicker opacity-65">最常用主题</p>
-            <h2 class="mt-4 text-[clamp(3rem,8vw,7rem)] font-black leading-[0.78] tracking-normal">#{featuredTags[0].name}</h2>
-            <div class="mt-8 flex flex-wrap gap-2">
-              {featuredTags.slice(0, 6).map((tag) => (
-                <a href={`/tags/${encodeURIComponent(tag.name)}`} class="inline-flex min-h-11 items-center rounded-full border border-current px-4 py-2 font-mono text-xs font-semibold uppercase tracking-[0.12em] no-underline transition-colors hover:text-[var(--theme-link-hover)]">
-                  <span>{tag.name}</span>
-                  <span class="ml-2 opacity-60">({tag.count})</span>
-                </a>
-              ))}
-            </div>
-          </div>
-
-          <aside class="verge-card-soft p-5">
-            <p class="verge-kicker">热门主题</p>
-            <ul class="mt-4 divide-y divide-white/12">
-              {featuredTags.slice(0, 8).map((tag, index) => (
-                <li class="py-4 first:pt-0 last:pb-0">
-                  <a href={`/tags/${encodeURIComponent(tag.name)}`} class="group flex items-center justify-between gap-4 text-white no-underline">
-                    <span class="min-w-0 truncate text-lg font-black leading-tight tracking-normal transition-colors group-hover:text-[var(--theme-link-hover)]">
-                      {String(index + 1).padStart(2, '0')} / #{tag.name}
-                    </span>
-                    <span class="shrink-0 font-mono text-[0.7rem] uppercase tracking-[0.12em] text-white/45">{tag.count}</span>
-                  </a>
-                </li>
-              ))}
-            </ul>
-          </aside>
-        </section>
-      )}
-
-      <section class="py-6">
-        <div class="mb-5 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
-          <div>
-            <p class="verge-kicker">索引</p>
-            <h2 class="mt-2 text-[clamp(2rem,4.6vw,4.2rem)] font-black leading-[0.9] tracking-normal text-white">全部主题</h2>
-          </div>
-          <p class="font-mono text-xs font-semibold uppercase tracking-[0.14em] text-white/48">
-            共 {sortedTags.length} 个标签
-          </p>
-        </div>
-
-        {sortedTags.length > 0 ? (
-          <div class="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
-            {sortedTags.map((tag, index) => {
-              const mentionPercent = totalTaggedMentions > 0 ? Math.round((tag.count / totalTaggedMentions) * 100) : 0
-
-              return (
-                <a
-                  href={`/tags/${encodeURIComponent(tag.name)}`}
-                  class:list={['verge-card-link flex min-h-56 flex-col justify-between p-5', index % 4 === 0 && accentClasses[index % accentClasses.length]]}
-                >
-                  <div class="flex items-start justify-between gap-4">
-                    <h3 class="min-w-0 break-words text-[clamp(1.75rem,3vw,2.7rem)] font-black leading-[0.9] tracking-normal">#{tag.name}</h3>
-                    <span class="shrink-0 rounded-full border border-current px-2 py-1 font-mono text-xs uppercase tracking-[0.1em] opacity-75">
-                      {tag.count}
-                    </span>
-                  </div>
-
-                  <div class="mt-8">
-                    <div class="h-1.5 overflow-hidden rounded-full bg-current/15">
-                      <div class="h-full rounded-full bg-current" style={`width: ${Math.max(mentionPercent, 4)}%`}></div>
-                    </div>
-                    <div class="mt-4 flex items-end justify-between gap-4">
-                      <div>
-                        <p class="verge-kicker opacity-60">占比</p>
-                        <p class="mt-2 text-3xl leading-none tracking-normal">{mentionPercent}%</p>
-                      </div>
-                      <span class="verge-icon-button size-10">→</span>
-                    </div>
-                  </div>
-                </a>
-              )
-            })}
-          </div>
-        ) : (
-          <p class="text-sm text-white/56">暂无标签。</p>
-        )}
-      </section>
-    </section>
+    {sortedTags.length === 0 && <p>暂无标签。</p>}
   </div>
 </Layout>
+
+<style>
+  .antfu-page { max-width: var(--layout-width); margin-inline: auto; padding: 4rem 1rem 2rem; }
+  .antfu-page h1 { font-size: 1.5rem; font-weight: 600; margin: 0 0 0.5em; }
+  .antfu-desc { opacity: var(--opacity-muted); margin: 0 0 2rem; }
+  .antfu-list { list-style: none; padding: 0; margin: 0; }
+  .antfu-list li { margin: 0; }
+  .antfu-list-link {
+    display: flex; align-items: baseline; justify-content: space-between; gap: 0.75rem;
+    padding: 0.35em 0; text-decoration: none; color: var(--theme-text); transition: opacity 200ms ease;
+  }
+  .antfu-list-link:hover { opacity: var(--opacity-secondary); }
+  .antfu-count { flex-shrink: 0; font-size: 0.8125rem; opacity: var(--opacity-muted); }
+</style>

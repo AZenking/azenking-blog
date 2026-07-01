@@ -1,211 +1,241 @@
 ---
-import { Image } from 'astro:assets'
 import { PROJECTS_CONFIG } from '~/config'
 import { getAllProjects } from '~/lib/data'
 import Layout from '~/layouts/Layout.astro'
 
-const { title, description, introduce } = PROJECTS_CONFIG
+const { title, introduce } = PROJECTS_CONFIG
 const projects = await getAllProjects()
-const totalStars = projects.reduce((sum, project) => sum + (project.data.star ?? 0), 0)
-const totalForks = projects.reduce((sum, project) => sum + (project.data.fork ?? 0), 0)
-const featuredProject = projects[0]
-const gridProjects = projects.slice(1)
+
+const resolveHref = (project: { data: { website: string; githubUrl: string } }) =>
+  project.data.website || project.data.githubUrl || '/projects'
+
+const isExternal = (href: string) => /^https?:\/\//i.test(href) || href.startsWith('//')
 ---
 
-<Layout {title} {description} fullWidth>
-  <div class="verge-shell">
-    <section class="verge-container">
-      <div class="border-b pb-8 verge-rule">
-        <div class="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
-          <div class="max-w-3xl">
-            <p class="verge-kicker">精选作品</p>
-            <h1 class="verge-display mt-4 text-[clamp(3rem,9vw,7rem)]">{title}</h1>
-            <p class="verge-copy mt-5 max-w-[48rem] text-base sm:text-lg">{introduce}</p>
-          </div>
+<Layout title={title} description={PROJECTS_CONFIG.description} fullWidth>
+  <div class="projects-page">
+    <header class="projects-header">
+      <h1>{title}</h1>
+      <p class="projects-desc">{introduce}</p>
+      <p class="projects-tagline">{projects.length} 个项目 · 持续迭代</p>
+    </header>
 
-          <div class="grid w-full max-w-xl grid-cols-1 gap-3 sm:grid-cols-3">
-            <div class="verge-stat">
-              <p class="verge-kicker text-white/48">项目</p>
-              <p class="mt-2 text-3xl leading-none tracking-[-0.05em]">{projects.length}</p>
-            </div>
-            <div class="verge-stat">
-              <p class="verge-kicker text-white/48">星标</p>
-              <p class="mt-2 text-3xl leading-none tracking-[-0.05em]">{totalStars}</p>
-            </div>
-            <div class="verge-stat">
-              <p class="verge-kicker text-white/48">分叉</p>
-              <p class="mt-2 text-3xl leading-none tracking-[-0.05em]">{totalForks}</p>
-            </div>
-          </div>
-        </div>
-      </div>
+    <section class="projects-list-wrap">
+      <ul class="projects-list">
+        {projects.map((project, index) => {
+          const href = resolveHref(project)
+          const external = isExternal(href)
+          const { star, fork, type } = project.data
+          const metaParts: string[] = []
+          if (type) metaParts.push(type)
+          if (star != null) metaParts.push(`★ ${star}`)
+          if (fork != null) metaParts.push(`⑂ ${fork}`)
 
-      {featuredProject ? (
-        <>
-          <div class="mt-8 grid gap-8 lg:grid-cols-[minmax(0,1.35fr)_24rem]">
-            <article class="verge-card overflow-hidden">
-              <div class="border-b border-white/28 px-6 py-6">
-                <div class="flex items-start gap-4">
-                  <div class="verge-accent-mint inline-flex size-14 shrink-0 items-center justify-center rounded-[1.25rem] text-xl">
-                    {featuredProject.data.type === 'icon' && typeof featuredProject.data.icon === 'string' ? (
-                      <span class={featuredProject.data.icon} />
-                    ) : featuredProject.data.icon ? (
-                      <Image
-                        src={featuredProject.data.icon}
-                        alt={featuredProject.data.name}
-                        width={48}
-                        height={48}
-                        class={featuredProject.data.imageClass ?? 'size-12'}
-                        densities={[1, 2]}
-                        loading="eager"
-                      />
-                    ) : (
-                      <span>↗</span>
-                    )}
-                  </div>
+          return (
+            <li class="projects-list-item" data-project-reveal style={`--reveal-index: ${index}`}>
+              <a
+                href={href}
+                class="projects-list-link"
+                target={external ? '_blank' : undefined}
+                rel={external ? 'noreferrer' : undefined}
+              >
+                <span class="projects-title">{project.data.name}</span>
+                {project.data.description && (
+                  <span class="projects-description">{project.data.description}</span>
+                )}
+                {metaParts.length > 0 && (
+                  <span class="projects-meta">{metaParts.join(' · ')}</span>
+                )}
+              </a>
+            </li>
+          )
+        })}
+      </ul>
 
-                  <div class="min-w-0">
-                    <p class="verge-kicker text-white/48">精选项目</p>
-                    <h2 class="verge-heading mt-2 text-[clamp(1.8rem,3.4vw,3rem)]">{featuredProject.data.name}</h2>
-                  </div>
-                </div>
-              </div>
-
-              <div class="grid gap-5 p-6">
-                <p class="verge-copy max-w-3xl text-base">{featuredProject.data.description}</p>
-
-                <div class="flex flex-wrap gap-2">
-                  <span class="verge-pill">
-                    星标 {featuredProject.data.star}
-                  </span>
-                  <span class="verge-pill">
-                    分叉 {featuredProject.data.fork}
-                  </span>
-                </div>
-
-                <div class="flex flex-wrap gap-3">
-                  {featuredProject.data.website && (
-                    <a
-                      href={featuredProject.data.website}
-                      target="_blank"
-                      rel="noreferrer"
-                      class="verge-button-primary"
-                    >
-                      <span class="icon-[mdi--web] size-4" />
-                      <span>访问站点</span>
-                    </a>
-                  )}
-                  {featuredProject.data.githubUrl && (
-                    <a
-                      href={featuredProject.data.githubUrl}
-                      target="_blank"
-                      rel="noreferrer"
-                      class="verge-button-secondary"
-                    >
-                      <span class="icon-[mdi--github] size-4" />
-                      <span>源码</span>
-                    </a>
-                  )}
-                </div>
-              </div>
-            </article>
-
-            <aside class="verge-card-soft p-5">
-              <p class="verge-kicker">项目索引</p>
-              <ul class="mt-4 divide-y divide-white/12">
-                {projects.map((project) => (
-                  <li class="py-4 first:pt-0 last:pb-0">
-                    <div class="flex items-start justify-between gap-4">
-                      <div>
-                        <h3 class="verge-heading text-2xl">{project.data.name}</h3>
-                        <p class="mt-2 text-sm leading-7 text-white/64">
-                          {project.data.star} 星标 · {project.data.fork} 分叉
-                        </p>
-                      </div>
-                      <div class="verge-icon-button size-10">
-                        ↗
-                      </div>
-                    </div>
-                  </li>
-                ))}
-              </ul>
-            </aside>
-          </div>
-
-          <section class="mt-14 border-t pt-8 verge-rule">
-            <div class="mb-8 flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
-              <div>
-                <p class="verge-kicker">归档</p>
-                <h2 class="mt-3 text-[clamp(1.9rem,4vw,3.15rem)] leading-[1.04] tracking-[-0.05em]">构建与实验</h2>
-              </div>
-              <p class="verge-copy max-w-xl text-sm">
-                这里收纳产品、个人项目和实验性构建，保持统一的界面语言。
-              </p>
-            </div>
-
-            {gridProjects.length > 0 ? (
-              <div class="grid grid-cols-1 gap-8 md:grid-cols-2">
-                {gridProjects.map((project) => (
-                  <article class="verge-card p-6">
-                    <div class="flex items-start gap-4">
-                      <div class="inline-flex size-12 shrink-0 items-center justify-center rounded-[1.25rem] border border-white/28 bg-[var(--theme-surface-soft)] text-lg text-white">
-                        {project.data.type === 'icon' && typeof project.data.icon === 'string' ? (
-                          <span class={project.data.icon} />
-                        ) : project.data.icon ? (
-                          <Image
-                            src={project.data.icon}
-                            alt={project.data.name}
-                            width={42}
-                            height={42}
-                            class={project.data.imageClass ?? 'size-10'}
-                            densities={[1, 2]}
-                            loading="lazy"
-                          />
-                        ) : (
-                          <span>↗</span>
-                        )}
-                      </div>
-
-                      <div class="min-w-0 flex-1">
-                        <h3 class="verge-heading text-2xl">{project.data.name}</h3>
-                        <p class="verge-copy mt-3 text-sm">{project.data.description}</p>
-                      </div>
-                    </div>
-
-                    <div class="mt-5 flex flex-wrap gap-2">
-                      <span class="inline-flex rounded-full border border-white/28 px-2 py-1 font-mono text-xs uppercase tracking-[0.1em]">
-                        星标 {project.data.star}
-                      </span>
-                      <span class="inline-flex rounded-full border border-white/28 px-2 py-1 font-mono text-xs uppercase tracking-[0.1em]">
-                        分叉 {project.data.fork}
-                      </span>
-                    </div>
-
-                    <div class="mt-5 flex flex-wrap gap-3 text-sm">
-                      {project.data.website && (
-                        <a href={project.data.website} target="_blank" rel="noreferrer" class="text-[var(--theme-accent)] no-underline hover:text-[var(--theme-link-hover)]">
-                          站点
-                        </a>
-                      )}
-                      {project.data.githubUrl && (
-                        <a href={project.data.githubUrl} target="_blank" rel="noreferrer" class="text-[var(--theme-accent)] no-underline hover:text-[var(--theme-link-hover)]">
-                          GitHub
-                        </a>
-                      )}
-                    </div>
-                  </article>
-                ))}
-              </div>
-            ) : (
-              <p class="text-sm text-white/56">暂无更多项目。</p>
-            )}
-          </section>
-        </>
-      ) : (
-        <section class="verge-card mt-10 px-6 py-14 text-center">
-          <p class="text-sm text-white/56">暂无项目。</p>
-        </section>
-      )}
+      {projects.length === 0 && <p class="projects-empty">暂无项目。</p>}
     </section>
   </div>
 </Layout>
+
+<style>
+  .projects-page {
+    width: 100%;
+    margin-inline: auto;
+    padding: clamp(3.5rem, 8vw, 6rem) 1.25rem 3rem;
+    color: var(--article-ink);
+    background:
+      linear-gradient(180deg, rgb(128 122 113 / 0.035), transparent 18rem),
+      var(--article-paper);
+  }
+
+  .projects-header {
+    width: min(100%, 48rem);
+    margin-inline: auto;
+    margin-bottom: clamp(2.5rem, 5vw, 3.75rem);
+  }
+
+  .projects-header h1 {
+    margin: 0 0 0.4em;
+    color: var(--article-ink);
+    font-family: var(--font-editorial);
+    font-size: clamp(2.5rem, 5vw, 3.25rem);
+    font-weight: 700;
+    line-height: 1.05;
+    letter-spacing: 0;
+    text-wrap: balance;
+  }
+
+  .projects-desc {
+    margin: 0 0 1.25rem;
+    color: var(--article-soft);
+    font-family: var(--font-editorial);
+    font-size: clamp(1rem, 1.6vw, 1.1rem);
+    line-height: 1.5;
+    text-wrap: balance;
+  }
+
+  .projects-tagline {
+    margin: 0;
+    color: var(--article-soft);
+    font-family: var(--font-geist-mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    opacity: 0.85;
+  }
+
+  .projects-list-wrap {
+    width: min(100%, 48rem);
+    margin-inline: auto;
+  }
+
+  .projects-list {
+    list-style: none;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+  }
+
+  .projects-list-item {
+    margin: 0;
+  }
+
+  :global(html.projects-reveal-ready) .projects-list-item {
+    opacity: 0;
+    transform: translateY(0.75rem);
+    transition:
+      opacity 480ms ease,
+      transform 480ms ease;
+    transition-delay: calc(var(--reveal-index, 0) * 55ms);
+  }
+
+  :global(html.projects-reveal-ready) .projects-list-item.is-visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .projects-list-link {
+    display: flex;
+    flex-direction: column;
+    gap: 0.45rem;
+    padding: 1rem 0 1.15rem;
+    color: var(--article-ink);
+    text-decoration: none;
+    border-block-end: 1px solid var(--article-rule);
+    transition: opacity 200ms ease;
+  }
+
+  .projects-list-link:hover {
+    opacity: 0.72;
+  }
+
+  .projects-list-link:focus-visible {
+    outline: 1px solid var(--article-accent);
+    outline-offset: 0.35rem;
+  }
+
+  .projects-title {
+    color: var(--article-ink);
+    font-family: var(--font-editorial);
+    font-size: clamp(1.2rem, 2.2vw, 1.4rem);
+    font-weight: 600;
+    line-height: 1.3;
+    text-wrap: balance;
+  }
+
+  .projects-description {
+    display: -webkit-box;
+    overflow: hidden;
+    color: var(--article-soft);
+    font-family: var(--font-editorial);
+    font-size: 0.95rem;
+    line-height: 1.6;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+  }
+
+  .projects-meta {
+    color: var(--article-soft);
+    font-family: var(--font-geist-mono);
+    font-size: 0.75rem;
+    letter-spacing: 0.02em;
+    opacity: 0.85;
+  }
+
+  .projects-empty {
+    color: var(--article-soft);
+  }
+
+  @media (max-width: 760px) {
+    .projects-page {
+      padding-top: 3rem;
+    }
+
+    .projects-header {
+      margin-bottom: 2.5rem;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .projects-list-item {
+      opacity: 1;
+      transform: none;
+      transition: none;
+    }
+  }
+</style>
+
+<script>
+  const initProjectsReveal = () => {
+    const revealItems = document.querySelectorAll<HTMLElement>('[data-project-reveal]')
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+
+    if (reduceMotion || !('IntersectionObserver' in window)) {
+      document.documentElement.classList.remove('projects-reveal-ready')
+      revealItems.forEach((item) => item.classList.add('is-visible'))
+      return
+    }
+
+    document.documentElement.classList.add('projects-reveal-ready')
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (!entry.isIntersecting) return
+          entry.target.classList.add('is-visible')
+          observer.unobserve(entry.target)
+        })
+      },
+      {
+        rootMargin: '0px 0px -8% 0px',
+        threshold: 0.12,
+      },
+    )
+
+    revealItems.forEach((item) => observer.observe(item))
+  }
+
+  initProjectsReveal()
+  document.addEventListener('astro:page-load', initProjectsReveal)
+</script>
