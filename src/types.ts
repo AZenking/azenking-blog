@@ -194,6 +194,7 @@ export interface GitalkConfig {
   createIssueManually?: boolean
   distractionFreeMode?: boolean
   enableHotKey?: boolean
+  id?: string
 }
 
 export interface AnalyticsConfig {

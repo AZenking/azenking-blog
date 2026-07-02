@@ -98,7 +98,8 @@ export const COMMENT_CONFIG: CommentConfig = {
     pagerDirection: 'last',
     createIssueManually: false,
     distractionFreeMode: false,
-    enableHotKey: true
+    enableHotKey: true,
+    id: location.pathname
   },
 }
 
