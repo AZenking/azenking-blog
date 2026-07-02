@@ -102,7 +102,7 @@ pnpm preview
 
 ```ts
 export const SITE = {
-  title: 'Ethan Yang',
+  title: 'Ethan Young',
   description: 'Ethan Young 的个人博客...',
   website: 'https://www.ethyoung.me/',
   lang: 'zh-CN',
@@ -148,7 +148,7 @@ title: '文章标题'
 description: '文章摘要，用于列表、SEO 和 RSS。'
 pubDate: 2026-03-20
 updatedDate: 2026-03-20
-author: 'Ethan Yang'
+author: 'Ethan Young'
 tags: ['Tech', 'Frontend']
 cover: assets/cover.png
 ogImage: assets/og-image.png
