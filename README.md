@@ -1,14 +1,12 @@
 # Ethan Young Blog
 
-Ethan Young 的个人博客与内容归档站点，基于 Astro、React 和 Tailwind CSS 构建。项目从 Litos 主题演进而来，现在更偏向个人内容门户：文章、短笔记、项目、照片、标签和友链统一收拢在一个暗色编辑部风格的站点里。
+Ethan Young 的个人博客与内容归档站点，基于 Astro、React 和 Tailwind CSS 构建。现在更偏向个人内容门户：文章、短笔记、项目、照片、标签和友链统一收拢在一个暗色编辑部风格的站点里。
 
 当前视觉方向参考 `DESIGN.md`：近黑画布、巨大 `<EY />` 字标、mint / ultraviolet 硬色块、1px 边框、StoryStream 时间线和紧凑的内容调度台。站点只保留暗色单主题，不再提供主题切换。
 
 ## 来源与致谢
 
-本项目 fork 自 [Dnzzk2/Litos](https://github.com/Dnzzk2/Litos)。Litos 提供了最初的 Astro 博客主题基础，包括内容结构、页面组织、文章能力和部分工程配置。
-
-感谢原作者 [Dnzzk2](https://github.com/Dnzzk2) 开源 Litos。当前仓库在此基础上继续调整为 Ethan Young 的个人站点，改造了首页、全站暗色视觉、Header/Footer、内容入口、主题逻辑和站点文案等。
+本项目 fork 自 [Dnzzk2/Litos](https://github.com/Dnzzk2/Litos)，在原作者 [Dnzzk2](https://github.com/Dnzzk2) 的 Astro 博客主题基础上改造为 Ethan Young 的个人站点（首页、视觉、Header/Footer、内容入口、主题逻辑、文案等）。
 
 ## 技术栈
 
@@ -188,12 +186,12 @@ draft: false
 
 ```mdx
 ---
-name: 'Litos'
+name: 'Magi'
 description: 'A Simple & Modern Blog Theme for Astro.'
-githubUrl: 'https://github.com/AZenking/Litos'
+githubUrl: 'https://github.com/AZenking/magi'
 website: 'https://ethyoung.me/'
 type: 'image'
-icon: 'assets/litos.png'
+icon: 'assets/magi.png'
 imageClass: 'w-10 h-10'
 star: 0
 fork: 0

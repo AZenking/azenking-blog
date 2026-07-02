@@ -1,10 +1,10 @@
-# Litos - Agent 配置文件
+# Magi - Agent 配置文件
 
 ## 项目概述
 
-Litos 是一个现代化的个人博客主题，使用 **Astro 5** + **React 19** + **TailwindCSS 4** 构建。
+Magi 是一个现代化的个人博客主题，使用 **Astro 5** + **React 19** + **TailwindCSS 4** 构建。
 
-- **仓库**: https://github.com/Dnzzk2/Litos
+- **仓库**: https://github.com/AZenking/magi
 - **作者**: Ethan Yang (yy921010)
 - **类型**: 个人博客/作品集主题
 
@@ -26,7 +26,7 @@ Litos 是一个现代化的个人博客主题，使用 **Astro 5** + **React 19*
 ## 项目结构
 
 ```
-Litos/
+Magi/
 ├── content/              # Markdown 内容
 │   ├── posts/           # 博客文章
 │   ├── projects/        # 项目展示
