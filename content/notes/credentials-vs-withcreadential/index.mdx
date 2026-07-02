@@ -9,9 +9,9 @@ toc: true
 
 ## 背景
 
-最近在做 SSE 功能优化时，将项目中的将原生的 [EventSource](https://developer.mozilla.org/zh-CN/docs/Web/API/EventSource) 替换为 [@microsoft/fetch-event-source](https://github.com/Azure/fetch-event-source)
+最近在做 SSE 功能优化时，将项目中原生的 [EventSource](https://developer.mozilla.org/zh-CN/docs/Web/API/EventSource) 替换为 [@microsoft/fetch-event-source](https://github.com/Azure/fetch-event-source)
 
-由于 @microsoft/fetch-event-source 使用 fetchAPI, 而原生的 EventSource 使用 XMLHttpRequest
+由于 @microsoft/fetch-event-source 使用 fetch API, 而原生的 EventSource 使用 XMLHttpRequest
 
 ![credentials vs withCredentials](./assets/6788aded4123d.png)
 

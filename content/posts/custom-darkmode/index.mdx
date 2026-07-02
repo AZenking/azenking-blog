@@ -13,7 +13,7 @@ postType: 'article'
 
 ![CleanShot 2025-01-08 at 23.32.33.gif](assets/677e9ae05ca6f.gif)
 
-当时在想，这个是怎么做到的，为何次动画如此丝滑，我得研究下；
+当时在想，这个是怎么做到的，为何这个动画如此丝滑，我得研究下；
 ![1736608357113.png](assets/67828a6c00acf.png)
 
 放弃了～～～
@@ -25,7 +25,7 @@ postType: 'article'
 ::view-transition-new(view-transition-name)
 ```
 
-印象中，这段使用的是 **View Transition API** 中的内容；于是乎去翻阅各种文档；发现大佬这边文章 [页面级可视动画 View Transitions API 初体验](https://arc.net/l/quote/lnuwtrci)，大佬深入浅出详细说明了此 API 的作用以及使用；这里不做过多的说明；
+印象中，这段使用的是 **View Transition API** 中的内容；于是乎去翻阅各种文档；发现大佬这篇文章 [页面级可视动画 View Transitions API 初体验](https://arc.net/l/quote/lnuwtrci)，大佬深入浅出详细说明了此 API 的作用以及使用；这里不做过多的说明；
 
 > mark：View Transitions API 简化了复杂动画的实现，无需手动处理位置计算或动画控制，尤其适合页面级的场景切换和动画增强。
 
@@ -48,7 +48,7 @@ postType: 'article'
 const rect = this.themeLabel?.getBoundingClientRect()
 ```
 
-boundingClientRect 包含两个 x 和 y，代码当前相对于视窗相对位置，借用 MDN 图：
+boundingClientRect 包含两个 x 和 y，表示当前相对于视窗相对位置，借用 MDN 图：
 
 ![Pasted image 20250111235731.png](assets/element-box-diagram.png)
 

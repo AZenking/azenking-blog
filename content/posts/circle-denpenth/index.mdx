@@ -1,5 +1,5 @@
 ---
-title: '记录一次循环依赖导致 undefined 的问题'
+title: '一个 undefined 让我排查了两天：前端循环依赖排查实录'
 description: '记录在 JavaScript 项目中引入循环依赖导致 undefined 错误的排查过程，分析模块加载顺序、依赖方向和可落地的重构方案。'
 pubDate: 2025-06-04
 tags: ['javascript', 'debug', '循环依赖']
@@ -103,7 +103,7 @@ hook.js:608 TypeError: _pages_cashRegister_ThirdPlatformService_SinopecCompServi
     at fn (bootstrap:150:1)
     at ./src/pages/cashRegister/ThirdPlatformService/SinopecCompService.js (42.js:3437:78)
 overrideMethod @ hook.js:608
-s2.f6yc.comnull/:1
+
 ```
 
 ### 定位过程
