@@ -98,8 +98,7 @@ export const COMMENT_CONFIG: CommentConfig = {
     pagerDirection: 'last',
     createIssueManually: false,
     distractionFreeMode: false,
-    enableHotKey: true,
-    id: '#{page.date}'.split('GMT')[0]
+    enableHotKey: true
   },
 }
 
