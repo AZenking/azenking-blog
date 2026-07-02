@@ -5,7 +5,6 @@ import TextType from '~/components/reactbits/TextType'
 import SiteBackground from '~/components/base/SiteBackground.astro'
 import Threads from '~/components/reactbits/Threads'
 
-const cleanDescription = SITE.description.replace(/^👋\s*/, '')
 const githubLink = SOCIAL_LINKS.find((item) => item.name === 'github')
 const introPhrases = [
   '前端开发与设计实践',
@@ -26,20 +25,17 @@ const introPhrases = [
       </h1>
 
       <p class="magi-greeting">
-        Hey! I'm Ethan, a frontend developer.
+        我是 Ethan Young，坐标南京。
       </p>
 
-      <p>{cleanDescription}</p>
+      <p>程序员、家人、朋友——以及对生活保持好奇的普通人。做了十年前端，一直想认真写点什么，总被日常琐事搁置。</p>
 
       <p>
-        我主要记录 <a href="/posts">前端开发</a>、工程实践、工具配置和产品构建中的经验。
-        更短的排查过程、片段和临时想法会放在 <a href="/notes">笔记</a> 里；
-        一些长期维护的小工具和站点实验整理在 <a href="/projects">项目</a> 页面。
+        趁这次重建博客，正式开写。<a href="/posts">文章</a>记技术思考和生活感悟，<a href="/notes">笔记</a>收日常碎片，<a href="/projects">项目</a>存实验成果，<a href="/photos">照片</a>留身边细节。
       </p>
 
       <p>
-        写代码之外，我也会拍一些 <a href="/photos">照片</a>，记录城市、旅行和生活里的细节。
-        这个站点就是这些内容的归档：慢慢写，慢慢整理，也慢慢迭代。
+        站点用 Astro 搭建，部署在 Vercel——像写代码一样，追求简洁和效率。不求更新频率，只求每篇都值得留下。生活如同 git，每一次 commit 都是在往自己的人生推进一步。
       </p>
 
       <p class="magi-typewriter">
