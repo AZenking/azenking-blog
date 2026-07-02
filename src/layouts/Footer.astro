@@ -7,10 +7,10 @@ const yearDisplay = currentYear > START_YEAR ? `${START_YEAR}–${currentYear}` 
 const githubLink = SOCIAL_LINKS.find((item) => item.name === 'github')
 ---
 
-<footer class="antfu-footer">
-  <div class="antfu-footer-inner">
-    <span class="antfu-footer-copy">{yearDisplay} © {SITE.author}</span>
-    <nav class="antfu-footer-links" aria-label="页脚导航">
+<footer class="magi-footer">
+  <div class="magi-footer-inner">
+    <span class="magi-footer-copy">{yearDisplay} © {SITE.author}</span>
+    <nav class="magi-footer-links" aria-label="页脚导航">
       {githubLink && <a href={githubLink.url} target="_blank" rel="noreferrer">GitHub</a>}
       <a href="/atom.xml">RSS</a>
       {
@@ -23,7 +23,7 @@ const githubLink = SOCIAL_LINKS.find((item) => item.name === 'github')
 </footer>
 
 <style>
-  .antfu-footer {
+  .magi-footer {
     width: min(100%, 48rem);
     margin-inline: auto;
     padding: 2rem 1.25rem 2.5rem;
@@ -34,7 +34,7 @@ const githubLink = SOCIAL_LINKS.find((item) => item.name === 'github')
     letter-spacing: 0.04em;
   }
 
-  .antfu-footer-inner {
+  .magi-footer-inner {
     display: flex;
     align-items: baseline;
     justify-content: space-between;
@@ -42,27 +42,27 @@ const githubLink = SOCIAL_LINKS.find((item) => item.name === 'github')
     flex-wrap: wrap;
   }
 
-  .antfu-footer-copy {
+  .magi-footer-copy {
     color: var(--article-soft);
   }
 
-  .antfu-footer-links {
+  .magi-footer-links {
     display: flex;
     flex-wrap: wrap;
     gap: 0.75rem 1rem;
   }
 
-  .antfu-footer-links a {
+  .magi-footer-links a {
     color: var(--article-soft);
     text-decoration: none;
     transition: color 200ms ease;
   }
 
-  .antfu-footer-links a:hover {
+  .magi-footer-links a:hover {
     color: var(--article-ink);
   }
 
-  .antfu-footer-links a:focus-visible {
+  .magi-footer-links a:focus-visible {
     outline: 1px solid var(--article-accent);
     outline-offset: 0.35rem;
   }

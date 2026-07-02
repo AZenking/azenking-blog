@@ -854,8 +854,8 @@ image-figure-polaroid {
 }
 
 /* ===== Editorial article body (shared by /posts/[id] and /notes/[id]) ===== */
-.antfu-article-body.markdown {
-  width: min(100%, 42rem);
+.magi-article-body.markdown {
+  width: min(100%, var(--content-width));
   margin-inline: auto;
   color: var(--article-ink);
   font-family: var(--article-body);
@@ -863,11 +863,11 @@ image-figure-polaroid {
   line-height: 1.72;
 }
 
-.antfu-article-body.markdown p {
+.magi-article-body.markdown p {
   margin-block: 1.2em;
 }
 
-.antfu-article-body.markdown :where(code):not(:where(pre *, a *)) {
+.magi-article-body.markdown :where(code):not(:where(pre *, a *)) {
   background: color-mix(in srgb, var(--article-code-bg) 78%, var(--article-ink) 8%);
   color: var(--article-code-fg);
   border: 1px solid color-mix(in srgb, var(--article-code-border) 76%, transparent);
@@ -876,78 +876,78 @@ image-figure-polaroid {
   padding-inline: 0.32rem;
 }
 
-.antfu-article-body.markdown > p:first-child {
+.magi-article-body.markdown > p:first-child {
   margin-block-start: 0;
 }
 
-.antfu-article-body.markdown :is(h1, h2, h3, h4, h5, h6) {
+.magi-article-body.markdown :is(h1, h2, h3, h4, h5, h6) {
   color: var(--article-ink);
   font-family: var(--article-display);
   font-weight: 700;
   letter-spacing: 0;
 }
 
-.antfu-article-body.markdown h2 {
+.magi-article-body.markdown h2 {
   margin-block: 2.4em 0.75em;
   font-size: clamp(1.55rem, 3vw, 2rem);
   line-height: 1.08;
 }
 
-.antfu-article-body.markdown h3 {
+.magi-article-body.markdown h3 {
   margin-block: 2em 0.65em;
   font-size: clamp(1.2rem, 2vw, 1.45rem);
   line-height: 1.2;
 }
 
-.antfu-article-body.markdown :is(h4, h5, h6) {
+.magi-article-body.markdown :is(h4, h5, h6) {
   margin-block: 1.75em 0.5em;
   font-size: 1.05rem;
   line-height: 1.25;
 }
 
-.antfu-article-body.markdown a:not(.card-github) {
+.magi-article-body.markdown a:not(.card-github) {
   color: inherit;
   border-block-end-color: var(--article-faint);
   text-decoration: none;
 }
 
-.antfu-article-body.markdown a:not(.card-github):hover {
+.magi-article-body.markdown a:not(.card-github):hover {
   border-block-end-color: var(--article-ink);
 }
 
-.antfu-article-body.markdown a:not(.card-github):focus-visible {
-  outline: 1px solid var(--article-accent);
+.magi-article-body.markdown a:not(.card-github):focus-visible {
+  outline: 1px solid var(--brand);
   outline-offset: 0.25rem;
 }
 
-.antfu-article-body.markdown blockquote {
+.magi-article-body.markdown blockquote {
   margin-block: 2em;
   border-inline-start-color: var(--article-faint);
   color: var(--article-soft);
   font-size: 1.08em;
 }
 
-.antfu-article-body.markdown img {
+.magi-article-body.markdown img {
   max-width: min(100%, 52rem);
   margin-block: 2.35rem;
 }
 
-.antfu-article-body.markdown pre,
-.antfu-article-body.markdown table {
+.magi-article-body.markdown pre,
+.magi-article-body.markdown table {
   font-family: var(--font-geist-mono);
 }
 
-.antfu-article-body.markdown pre:not(.expressive-code pre),
-.antfu-article-body.markdown .expressive-code {
+.magi-article-body.markdown pre:not(.expressive-code pre),
+.magi-article-body.markdown .expressive-code {
   box-sizing: border-box;
-  width: min(46rem, calc(100vw - 2.5rem));
+  width: min(calc(var(--content-width) + 4rem), calc(100vw - 2.5rem));
   max-width: calc(100vw - 2.5rem);
   margin-inline-start: 50%;
   margin-inline-end: 0;
   transform: translateX(-50%);
 }
 
-.antfu-article-body.markdown pre:not(.expressive-code pre) {
+.magi-article-body.markdown pre:not(.expressive-code pre) {
   margin-block: 1.9rem;
   padding: 1.15rem 1.35rem;
   border: 1px solid var(--article-code-border);
@@ -956,7 +956,7 @@ image-figure-polaroid {
   color: var(--article-code-fg);
 }
 
-.antfu-article-body.markdown .expressive-code {
+.magi-article-body.markdown .expressive-code {
   --ec-brdRad: 2px;
   --ec-brdWd: 1px;
   --ec-brdCol: var(--article-code-border);
@@ -998,24 +998,24 @@ image-figure-polaroid {
   margin-block: 1.9rem;
 }
 
-.antfu-article-body.markdown .expressive-code pre {
+.magi-article-body.markdown .expressive-code pre {
   border-color: var(--article-code-border);
   background: var(--article-code-bg);
 }
 
-.antfu-article-body.markdown .expressive-code pre > code {
+.magi-article-body.markdown .expressive-code pre > code {
   color: var(--article-code-fg);
 }
 
 @media (max-width: 720px) {
-  .antfu-article-body.markdown pre:not(.expressive-code pre) {
+  .magi-article-body.markdown pre:not(.expressive-code pre) {
     width: 100%;
     margin-inline: 0;
     padding: 1rem;
     transform: none;
   }
 
-  .antfu-article-body.markdown .expressive-code {
+  .magi-article-body.markdown .expressive-code {
     width: 100%;
     margin-inline: 0;
     transform: none;
@@ -1025,7 +1025,7 @@ image-figure-polaroid {
 }
 
 /* ===== Editorial article container (shared by /posts/[id] and /notes/[id]) ===== */
-.antfu-article {
+.magi-article {
   width: 100%;
   margin-inline: auto;
   padding: clamp(3.5rem, 8vw, 6.75rem) 1.25rem 3rem;
@@ -1035,7 +1035,7 @@ image-figure-polaroid {
     var(--article-paper);
 }
 
-.antfu-back {
+.magi-back {
   display: block;
   width: min(100%, 48rem);
   margin-inline: auto;
@@ -1049,24 +1049,24 @@ image-figure-polaroid {
   transition: color 200ms ease;
 }
 
-.antfu-back:hover {
+.magi-back:hover {
   color: var(--article-ink);
 }
 
-.antfu-back:focus-visible,
-.antfu-article-tag:focus-visible,
-.antfu-license a:focus-visible,
-.antfu-adjacent-link:focus-visible {
-  outline: 1px solid var(--article-accent);
+.magi-back:focus-visible,
+.magi-article-tag:focus-visible,
+.magi-license a:focus-visible,
+.magi-adjacent-link:focus-visible {
+  outline: 1px solid var(--brand);
   outline-offset: 0.35rem;
 }
 
-.antfu-article-cover {
+.magi-article-cover {
   width: min(100%, 52rem);
   margin: 0 auto clamp(3rem, 7vw, 4.75rem);
 }
 
-.antfu-article-cover img {
+.magi-article-cover img {
   display: block;
   width: 100%;
   height: auto;
@@ -1075,14 +1075,14 @@ image-figure-polaroid {
   filter: grayscale(1) contrast(1.04);
 }
 
-.antfu-article-header {
+.magi-article-header {
   width: min(100%, 48rem);
   margin-inline: auto;
   margin-bottom: clamp(2.75rem, 6vw, 4rem);
   text-align: center;
 }
 
-.antfu-article-title {
+.magi-article-title {
   margin: 0;
   color: var(--article-soft);
   font-family: var(--article-display);
@@ -1093,8 +1093,8 @@ image-figure-polaroid {
   text-wrap: balance;
 }
 
-.antfu-article-desc {
-  max-width: 42rem;
+.magi-article-desc {
+  max-width: var(--content-width);
   margin: clamp(1.35rem, 3vw, 2rem) auto 0;
   color: var(--article-ink);
   font-family: var(--article-body);
@@ -1104,7 +1104,7 @@ image-figure-polaroid {
   text-wrap: balance;
 }
 
-.antfu-article-meta {
+.magi-article-meta {
   display: flex;
   flex-wrap: wrap;
   align-items: baseline;
@@ -1117,7 +1117,7 @@ image-figure-polaroid {
   line-height: 1.5;
 }
 
-.antfu-article-tags {
+.magi-article-tags {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
@@ -1125,7 +1125,7 @@ image-figure-polaroid {
   margin-top: 0.8rem;
 }
 
-.antfu-article-tag {
+.magi-article-tag {
   color: var(--article-soft);
   font-family: var(--font-geist-mono);
   font-size: 0.72rem;
@@ -1134,40 +1134,41 @@ image-figure-polaroid {
   transition: color 200ms ease;
 }
 
-.antfu-article-tag::before {
+.magi-article-tag::before {
   content: '#';
+  color: var(--brand);
 }
 
-.antfu-article-tag:hover {
-  color: var(--article-ink);
+.magi-article-tag:hover {
+  color: var(--brand);
 }
 
-.antfu-license {
-  width: min(100%, 42rem);
+.magi-license {
+  width: min(100%, var(--content-width));
   margin: 3rem auto 0;
   color: var(--article-soft);
   font-size: 0.8125rem;
 }
 
-.antfu-license a {
+.magi-license a {
   text-decoration: none;
 }
 
-.antfu-license a:hover {
+.magi-license a:hover {
   color: var(--article-ink);
 }
 
-.antfu-adjacent {
+.magi-adjacent {
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
   gap: 1rem;
-  width: min(100%, 42rem);
+  width: min(100%, var(--content-width));
   margin: 2.5rem auto 0;
   padding-top: 1.5rem;
   border-top: 1px solid var(--article-rule);
 }
 
-.antfu-adjacent-link {
+.magi-adjacent-link {
   display: flex;
   flex-direction: column;
   gap: 0.3rem;
@@ -1176,57 +1177,57 @@ image-figure-polaroid {
   transition: color 200ms ease;
 }
 
-.antfu-adjacent-link:hover {
+.magi-adjacent-link:hover {
   color: var(--article-soft);
 }
 
-.antfu-adjacent-right {
+.magi-adjacent-right {
   align-items: flex-end;
   text-align: right;
 }
 
-.antfu-adjacent-label {
+.magi-adjacent-label {
   color: var(--article-soft);
   font-family: var(--font-geist-mono);
   font-size: 0.72rem;
   text-transform: uppercase;
 }
 
-.antfu-adjacent-title {
+.magi-adjacent-title {
   font-family: var(--article-body);
   font-size: 0.95rem;
   line-height: 1.35;
 }
 
-.antfu-comments {
-  width: min(100%, 42rem);
+.magi-comments {
+  width: min(100%, var(--content-width));
   margin: 3rem auto 0;
 }
 
 @media (max-width: 720px) {
-  .antfu-article {
+  .magi-article {
     padding-inline: 1rem;
     padding-top: 2.75rem;
   }
 
-  .antfu-back {
+  .magi-back {
     margin-bottom: 2.25rem;
   }
 
-  .antfu-article-cover {
+  .magi-article-cover {
     margin-bottom: 2.5rem;
   }
 
-  .antfu-article-title {
+  .magi-article-title {
     font-size: clamp(2.65rem, 15vw, 4rem);
     line-height: 0.96;
   }
 
-  .antfu-article-meta {
+  .magi-article-meta {
     margin-top: 1.75rem;
   }
 
-  .antfu-adjacent {
+  .magi-adjacent {
     grid-template-columns: 1fr;
   }
 }

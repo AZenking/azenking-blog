@@ -10,22 +10,31 @@ const isLinkActive = (linkUrl: string, pathname: string) => {
 const githubLink = SOCIAL_LINKS.find((item) => item.name === 'github')
 ---
 
-<header class="antfu-header">
-  <div class="antfu-header-inner">
-    <a href="/" class="antfu-header-brand" aria-label={`${SITE.title} 首页`} transition:persist>
-      <span class="antfu-header-logo" aria-hidden="true">
-        <img src="/logo.svg" alt="" loading="eager" decoding="async" />
+<header class="magi-header">
+  <div class="magi-header-inner">
+    <a href="/" class="magi-header-brand" aria-label={`${SITE.title} 首页`} transition:persist>
+      <span class="magi-header-logo" aria-hidden="true">
+        <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Magi logo">
+          <title>Magi</title>
+          <path d="M8 8 L8 40" stroke="currentColor" stroke-width="2.5" stroke-linecap="square" />
+          <path d="M8 8 L22 8" stroke="currentColor" stroke-width="2.5" stroke-linecap="square" />
+          <path d="M8 24 L18 24" stroke="currentColor" stroke-width="2" stroke-linecap="square" opacity="0.45" />
+          <path d="M8 40 L22 40" stroke="currentColor" stroke-width="2.5" stroke-linecap="square" />
+          <path d="M28 8 L34 22" stroke="currentColor" stroke-width="2.5" stroke-linecap="square" />
+          <path d="M40 8 L34 22" stroke="currentColor" stroke-width="2.5" stroke-linecap="square" />
+          <path d="M34 22 L34 40" stroke="currentColor" stroke-width="2.5" stroke-linecap="square" />
+          <line x1="22" y1="40" x2="34" y2="40" stroke="currentColor" stroke-width="1" stroke-linecap="square" opacity="0.2" />
+        </svg>
       </span>
-      <span class="antfu-header-name">{SITE.title}</span>
     </a>
 
-    <nav class="antfu-header-nav" aria-label="主导航">
+    <nav class="magi-header-nav" aria-label="主导航">
       {
         HEADER_LINKS.map((link) => (
           <a
             href={link.url}
             class:list={[
-              'antfu-header-link',
+              'magi-header-link',
               isLinkActive(link.url, Astro.url.pathname) ? 'is-active' : '',
             ]}
             aria-current={isLinkActive(link.url, Astro.url.pathname) ? 'page' : undefined}
@@ -36,36 +45,36 @@ const githubLink = SOCIAL_LINKS.find((item) => item.name === 'github')
       }
     </nav>
 
-    <div class="antfu-header-actions" transition:persist="header-search-switch">
-      <SearchSwitch labelClass="antfu-header-search-label" />
+    <div class="magi-header-actions" transition:persist="header-search-switch">
+      <SearchSwitch labelClass="magi-header-search-label" />
 
       {githubLink && (
         <a
           href={githubLink.url}
-          class="antfu-header-icon antfu-header-github"
+          class="magi-header-icon magi-header-github"
           target="_blank"
           rel="noreferrer"
           aria-label="GitHub"
           title="GitHub"
         >
-          <span class="icon-[ri--github-fill] antfu-header-icon-glyph" aria-hidden="true"></span>
+          <span class="icon-[ri--github-fill] magi-header-icon-glyph" aria-hidden="true"></span>
         </a>
       )}
 
       <button
         id="theme-toggle"
-        class="antfu-header-icon antfu-header-theme-toggle"
+        class="magi-header-icon magi-header-theme-toggle"
         type="button"
         aria-label="切换主题"
         title="切换主题"
       >
-        <span class="icon-[ri--sun-line] antfu-header-icon-glyph antfu-theme-icon-dark" aria-hidden="true"></span>
-        <span class="icon-[ri--moon-line] antfu-header-icon-glyph antfu-theme-icon-light" aria-hidden="true"></span>
+        <span class="icon-[ri--sun-line] magi-header-icon-glyph magi-theme-icon-dark" aria-hidden="true"></span>
+        <span class="icon-[ri--moon-line] magi-header-icon-glyph magi-theme-icon-light" aria-hidden="true"></span>
       </button>
 
       <button
         id="header-menu-button"
-        class="antfu-header-menu-button"
+        class="magi-header-menu-button"
         type="button"
         aria-expanded="false"
         aria-controls="header-mobile-menu"
@@ -77,14 +86,14 @@ const githubLink = SOCIAL_LINKS.find((item) => item.name === 'github')
     </div>
   </div>
 
-  <div id="header-mobile-menu" class="antfu-header-mobile-menu hidden">
+  <div id="header-mobile-menu" class="magi-header-mobile-menu hidden">
     <nav aria-label="移动端导航">
       {
         HEADER_LINKS.map((link) => (
           <a
             href={link.url}
             class:list={[
-              'antfu-header-mobile-link',
+              'magi-header-mobile-link',
               isLinkActive(link.url, Astro.url.pathname) ? 'is-active' : '',
             ]}
             aria-current={isLinkActive(link.url, Astro.url.pathname) ? 'page' : undefined}
@@ -98,29 +107,28 @@ const githubLink = SOCIAL_LINKS.find((item) => item.name === 'github')
 </header>
 
 <style>
-  .antfu-header {
+  .magi-header {
     position: relative;
     z-index: 20;
     padding: 0 1rem;
     color: var(--article-ink);
   }
 
-  .antfu-header-inner {
+  .magi-header-inner {
     display: grid;
     grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
     align-items: center;
     gap: clamp(1rem, 2.4vw, 2.5rem);
-    width: min(100%, 72rem);
+    width: min(100%, calc(var(--content-width) + 4rem));
     min-height: 4.75rem;
     margin-inline: auto;
     padding: 0.85rem clamp(1rem, 2.5vw, 2rem);
     color: var(--article-ink);
     font-family: var(--font-geist-mono);
     font-size: 0.75rem;
-    letter-spacing: 0.04em;
   }
 
-  .antfu-header-brand {
+  .magi-header-brand {
     display: inline-flex;
     min-width: 0;
     align-items: center;
@@ -133,12 +141,12 @@ const githubLink = SOCIAL_LINKS.find((item) => item.name === 'github')
       opacity 200ms ease;
   }
 
-  .antfu-header-brand:hover {
+  .magi-header-brand:hover {
     color: var(--article-ink);
     opacity: 0.78;
   }
 
-  .antfu-header-logo {
+  .magi-header-logo {
     display: inline-grid;
     width: 2.25rem;
     height: 2.25rem;
@@ -146,30 +154,16 @@ const githubLink = SOCIAL_LINKS.find((item) => item.name === 'github')
     place-items: center;
   }
 
-  .antfu-header-logo img {
+  .magi-header-logo svg {
     display: block;
     width: 100%;
     height: 100%;
-    object-fit: contain;
   }
 
-  :global(html.dark) .antfu-header-logo img {
-    filter: invert(0.88) sepia(0.08) saturate(0.55);
-  }
 
-  .antfu-header-name {
-    overflow: hidden;
-    color: currentColor;
-    font-family: var(--font-geist-mono);
-    font-size: clamp(1.05rem, 1.7vw, 1.3rem);
-    font-weight: 600;
-    letter-spacing: 0;
-    line-height: 1;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-  }
 
-  .antfu-header-nav {
+
+  .magi-header-nav {
     display: none;
     align-items: center;
     justify-content: center;
@@ -177,16 +171,16 @@ const githubLink = SOCIAL_LINKS.find((item) => item.name === 'github')
   }
 
   @media (min-width: 860px) {
-    .antfu-header-nav { display: flex; }
+    .magi-header-nav { display: flex; }
   }
 
-  .antfu-header-link {
+  .magi-header-link {
     display: inline-flex;
     min-height: 2.35rem;
     align-items: center;
     justify-content: center;
     border: 1px solid transparent;
-    border-radius: 999px;
+    border-radius: 4px;
     padding-inline: clamp(0.75rem, 1.2vw, 1.05rem);
     color: var(--article-soft);
     text-decoration: none;
@@ -199,31 +193,31 @@ const githubLink = SOCIAL_LINKS.find((item) => item.name === 'github')
       opacity 200ms ease;
   }
 
-  .antfu-header-link:hover {
+  .magi-header-link:hover {
     border-color: var(--article-rule);
     background: light-dark(rgb(31 31 29 / 0.035), rgb(232 228 220 / 0.045));
     color: var(--article-ink);
     opacity: 1;
   }
 
-  .antfu-header-link.is-active {
+  .magi-header-link.is-active {
     border-color: light-dark(rgb(31 31 29 / 0.14), rgb(232 228 220 / 0.14));
     background: light-dark(rgb(31 31 29 / 0.055), rgb(232 228 220 / 0.06));
-    color: var(--article-ink);
+    color: var(--brand);
     opacity: 1;
   }
 
-  .antfu-header-brand:focus-visible,
-  .antfu-header-link:focus-visible,
-  .antfu-header-icon:focus-visible,
-  :global(.antfu-header-search:focus-visible),
-  .antfu-header-menu-button:focus-visible,
-  .antfu-header-mobile-link:focus-visible {
-    outline: 1px solid var(--article-accent);
+  .magi-header-brand:focus-visible,
+  .magi-header-link:focus-visible,
+  .magi-header-icon:focus-visible,
+  :global(.magi-header-search:focus-visible),
+  .magi-header-menu-button:focus-visible,
+  .magi-header-mobile-link:focus-visible {
+    outline: 1px solid var(--brand);
     outline-offset: 0.35rem;
   }
 
-  .antfu-header-icon {
+  .magi-header-icon {
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -233,7 +227,7 @@ const githubLink = SOCIAL_LINKS.find((item) => item.name === 'github')
     color: var(--article-soft);
     background: transparent;
     border: 1px solid var(--article-rule);
-    border-radius: 999px;
+    border-radius: 4px;
     cursor: pointer;
     text-decoration: none;
     transition:
@@ -243,13 +237,13 @@ const githubLink = SOCIAL_LINKS.find((item) => item.name === 'github')
       opacity 200ms ease;
   }
 
-  .antfu-header-icon:hover {
+  .magi-header-icon:hover {
     border-color: light-dark(rgb(31 31 29 / 0.22), rgb(232 228 220 / 0.24));
     background: light-dark(rgb(31 31 29 / 0.035), rgb(232 228 220 / 0.045));
     color: var(--article-ink);
   }
 
-  .antfu-header-icon-glyph {
+  .magi-header-icon-glyph {
     display: inline-block;
     width: 1em;
     height: 1em;
@@ -258,27 +252,27 @@ const githubLink = SOCIAL_LINKS.find((item) => item.name === 'github')
   }
 
   /* 主题图标根据 html 上的 .dark / .light 类切换显示 */
-  .antfu-theme-icon-light {
+  .magi-theme-icon-light {
     display: none;
   }
 
-  :global(html.dark) .antfu-theme-icon-dark {
+  :global(html.dark) .magi-theme-icon-dark {
     display: inline-block;
   }
 
-  :global(html.dark) .antfu-theme-icon-light {
+  :global(html.dark) .magi-theme-icon-light {
     display: none;
   }
 
-  :global(html.light) .antfu-theme-icon-dark {
+  :global(html.light) .magi-theme-icon-dark {
     display: none;
   }
 
-  :global(html.light) .antfu-theme-icon-light {
+  :global(html.light) .magi-theme-icon-light {
     display: inline-block;
   }
 
-  .antfu-header-actions {
+  .magi-header-actions {
     display: flex;
     align-items: center;
     justify-content: flex-end;
@@ -286,7 +280,7 @@ const githubLink = SOCIAL_LINKS.find((item) => item.name === 'github')
     gap: 0.55rem;
   }
 
-  .antfu-header-menu-button {
+  .magi-header-menu-button {
     display: inline-flex;
     flex-direction: column;
     justify-content: center;
@@ -298,7 +292,7 @@ const githubLink = SOCIAL_LINKS.find((item) => item.name === 'github')
     color: var(--article-soft);
     background: transparent;
     border: 1px solid var(--article-rule);
-    border-radius: 999px;
+    border-radius: 4px;
     cursor: pointer;
     transition:
       background-color 200ms ease,
@@ -306,17 +300,17 @@ const githubLink = SOCIAL_LINKS.find((item) => item.name === 'github')
       color 200ms ease;
   }
 
-  .antfu-header-menu-button:hover {
+  .magi-header-menu-button:hover {
     border-color: light-dark(rgb(31 31 29 / 0.22), rgb(232 228 220 / 0.24));
     background: light-dark(rgb(31 31 29 / 0.035), rgb(232 228 220 / 0.045));
     color: var(--article-ink);
   }
 
   @media (min-width: 860px) {
-    .antfu-header-menu-button { display: none; }
+    .magi-header-menu-button { display: none; }
   }
 
-  .antfu-header-menu-button span {
+  .magi-header-menu-button span {
     display: block;
     width: 0.95rem;
     height: 1px;
@@ -324,17 +318,17 @@ const githubLink = SOCIAL_LINKS.find((item) => item.name === 'github')
     transition: transform 200ms ease;
   }
 
-  .antfu-header-mobile-menu {
-    width: min(100%, 72rem);
+  .magi-header-mobile-menu {
+    width: min(100%, calc(var(--content-width) + 4rem));
     margin-inline: auto;
     padding: 0.6rem clamp(1rem, 2.5vw, 2rem) 0;
   }
 
   @media (min-width: 860px) {
-    .antfu-header-mobile-menu { display: none !important; }
+    .magi-header-mobile-menu { display: none !important; }
   }
 
-  .antfu-header-mobile-menu nav {
+  .magi-header-mobile-menu nav {
     overflow: hidden;
     border: 1px solid light-dark(rgb(31 31 29 / 0.08), rgb(232 228 220 / 0.1));
     border-radius: 0.35rem;
@@ -342,13 +336,12 @@ const githubLink = SOCIAL_LINKS.find((item) => item.name === 'github')
     box-shadow: 0 12px 28px light-dark(rgb(31 31 29 / 0.06), rgb(0 0 0 / 0.18));
   }
 
-  .antfu-header-mobile-link {
+  .magi-header-mobile-link {
     display: block;
     padding: 0.8rem 1rem;
     color: var(--article-soft);
     font-family: var(--font-geist-mono);
     font-size: 0.8125rem;
-    letter-spacing: 0.04em;
     text-decoration: none;
     border-block-end: 1px solid var(--article-rule);
     opacity: 0.72;
@@ -357,24 +350,23 @@ const githubLink = SOCIAL_LINKS.find((item) => item.name === 'github')
       opacity 200ms ease;
   }
 
-  .antfu-header-mobile-link:hover,
-  .antfu-header-mobile-link.is-active {
-    color: var(--article-ink);
+  .magi-header-mobile-link:hover,
+  .magi-header-mobile-link.is-active {
+    color: var(--brand);
     opacity: 1;
   }
 
-  :global(.antfu-header-search) {
+  :global(.magi-header-search) {
     display: inline-flex;
     min-height: 2.35rem;
     align-items: center;
     justify-content: center;
     gap: 0.45rem;
     border: 1px solid var(--article-rule);
-    border-radius: 999px;
+    border-radius: 4px;
     padding-inline: 1rem;
     font-family: var(--font-geist-mono);
     font-size: 0.75rem;
-    letter-spacing: 0.04em;
     color: var(--article-soft);
     background: transparent;
     cursor: pointer;
@@ -385,54 +377,51 @@ const githubLink = SOCIAL_LINKS.find((item) => item.name === 'github')
       opacity 200ms ease;
   }
 
-  :global(.antfu-header-search:hover) {
+  :global(.magi-header-search:hover) {
     border-color: light-dark(rgb(31 31 29 / 0.22), rgb(232 228 220 / 0.24));
     background: light-dark(rgb(31 31 29 / 0.035), rgb(232 228 220 / 0.045));
     color: var(--article-ink);
   }
 
-  :global(.antfu-header-search-label) {
+  :global(.magi-header-search-label) {
     display: inline;
   }
 
-  :global(.antfu-header-search-icon) {
+  :global(.magi-header-search-icon) {
     width: 0.95rem;
     height: 0.95rem;
     flex: 0 0 auto;
   }
 
   @media (max-width: 859px) {
-    .antfu-header {
+    .magi-header {
       padding-inline: 0.75rem;
     }
 
-    .antfu-header-inner {
+    .magi-header-inner {
       grid-template-columns: minmax(0, 1fr) auto;
       min-height: 4.25rem;
       padding: 0.7rem 0.85rem;
     }
 
-    .antfu-header-actions {
+    .magi-header-actions {
       gap: 0.35rem;
     }
 
-    .antfu-header-logo {
+    .magi-header-logo {
       width: 2rem;
       height: 2rem;
     }
 
-    .antfu-header-name {
-      font-size: 1rem;
-    }
 
-    :global(.antfu-header-search) {
+    :global(.magi-header-search) {
       width: 2.35rem;
       min-width: 2.35rem;
       padding-inline: 0;
     }
 
-    :global(.antfu-header-search-label),
-    :global(.antfu-header-search .antfu-header-search-label) {
+    :global(.magi-header-search-label),
+    :global(.magi-header-search .magi-header-search-label) {
       position: absolute;
       width: 1px;
       height: 1px;
@@ -446,22 +435,18 @@ const githubLink = SOCIAL_LINKS.find((item) => item.name === 'github')
   }
 
   @media (max-width: 420px) {
-    .antfu-header-brand {
+    .magi-header-brand {
       gap: 0.55rem;
     }
 
-    .antfu-header-logo {
+    .magi-header-logo {
       width: 1.75rem;
       height: 1.75rem;
     }
 
-    .antfu-header-name {
-      max-width: 8.5rem;
-    }
-
-    .antfu-header-icon,
-    .antfu-header-menu-button,
-    :global(.antfu-header-search) {
+    .magi-header-icon,
+    .magi-header-menu-button,
+    :global(.magi-header-search) {
       width: 2.1rem;
       min-width: 2.1rem;
       height: 2.1rem;

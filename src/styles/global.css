@@ -8,7 +8,7 @@
 
 /* ===== 主题变量 ===== */
 @theme {
-  /* 字体系统 — antfu 风：等宽字体为正文主体 */
+  /* 字体系统：等宽字体为正文主体 */
   --font-heading: var(--font-mono);
   --font-sans: var(--font-sans);
   --font-mono: var(--font-geist-mono);
@@ -50,7 +50,7 @@
 /* ===== 颜色变量 ===== */
 @layer base {
   :root {
-    /* 字体族 — antfu 风：mono 为主，sans 辅助 */
+    /* 字体族：mono 为主，sans 辅助 */
     --font-geist-mono:
       "GeistMono", "Input Mono", "Fira Code",
       "ShangguSansSC-VF", ui-monospace, monospace;
@@ -73,13 +73,14 @@
     --article-faint: light-dark(#d8d3ca, #2a2825);
     --article-rule: light-dark(rgb(31 31 29 / 0.12), rgb(232 228 220 / 0.12));
     --article-accent: light-dark(#8f6b42, #b78c58);
+    --brand: light-dark(#f5a623, #ffc94d);
     --article-code-bg: light-dark(#f1eee8, #171512);
     --article-code-border: light-dark(#ddd4c7, #2d2822);
     --article-code-fg: light-dark(#2a2722, #e6ddce);
     --article-code-muted: light-dark(#817567, #9d9180);
     --article-code-selection: light-dark(rgb(143 107 66 / 0.22), rgb(183 140 88 / 0.28));
 
-    /* antfu-inspired grayscale palette — dark first */
+    /* magi-inspired grayscale palette — dark first */
     --theme-bg: #0a0a0a;
     --theme-surface: #141414;
     --theme-surface-soft: #1a1a1a;
@@ -107,18 +108,18 @@
     --scrollbar: 0 0% 20%;
     --scrollbar-bg: 0 0% 4%;
 
-    /* 布局宽度 — antfu 窄阅读流 */
-    --layout-width: 42rem;
+    /* 布局宽度 — 统一阅读流宽度 */
+    --content-width: 48rem;
 
-    /* 透明度分层 — antfu 核心手法 */
+    /* 透明度分层 */
     --opacity-primary: 1;
     --opacity-secondary: 0.7;
     --opacity-muted: 0.5;
     --opacity-faint: 0.3;
   }
 
-  .global-layout-width {
-    max-width: var(--layout-width);
+  .global-content-width {
+    max-width: var(--content-width);
   }
 
   /* 亮色模式 */
@@ -174,7 +175,7 @@
 
   body {
     @apply min-h-screen bg-background text-foreground;
-    font-size: 0.9375rem; /* 15px — antfu 标准正文字号 */
+    font-size: 0.9375rem; /* 15px */
     line-height: 1.75;
     font-feature-settings: "ss01" 1, "cv11" 1;
   }
@@ -183,14 +184,14 @@
     margin: 1.15em 0;
   }
 
-  /* 标题 — antfu 风：weight 600，靠字号区分 */
+  /* 标题：weight 600，靠字号区分 */
   h1, h2, h3, h4, h5, h6 {
     font-family: var(--font-geist-mono);
     font-weight: 600;
     line-height: 1.3;
   }
 
-  /* 链接 — antfu 风：与正文同色 + 下划线 + hover 加深 */
+  /* 链接：与正文同色 + 下划线 + hover 加深 */
   a {
     color: inherit;
     text-decoration: underline;

@@ -1,6 +1,13 @@
+---
+interface Props {
+  hideSilk?: boolean
+}
+const { hideSilk = false } = Astro.props
+---
+
 <div class="site-background" aria-hidden="true">
   <span class="site-background-glow"></span>
-  <span class="site-background-silk"></span>
+  {!hideSilk && <span class="site-background-silk"></span>}
   <span class="site-background-grid"></span>
   <span class="site-background-grain"></span>
 </div>
