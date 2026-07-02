@@ -1,16 +1,11 @@
 ---
 import { SITE, SOCIAL_LINKS } from '~/config.ts'
-import { getAllNotes, getAllPosts, getAllProjects } from '~/lib/data'
-import { formatDate } from '~/lib/utils'
 import Layout from '~/layouts/Layout.astro'
 import TextType from '~/components/reactbits/TextType'
 import SiteBackground from '~/components/base/SiteBackground.astro'
+import Threads from '~/components/reactbits/Threads'
 
 const cleanDescription = SITE.description.replace(/^👋\s*/, '')
-const [posts, notes, projects] = await Promise.all([getAllPosts(), getAllNotes(), getAllProjects()])
-const latestPosts = posts.slice(0, 5)
-const latestNotes = notes.slice(0, 3)
-const latestProjects = projects.slice(0, 3)
 const githubLink = SOCIAL_LINKS.find((item) => item.name === 'github')
 const introPhrases = [
   '前端开发与设计实践',
@@ -20,14 +15,17 @@ const introPhrases = [
 ---
 
 <Layout title="首页" description={SITE.description}>
-  <SiteBackground />
-  <div class="antfu-page antfu-home">
-    <section class="antfu-hero" aria-labelledby="home-title">
-      <h1 id="home-title" class="antfu-title">
+  <SiteBackground hideSilk />
+  <div class="threads-bg" aria-hidden="true">
+    <Threads client:visible color={[0.9, 0.9, 0.9]} amplitude={0.6} />
+  </div>
+  <div class="magi-page magi-home">
+    <section class="magi-hero" aria-labelledby="home-title">
+      <h1 id="home-title" class="magi-title">
         {SITE.author}
       </h1>
 
-      <p class="antfu-greeting">
+      <p class="magi-greeting">
         Hey! I'm Ethan, a frontend developer.
       </p>
 
@@ -44,7 +42,7 @@ const introPhrases = [
         这个站点就是这些内容的归档：慢慢写，慢慢整理，也慢慢迭代。
       </p>
 
-      <p class="antfu-typewriter">
+      <p class="magi-typewriter">
         <TextType
           client:visible
           as="span"
@@ -59,67 +57,11 @@ const introPhrases = [
       </p>
     </section>
 
-    {latestPosts.length > 0 && (
-      <section class="antfu-section">
-        <h2 class="antfu-section-title">Recent Posts</h2>
-        <ul class="antfu-list">
-          {latestPosts.map((post) => (
-            <li class="antfu-list-item">
-              <a href={`/posts/${post.id}`} class="antfu-list-link">
-                <span class="antfu-list-title">{post.data.title}</span>
-                <time class="antfu-list-date">{formatDate(post.data.updatedDate ?? post.data.pubDate, 'short')}</time>
-              </a>
-            </li>
-          ))}
-        </ul>
-        <p class="antfu-more"><a href="/posts">View all posts →</a></p>
-      </section>
-    )}
+    <hr class="magi-divider" />
 
-    {latestNotes.length > 0 && (
-      <section class="antfu-section">
-        <h2 class="antfu-section-title">Recent Notes</h2>
-        <ul class="antfu-list">
-          {latestNotes.map((note) => (
-            <li class="antfu-list-item">
-              <a href={`/notes/${note.id}`} class="antfu-list-link">
-                <span class="antfu-list-title">{note.data.title}</span>
-                <time class="antfu-list-date">{formatDate(note.data.updatedDate ?? note.data.pubDate, 'short')}</time>
-              </a>
-            </li>
-          ))}
-        </ul>
-        <p class="antfu-more"><a href="/notes">View all notes →</a></p>
-      </section>
-    )}
-
-    {latestProjects.length > 0 && (
-      <section class="antfu-section">
-        <h2 class="antfu-section-title">Projects</h2>
-        <ul class="antfu-list">
-          {latestProjects.map((project) => (
-            <li class="antfu-list-item">
-              <a
-                href={project.data.website || project.data.githubUrl || '/projects'}
-                class="antfu-list-link"
-                target={project.data.website ? '_blank' : undefined}
-                rel={project.data.website ? 'noreferrer' : undefined}
-              >
-                <span class="antfu-list-title">{project.data.name}</span>
-                {project.data.website && <span class="antfu-list-date">↗</span>}
-              </a>
-            </li>
-          ))}
-        </ul>
-        <p class="antfu-more"><a href="/projects">View all projects →</a></p>
-      </section>
-    )}
-
-    <hr class="antfu-divider" />
-
-    <section class="antfu-section antfu-find">
-      <h2 class="antfu-section-title">Find me on</h2>
-      <p class="antfu-social">
+    <section class="magi-section magi-find">
+      <h2 class="magi-section-title">Find me on</h2>
+      <p class="magi-social">
         {githubLink && <a href={githubLink.url} target="_blank" rel="noreferrer">GitHub</a>}
         <a href="/atom.xml">RSS</a>
         <a href="/friends">Friends</a>
@@ -129,110 +71,86 @@ const introPhrases = [
 </Layout>
 
 <style>
-  .antfu-home {
+  .threads-bg {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    opacity: 0.55;
+  }
+
+  .magi-home {
     position: relative;
     z-index: 1;
     padding-block: clamp(3.5rem, 9vw, 5.5rem) 2rem;
     color: var(--theme-text);
+    font-family: var(--article-body);
   }
 
-  .antfu-hero {
+  .magi-hero {
     margin-bottom: 3.25rem;
   }
 
-  .antfu-title {
+  .magi-title {
     margin: 0 0 1.35rem;
     color: var(--theme-text);
-    font-family: var(--font-geist-mono);
+    font-family: var(--article-display);
     font-size: clamp(1.75rem, 4vw, 2.35rem);
     font-weight: 700;
     line-height: 1.18;
     letter-spacing: 0;
   }
 
-  .antfu-hero p {
+  .magi-hero p {
     margin: 1.15em 0;
   }
 
-  .antfu-greeting {
+  .magi-greeting {
     margin-top: 0;
     font-size: 1rem;
   }
 
-  .antfu-typewriter {
+  .magi-typewriter {
     margin-top: 1.5rem;
     opacity: var(--opacity-muted);
+    font-family: var(--font-geist-mono);
     font-size: 0.875rem;
     min-height: 1.5em;
   }
-  .antfu-typewriter :global(.text-type) {
+  .magi-typewriter :global(.text-type) {
     font-family: var(--font-geist-mono);
   }
-  .antfu-typewriter :global(.text-type span) {
-    color: var(--theme-text);
-    opacity: 0.8;
+  .magi-typewriter :global(.text-type span) {
+    color: var(--brand);
+    opacity: 0.85;
   }
-  .antfu-section { margin-bottom: 2.5rem; }
-  .antfu-section-title {
+  .magi-section { margin-bottom: 2.5rem; }
+  .magi-section-title {
+    font-family: var(--font-geist-mono);
     font-size: 0.875rem;
     font-weight: 600;
     opacity: var(--opacity-muted);
     margin: 0 0 0.75rem;
   }
 
-  .antfu-list { list-style: none; padding: 0; margin: 0; }
-  .antfu-list-item { margin: 0; }
-  .antfu-list-link {
-    display: flex;
-    align-items: baseline;
-    justify-content: space-between;
-    gap: 0.75rem;
-    padding: 0.38em 0;
-    text-decoration: none;
-    color: var(--theme-text);
-    transition: opacity 200ms ease;
-  }
-  .antfu-list-link:hover { opacity: var(--opacity-secondary); }
-  .antfu-list-title {
-    min-width: 0;
-  }
-  .antfu-list-date {
-    flex-shrink: 0;
-    font-size: 0.8125rem;
-    opacity: var(--opacity-muted);
-    text-decoration: none;
-  }
-
-  .antfu-more {
-    margin: 0.85rem 0 0;
-    font-size: 0.875rem;
-  }
-
-  .antfu-divider {
+  .magi-divider {
     border: 0;
     border-top: 1px solid hsl(var(--border));
     margin: 3rem 0 2.25rem;
     opacity: var(--opacity-faint);
   }
 
-  .antfu-find {
+  .magi-find {
     margin-bottom: 0;
   }
 
-  .antfu-social { display: flex; flex-wrap: wrap; gap: 0.75rem; margin: 0; }
-  .antfu-social a { text-decoration: none; }
-  .antfu-social a:hover { opacity: var(--opacity-secondary); }
+  .magi-social { display: flex; flex-wrap: wrap; gap: 0.75rem; margin: 0; }
+  .magi-social a { text-decoration: none; }
+  .magi-social a:hover { opacity: 1; color: var(--brand); }
 
   @media (max-width: 520px) {
-    .antfu-home {
+    .magi-home {
       padding-top: 2.75rem;
-    }
-
-    .antfu-list-link {
-      align-items: flex-start;
-      flex-direction: column;
-      gap: 0.15rem;
-      padding-block: 0.5em;
     }
   }
 </style>

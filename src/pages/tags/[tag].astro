@@ -1,0 +1,227 @@
+---
+import type { CollectionEntry } from 'astro:content'
+import { getAllPosts, getAllTags } from '~/lib/data'
+import { formatDate } from '~/lib/utils'
+import Layout from '~/layouts/Layout.astro'
+
+export const getStaticPaths = async () => {
+  const [allPosts, tagsMap] = await Promise.all([getAllPosts(), getAllTags()])
+
+  return Object.keys(tagsMap).map((tag) => {
+    const posts = allPosts.filter((post) => post.data.tags?.includes(tag))
+    return {
+      params: { tag },
+      props: { tag, posts },
+    }
+  })
+}
+
+interface Props {
+  tag: string
+  posts: CollectionEntry<'posts'>[]
+}
+
+const { tag, posts } = Astro.props
+const description = `Ethan Young 博客中与 #${tag} 相关的文章归档，共 ${posts.length} 篇。`
+const allTags = await getAllTags()
+
+const relatedTags = Object.entries(allTags)
+  .filter(([name]) => name !== tag)
+  .sort(([, countA], [, countB]) => countB - countA)
+  .slice(0, 8)
+
+const postsByYear = new Map<number, CollectionEntry<'posts'>[]>()
+for (const post of posts) {
+  const year = (post.data.updatedDate ?? post.data.pubDate).getFullYear()
+  if (!postsByYear.has(year)) postsByYear.set(year, [])
+  postsByYear.get(year)!.push(post)
+}
+const yearGroups = [...postsByYear.entries()].sort(([a], [b]) => b - a)
+---
+
+<Layout title={`#${tag}`} description={description} fullWidth>
+  <div class="magi-page">
+    <a href="/tags" class="magi-back">← Back to tags</a>
+    <h1>#{tag}</h1>
+    <p class="magi-desc">这个主题下共有 {posts.length} 篇文章。</p>
+
+    <nav class="magi-tags">
+      <span class="is-active">#{tag} ({posts.length})</span>
+      {relatedTags.map(([name, count]) => (
+        <a href={`/tags/${encodeURIComponent(name)}`}>#{name} ({count})</a>
+      ))}
+    </nav>
+
+    {yearGroups.map(([year, yearPosts]) => (
+      <section class="magi-year-group">
+        <h2 class="magi-year">{year}</h2>
+        <div class="magi-year-watermark" aria-hidden="true">{year}</div>
+        <ul class="magi-list">
+          {yearPosts.map((post) => (
+            <li>
+              <a href={`/posts/${post.id}`} class="magi-list-link">
+                <span>{post.data.title}</span>
+                <time>{formatDate(post.data.updatedDate ?? post.data.pubDate, 'short')}</time>
+              </a>
+            </li>
+          ))}
+        </ul>
+      </section>
+    ))}
+
+    {posts.length === 0 && <p>这个标签下暂无文章。</p>}
+  </div>
+</Layout>
+
+<style>
+  .magi-page {
+    width: 100%;
+    margin-inline: auto;
+    padding-block: clamp(3.5rem, 8vw, 6rem) 3rem;
+    padding-inline: max(1.25rem, calc((100% - var(--content-width)) / 2));
+    color: var(--article-ink);
+    background:
+      linear-gradient(180deg, rgb(128 122 113 / 0.035), transparent 18rem),
+      var(--article-paper);
+  }
+
+  .magi-back {
+    display: inline-block;
+    margin-bottom: clamp(2rem, 5vw, 3rem);
+    color: var(--article-soft);
+    font-family: var(--font-geist-mono);
+    font-size: 0.75rem;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    text-decoration: none;
+    transition: color 200ms ease;
+  }
+  .magi-back:hover { color: var(--article-ink); }
+
+  .magi-page h1 {
+    margin: 0 0 0.4em;
+    color: var(--article-ink);
+    font-family: var(--font-editorial);
+    font-size: clamp(2.5rem, 5vw, 3.25rem);
+    font-weight: 700;
+    line-height: 1.05;
+    letter-spacing: 0;
+    text-wrap: balance;
+  }
+
+  .magi-desc {
+    margin: 0 0 clamp(2rem, 4vw, 2.75rem);
+    color: var(--article-soft);
+    font-family: var(--font-editorial);
+    font-size: clamp(1rem, 1.6vw, 1.1rem);
+    line-height: 1.5;
+    text-wrap: balance;
+  }
+
+  .magi-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem 1rem;
+    margin-bottom: clamp(2.5rem, 5vw, 3.5rem);
+    padding-bottom: clamp(2rem, 4vw, 2.75rem);
+    border-block-end: 1px solid var(--article-rule);
+  }
+  .magi-tags a,
+  .magi-tags span {
+    color: var(--article-soft);
+    font-family: var(--font-geist-mono);
+    font-size: 0.75rem;
+    letter-spacing: 0.02em;
+    text-decoration: none;
+    transition: color 200ms ease;
+  }
+  .magi-tags a:hover,
+  .magi-tags .is-active { color: var(--article-ink); }
+  .magi-tags .is-active { font-weight: 600; }
+
+  .magi-year-group {
+    position: relative;
+    isolation: isolate;
+    width: 100%;
+    margin: 0 0 3.5rem;
+    padding-top: 1.5rem;
+  }
+
+  .magi-year {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+  }
+
+  .magi-year-watermark {
+    position: absolute;
+    inset-block-start: 0;
+    inset-inline-start: -0.5rem;
+    z-index: 0;
+    font-family: var(--font-geist-mono);
+    font-size: clamp(5.5rem, 16vw, 10rem);
+    font-weight: 700;
+    line-height: 0.9;
+    letter-spacing: -0.02em;
+    color: transparent;
+    -webkit-text-stroke: 1px rgb(232 228 220 / 0.04);
+    pointer-events: none;
+    user-select: none;
+  }
+
+  :global(.light) .magi-year-watermark {
+    -webkit-text-stroke-color: rgb(31 31 29 / 0.08);
+  }
+
+  .magi-list {
+    position: relative;
+    z-index: 1;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  .magi-list li { margin: 0; }
+  .magi-list-link {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 0.75rem;
+    padding: 1rem 0 1.15rem;
+    color: var(--article-ink);
+    font-family: var(--font-editorial);
+    font-size: clamp(1.2rem, 2.2vw, 1.4rem);
+    font-weight: 500;
+    line-height: 1.3;
+    text-wrap: balance;
+    text-decoration: none;
+    border-block-end: 1px solid var(--article-rule);
+    transition: opacity 200ms ease;
+  }
+  .magi-list-link:hover { opacity: 1; color: var(--brand); }
+  .magi-list-link time {
+    flex-shrink: 0;
+    color: var(--article-soft);
+    font-family: var(--font-geist-mono);
+    font-size: 0.75rem;
+    letter-spacing: 0.02em;
+    opacity: 0.85;
+  }
+
+  @media (max-width: 760px) {
+    .magi-page { padding-top: 3rem; }
+    .magi-year-group {
+      margin-bottom: 3rem;
+      padding-top: 2.75rem;
+    }
+    .magi-year-watermark {
+      inset-inline-start: -0.2rem;
+      font-size: clamp(3.5rem, 22vw, 5.5rem);
+    }
+  }
+</style>

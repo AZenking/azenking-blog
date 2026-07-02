@@ -87,11 +87,11 @@ const articleDescription = getSeoDescription({
     "url": canonicalUrl,
   })} />
 
-  <article class="antfu-article">
-    <a href="/posts" class="antfu-back">Posts / Archive</a>
+  <article class="magi-article">
+    <a href="/posts" class="magi-back">Posts / Archive</a>
 
     {coverImage && (
-      <figure class="antfu-article-cover">
+      <figure class="magi-article-cover">
         <img
           src={coverImage.src}
           width={coverImage.width}
@@ -103,12 +103,12 @@ const articleDescription = getSeoDescription({
       </figure>
     )}
 
-    <header class="antfu-article-header">
-      <h1 class="antfu-article-title">{frontmatter.title}</h1>
+    <header class="magi-article-header">
+      <h1 class="magi-article-title">{frontmatter.title}</h1>
       {frontmatter.description && (
-        <p class="antfu-article-desc">{frontmatter.description}</p>
+        <p class="magi-article-desc">{frontmatter.description}</p>
       )}
-      <div class="antfu-article-meta">
+      <div class="magi-article-meta">
         <span>By {displayAuthor}</span>
         <span>·</span>
         <time datetime={frontmatter.pubDate.toISOString()}>{publishedDate}</time>
@@ -116,20 +116,20 @@ const articleDescription = getSeoDescription({
         {updatedDate && <><span>·</span><span>Updated {updatedDate}</span></>}
       </div>
       {tags.length > 0 && (
-        <div class="antfu-article-tags">
+        <div class="magi-article-tags">
           {tags.map((tag) => (
-            <a href={`/tags/${encodeURIComponent(tag)}`} class="antfu-article-tag">{tag}</a>
+            <a href={`/tags/${encodeURIComponent(tag)}`} class="magi-article-tag">{tag}</a>
           ))}
         </div>
       )}
     </header>
 
-    <Prose class="antfu-article-body">
+    <Prose class="magi-article-body">
       <Content />
     </Prose>
 
     {frontmatter.license && (
-      <section class="antfu-license">
+      <section class="magi-license">
         <p>
           Licensed under{' '}
           {licenseLink ? (
@@ -144,24 +144,24 @@ const articleDescription = getSeoDescription({
     )}
 
     {(prev || next) && (
-      <nav class="antfu-adjacent">
+      <nav class="magi-adjacent">
         {next ? (
-          <a href={`/posts/${next.id}`} class="antfu-adjacent-link">
-            <span class="antfu-adjacent-label">← {POSTS_CONFIG.prevPostText}</span>
-            <span class="antfu-adjacent-title">{next.data.title}</span>
+          <a href={`/posts/${next.id}`} class="magi-adjacent-link">
+            <span class="magi-adjacent-label">← {POSTS_CONFIG.prevPostText}</span>
+            <span class="magi-adjacent-title">{next.data.title}</span>
           </a>
         ) : <span></span>}
         {prev ? (
-          <a href={`/posts/${prev.id}`} class="antfu-adjacent-link antfu-adjacent-right">
-            <span class="antfu-adjacent-label">{POSTS_CONFIG.nextPostText} →</span>
-            <span class="antfu-adjacent-title">{prev.data.title}</span>
+          <a href={`/posts/${prev.id}`} class="magi-adjacent-link magi-adjacent-right">
+            <span class="magi-adjacent-label">{POSTS_CONFIG.nextPostText} →</span>
+            <span class="magi-adjacent-title">{prev.data.title}</span>
           </a>
         ) : <span></span>}
       </nav>
     )}
 
     {frontmatter.comment !== false && (
-      <section class="antfu-comments">
+      <section class="magi-comments">
         <Comment id={post.id} title={frontmatter.title} />
       </section>
     )}
@@ -184,7 +184,7 @@ const articleDescription = getSeoDescription({
 </Layout>
 
 <style>
-  /* .antfu-article 容器、返回链接、标题、meta、tags、license、adjacent nav 的样式
+  /* .magi-article 容器、返回链接、标题、meta、tags、license、adjacent nav 的样式
      全部统一在 markdown.css 的 "Editorial article container" 段落，由 /posts/[id] 和 /notes/[id] 共享。
      此页不再需要额外的 scoped 样式。 */
 </style>

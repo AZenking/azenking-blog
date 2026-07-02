@@ -1,102 +1,77 @@
 ---
 import Layout from '~/layouts/Layout.astro'
+import SiteBackground from '~/components/base/SiteBackground.astro'
 ---
 
-<Layout title="页面未找到" description="页面未找到">
-  <div class="antfu-404">
-    <div class="terminal-screen">
-      <p class="terminal-line terminal-error">[ERROR] 404 — PAGE_NOT_FOUND</p>
-      <p class="terminal-line">> Requested URL: {Astro.url.pathname}</p>
-      <p class="terminal-line">> The page you are looking for may have been moved, unpublished, or removed from the archive.</p>
-      <p class="terminal-line terminal-cursor">> <a href="/">cd /</a> <span class="blink">_</span></p>
-      <p class="terminal-line">> <a href="javascript:history.back()">cd ..</a></p>
-    </div>
+<Layout title="404 页面未找到" description="页面未找到">
+  <SiteBackground />
+  <div class="not-found">
+    <p class="line line-title">&gt; 404: 找不到这个路径</p>
+    <p class="line line-path">&gt; 路径&nbsp;&nbsp;<code>{Astro.url.pathname}</code></p>
+    <p class="line line-hint">这个链接可能已经移动、归档、或还没写完。</p>
+    <nav class="links">
+      <a href="/">首页</a>
+      <a href="/posts">文章</a>
+      <a href="/notes">笔记</a>
+      <a href="javascript:history.back()">返回上一页</a>
+    </nav>
   </div>
 </Layout>
 
 <style>
-  .antfu-404 {
-    max-width: var(--layout-width);
+  .not-found {
+    position: relative;
+    z-index: 1;
+    max-width: var(--content-width);
     margin-inline: auto;
     padding: 5rem 1rem 2rem;
   }
 
-  .terminal-screen {
-    border: 1px solid var(--color-border);
-    padding: 1.5rem;
-    background: rgba(255 255 255 / 0.02);
-    position: relative;
-    overflow: hidden;
-  }
-
-  .terminal-screen::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: repeating-linear-gradient(
-      0deg,
-      transparent,
-      transparent 2px,
-      rgba(229 229 229 / 0.02) 2px,
-      rgba(229 229 229 / 0.02) 4px
-    );
-    pointer-events: none;
-  }
-
-  .terminal-screen::after {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(180deg, transparent 50%, rgba(229 229 229 / 0.03) 50%);
-    background-size: 100% 4px;
-    pointer-events: none;
-    animation: scanline 8s linear infinite;
-  }
-
-  @keyframes scanline {
-    0% { transform: translateY(-100%); }
-    100% { transform: translateY(100%); }
-  }
-
-  .terminal-line {
-    margin: 0.5em 0;
+  .line {
+    margin-block: 0.5em;
     font-family: var(--font-geist-mono);
     font-size: 0.875rem;
-    opacity: var(--opacity-secondary);
-    position: relative;
+    line-height: 1.7;
   }
 
-  .terminal-error {
+  .line-title {
     color: var(--theme-text);
     opacity: 1;
     font-weight: 600;
-    animation: glitch 3s infinite;
   }
 
-  @keyframes glitch {
-    0%, 90%, 100% { transform: translateX(0); text-shadow: none; }
-    92% { transform: translateX(-2px); text-shadow: 1px 0 rgba(229 229 229 / 0.5), -1px 0 rgba(229 229 229 / 0.3); }
-    94% { transform: translateX(2px); text-shadow: -1px 0 rgba(229 229 229 / 0.5), 1px 0 rgba(229 229 229 / 0.3); }
-    96% { transform: translateX(-1px); text-shadow: none; }
+  .line-path {
+    opacity: var(--opacity-secondary);
   }
 
-  .terminal-line a {
+  .line-path code {
+    font-family: inherit;
+    font-size: inherit;
+    word-break: break-all;
+  }
+
+  .line-hint {
+    margin-block: 1rem;
+    opacity: var(--opacity-muted);
+  }
+
+  .links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem 1rem;
+    margin-top: 1.5rem;
+  }
+
+  .links a {
+    font-family: var(--font-geist-mono);
+    font-size: 0.875rem;
+    color: var(--theme-text);
     text-decoration: none;
     opacity: var(--opacity-muted);
     transition: opacity 200ms ease;
   }
 
-  .terminal-line a:hover { opacity: 1; }
-
-  .terminal-cursor { display: flex; align-items: baseline; gap: 0.25rem; }
-
-  .blink {
-    animation: blink 1s step-end infinite;
-    font-weight: 600;
-  }
-
-  @keyframes blink {
-    0%, 50% { opacity: 1; }
-    51%, 100% { opacity: 0; }
+  .links a:hover {
+    opacity: 1;
   }
 </style>

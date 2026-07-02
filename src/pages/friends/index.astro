@@ -13,19 +13,19 @@ const getHost = (url: string) => {
 }
 ---
 
-<Layout title={title} description={FRIENDS_CONFIG.description}>
-  <div class="antfu-page">
+<Layout title={title} description={FRIENDS_CONFIG.description} fullWidth>
+  <div class="magi-page">
     <h1>{title}</h1>
-    <p class="antfu-desc">{introduce}</p>
+    <p class="magi-desc">{introduce}</p>
 
-    <ul class="antfu-list">
+    <ul class="magi-list">
       {FRIEND_LINKS.map((friend) => (
-        <li class="antfu-friend">
-          <a href={friend.url} class="antfu-friend-link" target="_blank" rel="noreferrer">
+        <li class="magi-friend">
+          <a href={friend.url} class="magi-friend-link" target="_blank" rel="noreferrer">
             <span>{friend.name}</span>
-            <span class="antfu-host">{getHost(friend.url)} ↗</span>
+            <span class="magi-host">{getHost(friend.url)} ↗</span>
           </a>
-          {friend.description && <p class="antfu-friend-desc">{friend.description}</p>}
+          {friend.description && <p class="magi-friend-desc">{friend.description}</p>}
         </li>
       ))}
     </ul>
@@ -35,14 +35,79 @@ const getHost = (url: string) => {
 </Layout>
 
 <style>
-  .antfu-page { max-width: var(--layout-width); margin-inline: auto; padding: 4rem 1rem 2rem; }
-  .antfu-page h1 { font-size: 1.5rem; font-weight: 600; margin: 0 0 0.5em; }
-  .antfu-desc { opacity: var(--opacity-muted); margin: 0 0 2rem; }
-  .antfu-list { list-style: none; padding: 0; margin: 0; }
-  .antfu-friend { padding: 0.6em 0; }
-  .antfu-friend-link { display: flex; align-items: baseline; justify-content: space-between; gap: 1rem; text-decoration: none; color: var(--theme-text); transition: opacity 200ms ease; }
-  .antfu-friend-link:hover { opacity: var(--opacity-secondary); }
-  .antfu-friend-link span:first-child { font-weight: 600; }
-  .antfu-host { flex-shrink: 0; font-size: 0.8125rem; opacity: var(--opacity-muted); }
-  .antfu-friend-desc { margin: 0.25em 0 0; opacity: var(--opacity-muted); font-size: 0.875rem; }
+  .magi-page {
+    width: 100%;
+    margin-inline: auto;
+    padding-block: clamp(3.5rem, 8vw, 6rem) 3rem;
+    padding-inline: max(1.25rem, calc((100% - var(--content-width)) / 2));
+    color: var(--article-ink);
+    background:
+      linear-gradient(180deg, rgb(128 122 113 / 0.035), transparent 18rem),
+      var(--article-paper);
+  }
+
+  .magi-page h1 {
+    margin: 0 0 0.4em;
+    color: var(--article-ink);
+    font-family: var(--font-editorial);
+    font-size: clamp(2.5rem, 5vw, 3.25rem);
+    font-weight: 700;
+    line-height: 1.05;
+    letter-spacing: 0;
+    text-wrap: balance;
+  }
+
+  .magi-desc {
+    margin: 0 0 clamp(2.5rem, 5vw, 3.5rem);
+    color: var(--article-soft);
+    font-family: var(--font-editorial);
+    font-size: clamp(1rem, 1.6vw, 1.1rem);
+    line-height: 1.5;
+    text-wrap: balance;
+  }
+
+  .magi-list { list-style: none; padding: 0; margin: 0; }
+
+  .magi-friend {
+    padding: 1rem 0 1.15rem;
+    border-block-end: 1px solid var(--article-rule);
+  }
+
+  .magi-friend-link {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 1rem;
+    color: var(--article-ink);
+    font-family: var(--font-editorial);
+    font-size: clamp(1.2rem, 2.2vw, 1.4rem);
+    font-weight: 500;
+    line-height: 1.3;
+    text-wrap: balance;
+    text-decoration: none;
+    transition: opacity 200ms ease;
+  }
+
+  .magi-friend-link:hover { opacity: 1; color: var(--brand); }
+
+  .magi-host {
+    flex-shrink: 0;
+    color: var(--article-soft);
+    font-family: var(--font-geist-mono);
+    font-size: 0.75rem;
+    letter-spacing: 0.02em;
+    opacity: 0.85;
+  }
+
+  .magi-friend-desc {
+    margin: 0.35em 0 0;
+    color: var(--article-soft);
+    font-family: var(--font-editorial);
+    font-size: 0.95rem;
+    line-height: 1.6;
+  }
+
+  @media (max-width: 760px) {
+    .magi-page { padding-top: 3rem; }
+  }
 </style>

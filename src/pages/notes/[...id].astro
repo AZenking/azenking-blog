@@ -72,52 +72,52 @@ const noteDescription = getSeoDescription({
     "url": canonicalUrl,
   })} />
 
-  <article class="antfu-article antfu-article-notes">
-    <a href="/notes" class="antfu-back">Notes / Archive</a>
+  <article class="magi-article magi-article-notes">
+    <a href="/notes" class="magi-back">Notes / Archive</a>
 
-    <header class="antfu-article-header">
-      <h1 class="antfu-article-title">{frontmatter.title}</h1>
+    <header class="magi-article-header">
+      <h1 class="magi-article-title">{frontmatter.title}</h1>
       {frontmatter.description && (
-        <p class="antfu-article-desc">{frontmatter.description}</p>
+        <p class="magi-article-desc">{frontmatter.description}</p>
       )}
-      <div class="antfu-article-meta">
+      <div class="magi-article-meta">
         <span>By {displayAuthor}</span>
         <span>·</span>
         <time datetime={frontmatter.pubDate.toISOString()}>{publishedDate}</time>
         {updatedDate && <><span>·</span><span>Updated {updatedDate}</span></>}
       </div>
       {tags.length > 0 && (
-        <div class="antfu-article-tags">
+        <div class="magi-article-tags">
           {tags.map((tag) => (
-            <a href={`/tags/${encodeURIComponent(tag)}`} class="antfu-article-tag">{tag}</a>
+            <a href={`/tags/${encodeURIComponent(tag)}`} class="magi-article-tag">{tag}</a>
           ))}
         </div>
       )}
     </header>
 
-    <Prose class="antfu-article-body">
+    <Prose class="magi-article-body">
       <Content />
     </Prose>
 
     {(prev || next) && (
-      <nav class="antfu-adjacent">
+      <nav class="magi-adjacent">
         {next ? (
-          <a href={`/notes/${next.id}`} class="antfu-adjacent-link">
-            <span class="antfu-adjacent-label">← 上一篇笔记</span>
-            <span class="antfu-adjacent-title">{next.data.title}</span>
+          <a href={`/notes/${next.id}`} class="magi-adjacent-link">
+            <span class="magi-adjacent-label">← 上一篇笔记</span>
+            <span class="magi-adjacent-title">{next.data.title}</span>
           </a>
         ) : <span></span>}
         {prev ? (
-          <a href={`/notes/${prev.id}`} class="antfu-adjacent-link antfu-adjacent-right">
-            <span class="antfu-adjacent-label">下一篇笔记 →</span>
-            <span class="antfu-adjacent-title">{prev.data.title}</span>
+          <a href={`/notes/${prev.id}`} class="magi-adjacent-link magi-adjacent-right">
+            <span class="magi-adjacent-label">下一篇笔记 →</span>
+            <span class="magi-adjacent-title">{prev.data.title}</span>
           </a>
         ) : <span></span>}
       </nav>
     )}
 
     {frontmatter.comment !== false && (
-      <section class="antfu-comments">
+      <section class="magi-comments">
         <Comment id={note.id} title={frontmatter.title} />
       </section>
     )}
@@ -140,33 +140,33 @@ const noteDescription = getSeoDescription({
 </Layout>
 
 <style>
-  /* Notes 详情页复用 .antfu-article 的容器样式（统一在 markdown.css 的
+  /* Notes 详情页复用 .magi-article 的容器样式（统一在 markdown.css 的
      "Editorial article container" 段落，由 /posts/[id] 和 /notes/[id] 共享）。
      此处只补充 notes 特有的克制差异：标题不那么巨大、左对齐、不强制居中 meta。 */
 
-  .antfu-article-notes {
+  .magi-article-notes {
     padding: clamp(3rem, 6vw, 5rem) 1.25rem 3rem;
   }
 
-  .antfu-article-notes .antfu-back {
+  .magi-article-notes .magi-back {
     margin-bottom: clamp(2rem, 4vw, 2.75rem);
   }
 
-  .antfu-article-notes .antfu-article-header {
+  .magi-article-notes .magi-article-header {
     width: min(100%, 48rem);
     margin-inline: auto;
     margin-bottom: clamp(2.25rem, 4vw, 3rem);
     text-align: left;
   }
 
-  .antfu-article-notes .antfu-article-title {
+  .magi-article-notes .magi-article-title {
     color: var(--article-ink);
     font-size: clamp(1.75rem, 4vw, 2.5rem);
     font-weight: 700;
     line-height: 1.15;
   }
 
-  .antfu-article-notes .antfu-article-desc {
+  .magi-article-notes .magi-article-desc {
     margin: clamp(0.85rem, 1.8vw, 1.25rem) 0 0;
     max-width: none;
     color: var(--article-soft);
@@ -175,7 +175,7 @@ const noteDescription = getSeoDescription({
     line-height: 1.5;
   }
 
-  .antfu-article-notes .antfu-article-meta {
+  .magi-article-notes .magi-article-meta {
     justify-content: flex-start;
     margin-top: clamp(1.25rem, 2.5vw, 1.75rem);
     font-family: var(--font-geist-mono);
@@ -183,27 +183,27 @@ const noteDescription = getSeoDescription({
     letter-spacing: 0.02em;
   }
 
-  .antfu-article-notes .antfu-article-tags {
+  .magi-article-notes .magi-article-tags {
     justify-content: flex-start;
     margin-top: 0.75rem;
   }
 
-  .antfu-article-notes .antfu-adjacent {
-    width: min(100%, 42rem);
+  .magi-article-notes .magi-adjacent {
+    width: min(100%, var(--content-width));
     margin: 2.5rem auto 0;
   }
 
   @media (max-width: 720px) {
-    .antfu-article-notes {
+    .magi-article-notes {
       padding-inline: 1rem;
       padding-top: 2.5rem;
     }
 
-    .antfu-article-notes .antfu-article-title {
+    .magi-article-notes .magi-article-title {
       font-size: clamp(1.5rem, 6vw, 2rem);
     }
 
-    .antfu-article-notes .antfu-adjacent {
+    .magi-article-notes .magi-adjacent {
       grid-template-columns: 1fr;
     }
   }
