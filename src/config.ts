@@ -14,8 +14,8 @@ import type {
 
 //--- Readme Page Config ---
 export const SITE: Site = {
-  title: 'Ethan Yang',
-  description: 'Ethan Young 的个人博客，记录前端开发、工程实践、产品构建、工具配置、生活观察和持续迭代的日常思考。',
+  title: 'Ethan Young',
+  description: 'Ethan Young 的个人博客。前端开发、工程实践与产品构建。',
   website: 'https://www.ethyoung.me/',
   lang: 'zh-CN',
   base: '/',
@@ -86,20 +86,16 @@ export const POSTS_CONFIG: PostConfig = {
 
 export const COMMENT_CONFIG: CommentConfig = {
   enabled: true,
-  system: 'gitalk',
-  gitalk: {
-    clientID: import.meta.env.PUBLIC_GITHUB_CLIENT_ID,
-    clientSecret: import.meta.env.PUBLIC_GITHUB_CLIENT_SECRET,
-    repo: 'azenking-blog',
-    owner: 'AZenking',
-    admin: ['AZenking'],
-    language: 'en-US',
-    perPage: 5,
-    pagerDirection: 'last',
-    createIssueManually: false,
-    distractionFreeMode: false,
-    enableHotKey: true,
-    id: location.pathname
+  system: 'giscus',
+  giscus: {
+    repo: 'AZenking/azenking-blog',
+    repoId: 'R_kgDOS4N0fg',
+    category: 'General',
+    categoryId: 'DIC_kwDOS4N0fs4DAW0B',
+    mapping: 'pathname',
+    reactionsEnabled: true,
+    inputPosition: 'bottom',
+    lang: 'zh-CN',
   },
 }
 

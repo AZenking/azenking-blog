@@ -1,0 +1,153 @@
+---
+interface Props {
+  id: string
+  title: string
+}
+
+const { id, title } = Astro.props
+---
+
+<div class="giscus-container" data-id={id} data-title={title}></div>
+
+<script>
+  import { COMMENT_CONFIG } from '~/config'
+
+  const giscus = COMMENT_CONFIG.giscus
+  const themeVersion = '20260702-2230'
+
+  let observer: IntersectionObserver | null = null
+  let themeObserver: MutationObserver | null = null
+  let initializedForId: string | null = null
+
+  function getTheme() {
+    if (giscus?.theme) return giscus.theme
+    const isLight = document.documentElement.classList.contains('light')
+    return `${location.origin}/giscus/${isLight ? 'light' : 'dark'}.css?v=${themeVersion}`
+  }
+
+  function queueThemeSync(delay = 0) {
+    window.setTimeout(syncTheme, delay)
+  }
+
+  function initGiscus() {
+    if (!giscus) return
+    if (!giscus.repoId || giscus.repoId.includes('HERE')) return
+
+    const container = document.querySelector<HTMLElement>('.giscus-container')
+    if (!container) return
+
+    const targetId = container.dataset.id || ''
+    if (initializedForId === targetId) return
+    initializedForId = targetId
+
+    container.innerHTML = ''
+
+    const script = document.createElement('script')
+    script.src = 'https://giscus.app/client.js'
+    script.setAttribute('data-repo', giscus.repo)
+    script.setAttribute('data-repo-id', giscus.repoId)
+    script.setAttribute('data-category', giscus.category)
+    script.setAttribute('data-category-id', giscus.categoryId)
+    script.setAttribute('data-mapping', giscus.mapping)
+    script.setAttribute('data-strict', '0')
+    script.setAttribute('data-reactions-enabled', giscus.reactionsEnabled !== false ? '1' : '0')
+    script.setAttribute('data-emit-metadata', '0')
+    script.setAttribute('data-input-position', giscus.inputPosition || 'top')
+    script.setAttribute('data-theme', getTheme())
+    script.setAttribute('data-lang', giscus.lang || 'zh-CN')
+    script.setAttribute('data-loading', 'lazy')
+    script.crossOrigin = 'anonymous'
+    script.async = true
+    script.addEventListener('load', () => queueThemeSync(300))
+
+    container.appendChild(script)
+    queueThemeSync(300)
+    queueThemeSync(1200)
+  }
+
+  function isElementInViewport(element: Element) {
+    const rect = element.getBoundingClientRect()
+    const windowHeight = window.innerHeight || document.documentElement.clientHeight
+    return rect.top <= windowHeight + 3000 && rect.bottom >= -3000
+  }
+
+  function setupObserver() {
+    const container = document.querySelector('.giscus-container')
+    if (!container) return
+
+    cleanup()
+
+    if (isElementInViewport(container)) {
+      initGiscus()
+      return
+    }
+
+    observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            initGiscus()
+            cleanup()
+          }
+        })
+      },
+      {
+        rootMargin: '3000px',
+        threshold: 0,
+      },
+    )
+
+    observer.observe(container)
+  }
+
+  function cleanup() {
+    if (observer) {
+      observer.disconnect()
+      observer = null
+    }
+  }
+
+  function resetAndInitialize() {
+    initializedForId = null
+    cleanup()
+    setupObserver()
+  }
+
+  function syncTheme() {
+    if (giscus?.theme) return
+    const iframe = document.querySelector<HTMLIFrameElement>('iframe.giscus-frame')
+    if (!iframe || !iframe.contentWindow) return
+    iframe.contentWindow.postMessage(
+      { giscus: { setConfig: { theme: getTheme() } } },
+      'https://giscus.app',
+    )
+  }
+
+  function setupThemeObserver() {
+    if (giscus?.theme || themeObserver) return
+
+    themeObserver = new MutationObserver(() => queueThemeSync(50))
+    themeObserver.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ['class'],
+    })
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', setupObserver)
+  } else {
+    setupObserver()
+  }
+
+  document.addEventListener('astro:page-load', resetAndInitialize)
+  document.addEventListener('astro:before-preparation', cleanup)
+  window.addEventListener('beforeunload', cleanup)
+  setupThemeObserver()
+</script>
+
+<style is:global>
+  .giscus-container {
+    min-height: 1rem;
+    color: var(--theme-text);
+  }
+</style>

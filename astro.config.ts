@@ -17,6 +17,16 @@ export default defineConfig({
   },
   vite: {
     plugins: [tailwindcss()],
+    server: {
+      headers: {
+        'Access-Control-Allow-Origin': '*',
+      },
+    },
+    preview: {
+      headers: {
+        'Access-Control-Allow-Origin': '*',
+      },
+    },
   },
   markdown: {
     syntaxHighlight: false,

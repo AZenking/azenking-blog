@@ -1,6 +1,6 @@
 ---
 import { COMMENT_CONFIG } from '~/config'
-import Gitalk from './Gitalk.astro'
+import Giscus from './Giscus.astro'
 
 interface Props {
   id: string
@@ -11,14 +11,15 @@ const { id, title } = Astro.props
 
 const enabled = COMMENT_CONFIG.enabled !== false && COMMENT_CONFIG.system !== 'none'
 
-const gitalkConfig = COMMENT_CONFIG.gitalk
-const gitalkReady =
-  COMMENT_CONFIG.system === 'gitalk'
-  && !!gitalkConfig
-  && !!gitalkConfig.clientID
-  && !!gitalkConfig.clientSecret
+const giscusConfig = COMMENT_CONFIG.giscus
+const giscusReady =
+  COMMENT_CONFIG.system === 'giscus'
+  && !!giscusConfig
+  && !!giscusConfig.repoId
+  && !!giscusConfig.categoryId
+  && !giscusConfig.repoId.includes('HERE')
 
-const renderGitalk = enabled && gitalkReady
+const renderGiscus = enabled && giscusReady
 ---
 
-{renderGitalk && <Gitalk id={id} title={title} />}
+{renderGiscus && <Giscus id={id} title={title} />}

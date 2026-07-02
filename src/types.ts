@@ -182,19 +182,16 @@ export interface PhotoData {
   travel?: string
 }
 
-export interface GitalkConfig {
-  clientID: string
-  clientSecret: string
-  repo: string
-  owner: string
-  admin: string[]
-  language?: string
-  perPage?: number
-  pagerDirection?: 'last' | 'first'
-  createIssueManually?: boolean
-  distractionFreeMode?: boolean
-  enableHotKey?: boolean
-  id?: string
+export interface GiscusConfig {
+  repo: `${string}/${string}`
+  repoId: string
+  category: string
+  categoryId: string
+  mapping: 'pathname' | 'url' | 'title' | 'og:title' | 'specific' | 'number'
+  reactionsEnabled?: boolean
+  inputPosition?: 'top' | 'bottom'
+  theme?: string
+  lang?: string
 }
 
 export interface AnalyticsConfig {
@@ -214,6 +211,6 @@ export interface AnalyticsConfig {
 
 export interface CommentConfig {
   enabled: boolean
-  system: 'gitalk' | 'artalk' | 'waline' | 'none'
-  gitalk?: GitalkConfig
+  system: 'giscus' | 'artalk' | 'waline' | 'none'
+  giscus?: GiscusConfig
 }
