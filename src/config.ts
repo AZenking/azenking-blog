@@ -99,6 +99,7 @@ export const COMMENT_CONFIG: CommentConfig = {
     createIssueManually: false,
     distractionFreeMode: false,
     enableHotKey: true,
+    id: '#{page.date}'.split('GMT')[0]
   },
 }
 
