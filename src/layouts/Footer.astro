@@ -26,7 +26,7 @@ const githubLink = SOCIAL_LINKS.find((item) => item.name === 'github')
   .magi-footer {
     width: min(100%, 48rem);
     margin-inline: auto;
-    padding: 2rem 1.25rem 2.5rem;
+    padding: 2rem 1.25rem calc(2.5rem + env(safe-area-inset-bottom));
     border-block-start: 1px solid var(--article-rule);
     color: var(--article-soft);
     font-family: var(--font-geist-mono);
