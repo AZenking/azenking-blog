@@ -125,22 +125,8 @@ export const FRIENDS_CONFIG: FriendsConfig = {
 
 export const FRIEND_LINKS: FriendLinkItem[] = [
   {
-    name:'Pw0n’s blog',
-    url: 'https://pw0n.com',
-    description: '技术分享、生活记录、教程指南',
-    avatar: 'https://pw0n.com/img/butterfly-icon.png',
-    tags: ['Blog', 'Tech'],
-  },
-  {
-    name: '花墨',
-    url: 'https://flowersink.com',
-    description: '一个喜欢写作、分享生活的已婚前端的个人网站',
-    avatar: 'https://api.flowersink.com/img/logo.png',
-    tags: ['Blog', 'Frontend'],
-  },
-  {
     name: '我要去巴萨',
-    url: 'https://www.coyoteoutdoor.space:8095/',
+    url: 'https://hub.nodeverse.cn:8888/',
     description: '技术分享博客',
     avatar: '',
     tags: ['Blog', 'Tech'],
