@@ -126,7 +126,7 @@ export const FRIENDS_CONFIG: FriendsConfig = {
 export const FRIEND_LINKS: FriendLinkItem[] = [
   {
     name: '我要去巴萨',
-    url: 'https://hub.nodeverse.cn:8888/',
+    url: 'https://code.nodeverse.cn:8888/about',
     description: '技术分享博客',
     avatar: '',
     tags: ['Blog', 'Tech'],
